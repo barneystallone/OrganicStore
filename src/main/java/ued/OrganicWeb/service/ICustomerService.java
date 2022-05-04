@@ -1,18 +1,13 @@
-package ued.OrganicWeb.dao;
+package ued.OrganicWeb.service;
 
 import java.util.List;
 
 import ued.OrganicWeb.model.CustomerModel;
 
-
-
-public interface ICustomerDAO {
-
-	//=========================================
-	// 1 param -> LIMIT, 2 param -> OFFSET, LIMIT 
+public interface ICustomerService {
 	List<CustomerModel> listCustomers(Integer... params);
 	int save(CustomerModel customer);
 	void update(CustomerModel customer);
 	void delete(CustomerModel customer);
-
+	
 }

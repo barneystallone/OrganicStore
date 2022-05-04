@@ -15,12 +15,13 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 
 	public Connection getConnection() {
 		try {
+			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:3306/organicstoredb";
 			String user = "root";
 			String password = "admin";
 
 			return DriverManager.getConnection(url, user, password);
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			return null;
 		}
 	}
@@ -35,7 +36,7 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 				if (param instanceof String) {
 					stmt.setString(i + 1, (String) param);
 				}
-//					add here
+
 
 			}
 		} catch (SQLException e) {
@@ -82,5 +83,57 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 
 		return null;
 	}
+	@Override
+	public int insert(StringBuilder sql, Object... params) {
+		Connection conn = getConnection();
+		PreparedStatement stmt = null;
+		
+		if (conn != null) {
+			try {
+				stmt = conn.prepareStatement(sql.toString());
+				setParams(stmt, params);
+
+				ResultSet rs = stmt.executeQuery();
+				if (rs.next()) {
+					// getGeneratedKeys
+					return rs.getInt("id");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return 0;
+			}
+			
+		}
+		return 0;
+	}
+
+	@Override
+	public void update(StringBuilder sql, Object... params) {
+		Connection conn = getConnection();
+		PreparedStatement stmt = null;
+		if (conn != null) {
+			try {
+				stmt = conn.prepareStatement(sql.toString());
+				setParams(stmt, params );
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+					if (stmt != null) {
+						stmt.close();
+					}
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+
+		}
+		
+	}
+
 
 }
