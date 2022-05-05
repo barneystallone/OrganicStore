@@ -22,14 +22,12 @@
 		<!-- header  -->
 		<%@ include file="/common/admin/header.jsp"%>
 		<!-- header -->
-
+		<!-- Topbar  -->
+		<%@ include file="/common/admin/topbar.jsp"%>
+		<!-- Topbar -->
+		
 		<!-- Content-Wrapper Start -->
 		<div class="main">
-				<!-- Topbar  -->
-				<%@ include file="/common/admin/topbar.jsp"%>
-				<!-- Topbar -->
-				
-				<dec:body />
 
 		</div>
 		
@@ -47,8 +45,30 @@
     <!-- chart js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <!-- custom -->
-    <script src="${root}/static/admin/js/main.js"></script>
-    <script src="${root}/static/admin/js/myChart.js"></script>
+    <script type="module" src="${root}/static/admin/js/main.js"></script>
+  
+	<script type="text/javascript">
+	// MenuToggle
+	let toggle = document.querySelector('.toggle');
+	let navigation = document.querySelector('.navigation');
+	let main = document.querySelector('.main');
+	let topbar = document.querySelector('.topbar');
+
+	toggle.onclick = function() {
+		navigation.classList.toggle('active')
+		main.classList.toggle('active')
+		topbar.classList.toggle('active')
+	}
+	// add hovered class
+	let list = document.querySelectorAll('.navigation li');
+	function activeLink() {
+		list.forEach((item) => item.classList.remove('hovered'));
+		this.classList.add('hovered');
+	}
+
+	list.forEach((item) =>
+		item.addEventListener('mouseover', activeLink));
+	</script>
 
 
 </body>

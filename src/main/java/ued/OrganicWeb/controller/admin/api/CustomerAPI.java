@@ -1,6 +1,8 @@
 package ued.OrganicWeb.controller.admin.api;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,10 +32,44 @@ public class CustomerAPI extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+	/**
+	 *  Access origin control
+	 *  
+        List<String> incomingURLs = Arrays.asList(getServletContext().getInitParameter("urlCallAPI").trim().split(","));        
+        String clientOrigin = req.getHeader("origin");
+        int myIndex = incomingURLs.indexOf(clientOrigin);
+        
+        if(myIndex != -1){
+        	resp.setHeader("Access-Control-Allow-Origin", clientOrigin);
+        	resp.setHeader("Access-Control-Allow-Methods", "GET");
+        	resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        	resp.setHeader("Access-Control-Max-Age", "86400");
+        }
+	 * 
+	 */
+		
+		// full access 
+		resp.setHeader("Access-Control-Allow-Origin","*");
+		
 		ObjectMapper mapper = new ObjectMapper();
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
-		List<CustomerModel> results = customerService.listCustomers(2);
+		String sLimit  = (req.getParameter("limit")==null) ? "" : req.getParameter("limit");
+		String sOffset  = (req.getParameter("offset")==null) ? "" : req.getParameter("offset");
+
+		List<CustomerModel> results = new ArrayList<>();
+		if (sLimit.matches("^\\d+$")){
+			int limit = Integer.parseInt(sLimit);
+			if(sOffset.matches("^\\d+$")) {
+				int offset = Integer.parseInt(sOffset);
+				results = customerService.listCustomers(offset , limit );							
+			} else {
+				results = customerService.listCustomers(limit);							
+			}
+		} else {
+			results = customerService.listCustomers();	
+		}
 
 		mapper.writeValue(resp.getOutputStream(), results);
 	}
