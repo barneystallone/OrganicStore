@@ -9,11 +9,8 @@
     setTitle(title) {
         document.title = title;
     }
-    
-    getHtml() {
-        return "";
-    }
-    getScript(){
-        
+    getHtml(elem){
+        const content="";
+        elem.innerHTML= content ; 
     }
 }

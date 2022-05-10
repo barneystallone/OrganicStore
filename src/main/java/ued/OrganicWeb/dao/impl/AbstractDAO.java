@@ -16,7 +16,7 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 	public Connection getConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/organicstoredb";
+			String url = "jdbc:mysql://localhost:3306/organicshopdb";
 			String user = "root";
 			String password = "admin";
 

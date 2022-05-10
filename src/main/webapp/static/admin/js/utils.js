@@ -3,14 +3,7 @@
  */
 export default class TableUtil {
     constructor() { }
-    /**
-     * Sort HTML Table
-     * 
-     * @param {table}  table The table to sort
-     * @param {column} column The index of the column to sort
-     * @param {asc} asc default asc sorting
-     * @param {options} options Options is object  {type :"th"} or {type:"td"}
-     */
+    
     static sortTableByColumn(table, column, asc = true, options = { type: 'td' }) {
 
         // thead td or thead th

@@ -42,8 +42,9 @@ const router = () => {
     }
 
     const view = new match.route.view(getParams(match));
-    
-    document.querySelector(".main").innerHTML =  view.getHtml();
+	    // document.querySelector(".main").innerHTML =  view.getHtml();
+    view.getHtml(document.querySelector(".main"));
+		
     view.getScript();
 };
 
