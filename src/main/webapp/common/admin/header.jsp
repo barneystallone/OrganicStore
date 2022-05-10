@@ -15,7 +15,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="${root}/admin-home" data-link>
                         <span class="icon">
                             <ion-icon class="icon-outline" name="home-outline"></ion-icon>
                             <ion-icon class="icon-full" name="home"></ion-icon>
@@ -24,7 +24,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="${root}/admin-customer" data-link>
                         <span class="icon">
                             <ion-icon class="icon-outline" name="person-outline"></ion-icon>
                             <ion-icon class="icon-full" name="person"></ion-icon>

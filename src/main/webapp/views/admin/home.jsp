@@ -67,11 +67,11 @@
                     <table class="table table-sortable">
                         <thead>
                             <tr>
-                                <td>Name</td>
-                                <td>Title</td>
-                                <td>Status</td>
-                                <td>Role</td>
-                                <td></td>
+                                <th>Name</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
