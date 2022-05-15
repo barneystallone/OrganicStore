@@ -35,19 +35,29 @@
                 <li>
                     <a href="#">
                         <span class="icon">
-                            <ion-icon class="icon-outline" name="chatbubble-outline"></ion-icon>
-                            <ion-icon class="icon-full" name="chatbubble"></ion-icon>
+                            <ion-icon name="book-outline" class="icon-outline"></ion-icon>
+                            <ion-icon name="book" class="icon-full"></ion-icon>
+                            <!-- <ion-icon class="icon-full" name="chatbubble"></ion-icon> -->
                         </span>
-                        <span class="title">Message</span>
+                        <span class="title">Category</span>
                     </a>
                 </li>
                 <li>
                     <a href="#">
                         <span class="icon">
-                            <ion-icon class="icon-outline" name="settings-outline"></ion-icon>
-                            <ion-icon class="icon-full" name="settings-sharp"></ion-icon>
+                            <ion-icon class="icon-outline" name="restaurant-outline"></ion-icon>
+                            <ion-icon class="icon-full" name="restaurant"></ion-icon>
                         </span>
                         <span class="title">Help</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon class="icon-outline" name="stats-chart-outline"></ion-icon>
+                            <ion-icon class="icon-full" name="stats-chart"></ion-icon>
+                        </span>
+                        <span class="title">Doanh thu</span>
                     </a>
                 </li>
                 <li>

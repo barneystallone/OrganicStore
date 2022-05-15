@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Arima+Madurai:wght@300;400;500;700&family=Baloo+2:wght@400;500;600&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arima+Madurai:wght@300;400;500;700&family=Baloo+2:wght@400;500;600&display=swap'); */
 * {
     margin: 0;
     padding: 0;
@@ -98,7 +98,7 @@ body {
     font-weight: 700;
     font-size:19px;
     color: var(--black1);
-    padding: 10px 15px;
+    padding: 10px;
     background: var(--white2);
 }
 
@@ -143,7 +143,7 @@ body {
 
  .table tr td
 {
-    padding:16px 12px;
+    padding:14px 10px;
 }
 
 .status
@@ -154,12 +154,18 @@ body {
 {
     width: 9%;
 }
+.edit {
+    cursor: pointer;
+}
 .edit a 
 {
     text-decoration: none;
     font-size: 14px;
     color: var(--purple);
     font-weight: 600;
+}
+.edit:hover {
+    opacity: 0.7;
 }
 
 .table  tr td h5 + p {
@@ -313,6 +319,7 @@ body {
 
 /*-------------- main ------------------*/
 .main {
+    animation: fadeIn ease-in 0.2s;
     position: absolute;
     width: calc(100% - 300px);
     left: 300px;
@@ -689,6 +696,10 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
+.modal * {
+    font-family: 'Arima Madurai', cursive;
+    font-weight: 600;
+}
 .modal {
     position: fixed;
     top:0;
@@ -730,6 +741,10 @@ input::-webkit-inner-spin-button {
     border-radius: 8px 8px 0 0;
     align-items: center;
     font-family: 'Baloo 2', cursive;
+}
+.modal-header span{
+    margin-left: 5px;
+    font-size: 24px;
 }
 .modal-heading-icon {
     margin-right: 14px;
@@ -862,4 +877,8 @@ input::-webkit-inner-spin-button {
     width: 100%;
     resize: none;
     height: 150px;
+}
+
+.d-none {
+    display:none;
 }

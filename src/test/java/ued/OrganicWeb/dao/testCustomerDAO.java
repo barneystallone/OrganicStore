@@ -44,37 +44,17 @@ public class testCustomerDAO {
 	}
 	@Test
 	public void testListCustomers() {
-		List<CustomerModel> result = customerDAO.listCustomers(3,1);
+		List<CustomerModel> result = customerDAO.listCustomers(2,3);
 
 		customer = result.get(2);
 		assertEquals("Nguyễn Văn C", customer.getName());
 	}
 
-	@Test
-	public void testUpdate1() {
-		CustomerModel customer = new CustomerModel();
-		customer.setId(2);
-		customer.setName("Nguyễn Văn B4");
-
-		customerDAO.update(customer);
-		List<CustomerModel> result = customerDAO.listCustomers(2,1);
-		customer = result.get(0);
-		assertEquals("Nguyễn Văn B4", customer.getName());
-	}
-	@Test
-	public void testUpdate2() {
-		CustomerModel customer = new CustomerModel();
-		customer.setId(2);
-		customer.setName("Nguyễn Văn B4");
-		customer.setSubDistrict("Phường Hòa Thuận Tây");
-		customer.setDistrict("Quận Hải Châu");
-		customer.setCity("Thành Phố Đà Nẵng");
-		
-		customerDAO.update(customer);
-		List<CustomerModel> result = customerDAO.listCustomers(2,1);
-		customer = result.get(0);
-		assertEquals("Phường Hòa Thuận Tây", customer.getSubDistrict());
-	}
 	
-
+	
+	@Test
+	public void testGetOne() {
+		customer = customerDAO.get(4);
+		assertEquals("Nguyễn Văn C", customer.getName());
+	}
 }

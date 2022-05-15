@@ -1,6 +1,6 @@
 
-import Dashboard from "/OrganicStore/static/admin/js//views/Dashboard.js";
-import Customer from "/OrganicStore/static/admin/js//views/Customer.js";
+import Dashboard from "/OrganicStore/static/admin/js/views/Dashboard.js";
+import Customer from "/OrganicStore/static/admin/js/views/Customer.js";
 
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 

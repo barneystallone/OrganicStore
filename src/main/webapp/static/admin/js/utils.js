@@ -7,11 +7,13 @@ export default class TableUtil {
     static sortTableByColumn(table, column, asc = true, options = { type: 'td' }) {
 
         // thead td or thead th
+
         const colTag = options.type
         const typeSort = asc ? 1 : -1;
         const tbody = table.tBodies[0];
         const rows = Array.from(tbody.querySelectorAll('tr'));
 
+        // a-> current , b-> prev , -1 -> swap, 0 -> nothing
         const sortedRows = rows.sort((a, b) => {
             const aColText = a.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
             const bColText = b.querySelector(`td:nth-child(${column + 1})`).textContent.trim();

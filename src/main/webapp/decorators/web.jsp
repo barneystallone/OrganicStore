@@ -14,13 +14,13 @@
 
 
 <!-- Js Plugins -->
-<script src="<c:url value="/static/web/js/jquery-3.3.1.min.js"/>"></script>
-<script src="<c:url value="/static/web/js/bootstrap.min.js"/>"></script>
-<script src="<c:url value="/static/web/js/jquery.nice-select.min.js"/>"></script>
-<script src="<c:url value="/static/web/js/jquery-ui.min.js"/>"></script>
-<script src="<c:url value="/static/web/js/jquery.slicknav.js"/>"></script>
-<script src="<c:url value="/static/web/js/mixitup.min.js"/>"></script>
-<script src="<c:url value="/static/web/js/owl.carousel.min.js"/>"></script>
+<script src="${root}/static/web/js/jquery-3.3.1.min.js"></script>
+<script src="${root}/static/web/js/bootstrap.min.js"></script>
+<script src="${root}/static/web/js/jquery.nice-select.min.js"></script>
+<script src="${root}/static/web/js/jquery-ui.min.js"></script>
+<script src="${root}/static/web/js/jquery.slicknav.js"></script>
+<script src="${root}/static/web/js/mixitup.min.js"></script>
+<script src="${root}/static/web/js/owl.carousel.min.js"></script>
 
 <!-- Google Font -->
 <link
@@ -29,26 +29,26 @@
 
 <!-- Css Styles -->
 <link rel="stylesheet"
-	href="<c:url value="/static/web/css/bootstrap.min.css"/>"
+	href="${root}/static/web/css/bootstrap.min.css"
 	type="text/css">
 <link rel="stylesheet"
-	href="<c:url value="/static/web/css/font-awesome.min.css"/>"
+	href="${root}/static/web/css/font-awesome.min.css"
 	type="text/css">
 <link rel="stylesheet"
-	href="<c:url value="/static/web/css/elegant-icons.css"/>"
+	href="${root}/static/web/css/elegant-icons.css"
 	type="text/css">
 <link rel="stylesheet"
-	href="<c:url value="/static/web/css/nice-select.css"/>" type="text/css">
+	href="${root}/static/web/css/nice-select.css" type="text/css">
 <link rel="stylesheet"
-	href="<c:url value="/static/web/css/jquery-ui.min.css"/>"
+	href="${root}/static/web/css/jquery-ui.min.css"
 	type="text/css">
 <link rel="stylesheet"
-	href="<c:url value="/static/web/css/owl.carousel.min.css"/>"
+	href="${root}/static/web/css/owl.carousel.min.css"
 	type="text/css">
 <link rel="stylesheet"
-	href="<c:url value="/static/web/css/slicknav.min.css"/>"
+	href="${root}/static/web/css/slicknav.min.css"
 	type="text/css">
-<link rel="stylesheet" href="<c:url value="/static/web/css/style.css"/>"
+<link rel="stylesheet" href="${root}/static/web/css/style.css"
 	type="text/css">
 </head>
 <body>
@@ -63,7 +63,7 @@
 	<!-- footer -->
 
 	<!-- custom js -->
-	<script src="<c:url value="/static/web/js/main.js"/>"></script>
+	<script src="${root}/static/web/js/main.js">"></script>
 
 
 </body>

@@ -1,5 +1,6 @@
 package ued.OrganicWeb.dao.impl;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.naming.java.javaURLContextFactory;
+
 import ued.OrganicWeb.dao.IGenericDAO;
 import ued.OrganicWeb.mapper.MapModel;
 
@@ -15,7 +18,8 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 
 	public Connection getConnection() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+//			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:3306/organicshopdb";
 			String user = "root";
 			String password = "admin";
@@ -33,10 +37,16 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 				if (param instanceof Integer) {
 					stmt.setInt(i + 1, (int) param);
 				}
-				if (param instanceof String) {
+				else if (param instanceof String) {
 					stmt.setString(i + 1, (String) param);
 				}
-
+				else if (param == null ) {
+					stmt.setNull(i+1, java.sql.Types.NULL );
+				}
+				else if (param instanceof byte[]){
+					 stmt.setBytes(i+1, (byte[]) param);
+				}
+				
 
 			}
 		} catch (SQLException e) {
@@ -44,9 +54,44 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 		}
 
 	}
+	public  T get(StringBuilder sql, MapModel<T> mapper, int id) {
+		Connection conn = getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		if (conn != null) {
+			try {
+				stmt = conn.prepareStatement(sql.toString());
+				setParams(stmt, id);
+				rs = stmt.executeQuery();
+				if (rs.next()) {
+					return mapper.mapRow(rs);
+				}
+			} catch (SQLException e) {
+				return null;
+			} finally {
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+					if (stmt != null) {
+						stmt.close();
+					}
+					if (rs != null) {
+						rs.close();
+					}
+				} catch (SQLException e2) {
+					return null;
+				}
+			}
+
+		}
+		
+		
+		return null;
+	}
 
 	@Override
-	public <T> List<T> query(StringBuilder sql, MapModel<T> mapper, Object... params) {
+	public  List<T> query(StringBuilder sql, MapModel<T> mapper, Object... params) {
 		Connection conn = getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -87,16 +132,18 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 	public int insert(StringBuilder sql, Object... params) {
 		Connection conn = getConnection();
 		PreparedStatement stmt = null;
-		
+		ResultSet rs =null;
 		if (conn != null) {
 			try {
-				stmt = conn.prepareStatement(sql.toString());
+				stmt = conn.prepareStatement(sql.toString(),stmt.RETURN_GENERATED_KEYS);
 				setParams(stmt, params);
-
-				ResultSet rs = stmt.executeQuery();
+				stmt.executeUpdate();
+//				
+				rs = stmt.getGeneratedKeys();
+				
 				if (rs.next()) {
 					// getGeneratedKeys
-					return rs.getInt("id");
+					return rs.getInt(1);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();

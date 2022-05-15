@@ -22,8 +22,8 @@ import ued.OrganicWeb.utils.HttpUtil;
 /**
  * HP
  */
-@WebServlet(urlPatterns = { "/api-customer" })
-public class CustomerAPI extends AbstractServlet<CustomerModel> {
+@WebServlet(urlPatterns = { "/api-customer3" })
+public class CustomerAPI3 extends HttpServlet {
 	@Inject
 	private ICustomerService customerService;
 
@@ -54,6 +54,8 @@ public class CustomerAPI extends AbstractServlet<CustomerModel> {
 		ObjectMapper mapper = new ObjectMapper();
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
+		String sLimit  = (req.getParameter("limit")==null) ? "" : req.getParameter("limit");
+		String sOffset  = (req.getParameter("offset")==null) ? "" : req.getParameter("offset");
 		String customerId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
 		
 		if (customerId.matches("^\\d+$")) {
@@ -63,8 +65,20 @@ public class CustomerAPI extends AbstractServlet<CustomerModel> {
 		
 		} else if(customerId.equals("")) {
 		
-			List<CustomerModel> results = getList(customerService, req, resp);
+			List<CustomerModel> results = new ArrayList<>();
+			if (sLimit.matches("^\\d+$")){
+				int limit = Integer.parseInt(sLimit);
+				if(sOffset.matches("^\\d+$")) {
+					int offset = Integer.parseInt(sOffset);
+					results = customerService.listCustomers(offset , limit );							
+				} else {
+					results = customerService.listCustomers(limit);							
+				}
+			} else {
+				results = customerService.listCustomers();	
+			}
 			mapper.writeValue(resp.getOutputStream(), results);
+		
 		} else {			
 		
 			ObjectNode message = mapper.createObjectNode();

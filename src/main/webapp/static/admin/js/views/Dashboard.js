@@ -1,6 +1,7 @@
 import { myChart, config, config2 } from "/OrganicStore/static/admin/js/myChart.js";
 import AbstractView from "/OrganicStore/static/admin/js/views/AbstractView.js";
-import TableUtil from "/OrganicStore/static/admin/js/utils.js";
+// import TableUtil from "/OrganicStore/static/admin/js/utils.js";
+import {AddSortByClickEvent} from "/OrganicStore/static/common/utils.js";
 export default class Dashboard extends AbstractView {
 	constructor(params) {
 		super(params);
@@ -313,12 +314,14 @@ export default class Dashboard extends AbstractView {
         
         `;
         elem.innerHTML= content ; 
-        TableUtil.addClickEventToSort();
-        myChart.drawChart(config);
-        myChart.drawChart(config2);	
+        // TableUtil.addClickEventToSort();
+        AddSortByClickEvent();
+       
 
 	}
 	getScript() {
+        myChart.drawChart(config);
+        myChart.drawChart(config2);	
 	}
 }
 

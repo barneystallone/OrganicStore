@@ -26,6 +26,14 @@ public class CustomerService implements ICustomerService {
 	public void delete(CustomerModel customer) {
 		customerDAO.delete(customer);
 	}
+	@Override
+	public CustomerModel get(int id) {
+		return customerDAO.get(id);
+	}
+	@Override
+	public List<CustomerModel> list(Integer... params) {
+		return customerDAO.listCustomers(params);
+	}
 	
 	
 }

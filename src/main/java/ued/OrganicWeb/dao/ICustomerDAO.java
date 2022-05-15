@@ -14,5 +14,6 @@ public interface ICustomerDAO {
 	int save(CustomerModel customer);
 	void update(CustomerModel customer);
 	void delete(CustomerModel customer);
+	CustomerModel get(int id);
 
 }
