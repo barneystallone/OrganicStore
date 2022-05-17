@@ -25,7 +25,7 @@ public class testCategoryDAO {
 	
 	@Test
 	public void testListCategory() {
-		List<CategoryModel> list = categoryDAO.listCategories();
+		List<CategoryModel> list = categoryDAO.list();
 		
 		assertNotNull(list);
 	}
@@ -40,7 +40,7 @@ public class testCategoryDAO {
 		category.setName("????");
 		category.setId(24);
 		categoryDAO.update(category);
-		category= categoryDAO.listCategories(6,1).get(0);
+		category= categoryDAO.list(6,1).get(0);
 		assertEquals("????", category.getName());
 	}
 	

@@ -37,14 +37,14 @@ public class testCustomerDAO {
 
 	@Test
 	public void testListAllCustomers() {
-		List<CustomerModel> result = customerDAO.listCustomers();
+		List<CustomerModel> result = customerDAO.list();
 		
 		customer = result.get(1);
 		assertEquals("Nguyễn Văn B", customer.getName());
 	}
 	@Test
 	public void testListCustomers() {
-		List<CustomerModel> result = customerDAO.listCustomers(2,3);
+		List<CustomerModel> result = customerDAO.list(2,3);
 
 		customer = result.get(2);
 		assertEquals("Nguyễn Văn C", customer.getName());

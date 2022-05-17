@@ -31,14 +31,14 @@ public class ProductService implements IProductService{
 		return productDAO.get(id);
 	}
 
-	@Override
-	public List<ProductModel> listProducts(Integer... params) {
-		return productDAO.listProducts(params);
-	}
+//	@Override
+//	public List<ProductModel> listProducts(Integer... params) {
+//		return productDAO.listProducts(params);
+//	}
 
 	@Override
 	public List<ProductModel> list(Integer... params) {
-		return productDAO.listProducts(params);
+		return productDAO.list(params);
 	}
 	
 }

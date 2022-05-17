@@ -2,6 +2,9 @@ package ued.OrganicWeb.model;
 
 import java.util.Base64;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"image"})
 public class ProductModel extends AbstractModel {
 	private String name;
 	private String description;

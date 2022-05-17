@@ -11,10 +11,10 @@ import java.util.List;
 
 import org.apache.naming.java.javaURLContextFactory;
 
-import ued.OrganicWeb.dao.IGenericDAO;
+import ued.OrganicWeb.dao.IAbstractDAO;
 import ued.OrganicWeb.mapper.MapModel;
 
-public class AbstractDAO<T> implements IGenericDAO<T> {
+public class AbstractDAO<T> implements IAbstractDAO<T> {
 
 	public Connection getConnection() {
 		try {
@@ -182,5 +182,43 @@ public class AbstractDAO<T> implements IGenericDAO<T> {
 		
 	}
 
+	@Override
+	public int rowCount(StringBuilder sql, Object... params) {
+		Connection conn = getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int id=0;
+		if (conn != null) {
+			try {
+				stmt = conn.prepareStatement(sql.toString());
+				setParams(stmt, params);
+				rs = stmt.executeQuery();
+				
+				while (rs.next()) {
+					id = rs.getInt(1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+					if (stmt != null) {
+						stmt.close();
+					}
+					if (rs != null) {
+						rs.close();
+					}
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+
+		}
+
+		return id;
+	}
+	
 
 }

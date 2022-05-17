@@ -11,10 +11,10 @@ public class CategoryService implements ICategoryService {
 
 	private ICategoryDAO categoryDAO = CategoryDAO.getInstance();
 
-	@Override
-	public List<CategoryModel> listCategories(Integer... params) {
-		return categoryDAO.listCategories(params);
-	}
+//	@Override
+//	public List<CategoryModel> listCategories(Integer... params) {
+//		return categoryDAO.listCategories(params);
+//	}
 	public int save(CategoryModel customer) {
 		return categoryDAO.save(customer);
 	}
@@ -32,7 +32,11 @@ public class CategoryService implements ICategoryService {
 	}
 	@Override
 	public List<CategoryModel> list(Integer... params) {
-		return categoryDAO.listCategories(params);
+		return categoryDAO.list(params);
+	}
+	@Override
+	public int getRowCount() {
+		return categoryDAO.getRowCount();
 	}
 	
 	

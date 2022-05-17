@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,13 +15,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ued.OrganicWeb.model.CategoryModel;
 import ued.OrganicWeb.service.ICategoryService;
-import ued.OrganicWeb.utils.HttpUtil;
+import ued.OrganicWeb.utils.RestUtil;
 
 /**
  *	HP 
  */
 @WebServlet(urlPatterns = {"/api-category"})
-public class CategoryAPI extends AbstractServlet<CategoryModel> {
+public class CategoryAPI extends HttpServlet {
 	@Inject
 	private ICategoryService categoryService;
 	
@@ -35,13 +36,17 @@ public class CategoryAPI extends AbstractServlet<CategoryModel> {
 
 		ObjectMapper mapper = new ObjectMapper();
 		String categoryId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
-		
-		if (categoryId.matches("^\\d+$")) {
+		if (req.getParameter("count")!=null) {
+			int count = categoryService.getRowCount();
+			ObjectNode data = mapper.createObjectNode();
+			data.put("count", count);
+			mapper.writeValue(resp.getOutputStream(), data);
+		}else if (categoryId.matches("^\\d+$")) {
 			CategoryModel result = categoryService.get(Integer.parseInt(categoryId));
 			mapper.writeValue(resp.getOutputStream(), result);
 			
 		} else if(categoryId.equals("")) {
-			List<CategoryModel> results = getList(categoryService, req, resp);
+			List<CategoryModel> results = RestUtil.getList(categoryService, req, resp);
 			mapper.writeValue(resp.getOutputStream(), results);
 		} else {
 			mapper.writeValue(resp.getOutputStream(), "Invalid category id");
@@ -51,7 +56,7 @@ public class CategoryAPI extends AbstractServlet<CategoryModel> {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
-		CategoryModel categoryModel = HttpUtil.of(req.getReader()).toModel(CategoryModel.class);
+		CategoryModel categoryModel = RestUtil.of(req.getReader()).toModel(CategoryModel.class);
 		int id = categoryService.save(categoryModel);
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode data = mapper.createObjectNode();
@@ -62,7 +67,7 @@ public class CategoryAPI extends AbstractServlet<CategoryModel> {
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
-		CategoryModel categoryModel = HttpUtil.of(req.getReader()).toModel(CategoryModel.class);
+		CategoryModel categoryModel = RestUtil.of(req.getReader()).toModel(CategoryModel.class);
 		categoryService.update(categoryModel);
 		categoryModel = categoryService.get(categoryModel.getId());
 		ObjectMapper mapper = new ObjectMapper();
@@ -72,7 +77,7 @@ public class CategoryAPI extends AbstractServlet<CategoryModel> {
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
-		CategoryModel categoryModel = HttpUtil.of(req.getReader()).toModel(CategoryModel.class);
+		CategoryModel categoryModel = RestUtil.of(req.getReader()).toModel(CategoryModel.class);
 		categoryService.delete(categoryModel);
 //		ObjectMapper mapper = new ObjectMapper();
 	}

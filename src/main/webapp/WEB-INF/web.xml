@@ -18,6 +18,15 @@
   	<url-pattern>/*</url-pattern>
   </filter-mapping>
   
+  
+  <filter>
+		<filter-name>AuthFilter</filter-name>
+		<filter-class>ued.OrganicWeb.filter.AuthorizationFilter</filter-class>
+  </filter>
+	<filter-mapping>
+		<filter-name>AuthFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
+	</filter-mapping>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>index.html</welcome-file>

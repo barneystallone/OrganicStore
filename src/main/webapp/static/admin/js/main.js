@@ -1,7 +1,8 @@
 
 import Dashboard from "/OrganicStore/static/admin/js/views/Dashboard.js";
 import Customer from "/OrganicStore/static/admin/js/views/Customer.js";
-
+import Category from "/OrganicStore/static/admin/js/views/Category.js";
+import {Login} from "/OrganicStore/static/admin/js/views/login.js";
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
 
@@ -21,10 +22,10 @@ const navigateTo = url => {
 
 const router = () => {
     const routes = [
-        {path:"/OrganicStore/admin-home" , view : Dashboard},
-        {path:"/OrganicStore/admin-customer" , view : Customer},
-        // {path:"/category" , view : Category},
-        // {path:"/product" , view : Product}
+        {path:"/OrganicStore/admin/" , view : Dashboard},
+        {path:"/OrganicStore/admin/customer" , view : Customer},
+        {path:"/OrganicStore/admin/category" , view : Category},
+        // {path:"/OrganicStore/login" , view : Login}
     ]
     const mapRouteMatchs = routes.map(route => {
         return {
@@ -39,13 +40,16 @@ const router = () => {
             route: routes[0],
             result: [location.pathname]
         };
+        navigateTo("/OrganicStore/admin/");
     }
-
     const view = new match.route.view(getParams(match));
-	    // document.querySelector(".main").innerHTML =  view.getHtml();
-    view.getHtml(document.querySelector(".main"));
+    // if(location.pathname!="/OrganicStore/login"){
+    //     document.querySelector("body").classList.remove("hidden");
+    // }
+    // view.getAsync();
+    // view.getHtml();
 		
-    view.getScript();
+    // view.getScript();
 };
 
 window.addEventListener("popstate", router);

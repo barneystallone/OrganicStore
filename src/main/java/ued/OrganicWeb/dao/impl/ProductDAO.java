@@ -20,7 +20,7 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 	}
 
 	@Override
-	public List<ProductModel> listProducts(Integer... params) {
+	public List<ProductModel> list(Integer... params) {
 		StringBuilder sql = new StringBuilder("Select * from product");
 		int len = params.length;
 		if(len > 0) {
@@ -80,6 +80,12 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 	public ProductModel get(int id) {
 		StringBuilder sql = new StringBuilder("select * from product where id = ?");
 		return super.get(sql, new ProductMapper(), id);
+	}
+
+	@Override
+	public int getRowCount() {
+		StringBuilder sql = new StringBuilder("select count(id) from product");
+		return rowCount(sql);
 	}
 	
 }

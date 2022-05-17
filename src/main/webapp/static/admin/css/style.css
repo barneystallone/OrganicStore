@@ -44,6 +44,8 @@ body {
     box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
     border-radius: 20px;
     overflow:auto;
+    width: fit-content;
+    margin: auto;
 }
 .cardHeader {
     display: flex;
@@ -69,7 +71,7 @@ body {
     background-color: var(--white);
     overflow: auto;
     border-radius: 8px;
-
+    min-height: 450px;
     width: 100%;
     border-collapse: collapse;
     box-shadow: 3px 8px 25px rgba(0, 0, 0, 0.18);
@@ -156,6 +158,7 @@ body {
 }
 .edit {
     cursor: pointer;
+    text-align: center;
 }
 .edit a 
 {
@@ -881,4 +884,81 @@ input::-webkit-inner-spin-button {
 
 .d-none {
     display:none;
+}
+
+/* pagination */
+.pagination {
+    margin : 20px auto 0;
+}
+.pagination ul{
+    box-shadow: 0 7px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    background: #fefefe;
+    color: var(--green);
+    padding: 8px ;
+    border-radius: 30px;
+    width: fit-content;
+    
+}
+.pagination ul li {
+    list-style: none;
+    line-height: 45px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    user-select: none;
+}
+.pagination li.number {
+    height: 45px;
+    width: 45px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.pagination li.btn {
+    padding: 0 20px;
+    cursor: pointer;
+    background-color: #fefefe;
+    min-width: 90px;
+    color: var(--green);
+}
+
+.pagination li.prev {
+    border-radius: 25px 5px 5px 25px;
+}
+.pagination li.next {
+    border-radius: 5px 25px 25px 5px;
+}
+
+.pagination li.dots {
+    cursor: default;
+    font-size:22px
+}
+
+.pagination li.active,
+.pagination li.number:hover,
+.pagination li.btn:hover {
+    background: var(--green);
+    color: #fff;
+}
+
+/* login */
+.login-form {
+    width: 350px;
+}
+.login-form input {
+    margin-top: 10px ;
+}
+.login-form__links {
+    margin: 0 auto 5px;
+    text-align: center;
+}
+
+.login-form__link {
+    font-size: 0.9em;
+    color: #008067;
+    text-decoration: none;
+}
+
+.hidden {
+    visibility: hidden;
 }

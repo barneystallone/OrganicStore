@@ -11,10 +11,10 @@ public class CustomerService implements ICustomerService {
 
 	private ICustomerDAO customerDAO = CustomerDAO.getInstance();
 
-	@Override
-	public List<CustomerModel> listCustomers(Integer... params) {
-		return customerDAO.listCustomers(params);
-	}
+//	@Override
+//	public List<CustomerModel> listCustomers(Integer... params) {
+//		return customerDAO.listCustomers(params);
+//	}
 	public int save(CustomerModel customer) {
 		return customerDAO.save(customer);
 	}
@@ -32,7 +32,7 @@ public class CustomerService implements ICustomerService {
 	}
 	@Override
 	public List<CustomerModel> list(Integer... params) {
-		return customerDAO.listCustomers(params);
+		return customerDAO.list(params);
 	}
 	
 	

@@ -17,13 +17,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ued.OrganicWeb.model.CustomerModel;
 import ued.OrganicWeb.service.ICustomerService;
-import ued.OrganicWeb.utils.HttpUtil;
+import ued.OrganicWeb.utils.RestUtil;
 
 /**
  * HP
  */
 @WebServlet(urlPatterns = { "/api-customer" })
-public class CustomerAPI extends AbstractServlet<CustomerModel> {
+public class CustomerAPI extends HttpServlet{
 	@Inject
 	private ICustomerService customerService;
 
@@ -49,11 +49,12 @@ public class CustomerAPI extends AbstractServlet<CustomerModel> {
 	 */
 		
 		// full access 
-		resp.setHeader("Access-Control-Allow-Origin","*");
 		
 		ObjectMapper mapper = new ObjectMapper();
 		req.setCharacterEncoding("UTF-8");
+		resp.setHeader("Access-Control-Allow-Origin","*");
 		resp.setContentType("application/json");
+		
 		String customerId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
 		
 		if (customerId.matches("^\\d+$")) {
@@ -63,7 +64,7 @@ public class CustomerAPI extends AbstractServlet<CustomerModel> {
 		
 		} else if(customerId.equals("")) {
 		
-			List<CustomerModel> results = getList(customerService, req, resp);
+			List<CustomerModel> results = RestUtil.getList(customerService, req, resp);
 			mapper.writeValue(resp.getOutputStream(), results);
 		} else {			
 		
@@ -79,7 +80,7 @@ public class CustomerAPI extends AbstractServlet<CustomerModel> {
 		ObjectMapper mapper = new ObjectMapper();
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
-		CustomerModel customer = HttpUtil.of(req.getReader()).toModel(CustomerModel.class);
+		CustomerModel customer = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 		int id = customerService.save(customer);
 
 		 ObjectNode idObject = mapper.createObjectNode();
@@ -92,7 +93,7 @@ public class CustomerAPI extends AbstractServlet<CustomerModel> {
 		ObjectMapper mapper = new  ObjectMapper();
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
-		CustomerModel customer = HttpUtil.of(req.getReader()).toModel(CustomerModel.class);
+		CustomerModel customer = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 		customerService.update(customer);
 		customer = customerService.get(customer.getId());
 		mapper.writeValue(resp.getOutputStream(), customer);
@@ -100,7 +101,7 @@ public class CustomerAPI extends AbstractServlet<CustomerModel> {
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
-		CustomerModel customer = HttpUtil.of(req.getReader()).toModel(CustomerModel.class);
+		CustomerModel customer = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 		customerService.delete(customer);
 	}
 }

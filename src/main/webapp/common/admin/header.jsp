@@ -15,7 +15,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${root}/admin-home" data-link>
+                    <a href="${root}/admin/home" data-link>
                         <span class="icon">
                             <ion-icon class="icon-outline" name="home-outline"></ion-icon>
                             <ion-icon class="icon-full" name="home"></ion-icon>
@@ -24,7 +24,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${root}/admin-customer" data-link>
+                    <a href="${root}/admin/customer" data-link>
                         <span class="icon">
                             <ion-icon class="icon-outline" name="person-outline"></ion-icon>
                             <ion-icon class="icon-full" name="person"></ion-icon>
@@ -33,7 +33,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="${root}/admin/category" data-link>
                         <span class="icon">
                             <ion-icon name="book-outline" class="icon-outline"></ion-icon>
                             <ion-icon name="book" class="icon-full"></ion-icon>
@@ -43,7 +43,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="${root}/login" data-link>
                         <span class="icon">
                             <ion-icon class="icon-outline" name="restaurant-outline"></ion-icon>
                             <ion-icon class="icon-full" name="restaurant"></ion-icon>

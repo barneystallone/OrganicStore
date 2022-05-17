@@ -25,7 +25,7 @@ public class CustomerDAO extends AbstractDAO<CustomerModel> implements ICustomer
 	
 	
 	@Override
-	public List<CustomerModel> listCustomers(Integer... params) {
+	public List<CustomerModel> list(Integer... params) {
 		StringBuilder sql = new StringBuilder("Select c.*,a.city,a.district,a.subdistrict");
 		sql.append(" from Customer as c join area as a on c.area_id = a.id");
 		int len = params.length;
@@ -93,6 +93,12 @@ public class CustomerDAO extends AbstractDAO<CustomerModel> implements ICustomer
 		
 		return super.get(sql, new CustomerMapper(), id);
 		
+	}
+
+	@Override
+	public int getRowCount() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	

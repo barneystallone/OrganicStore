@@ -22,7 +22,7 @@ public class CategoryDAO extends AbstractDAO<CategoryModel> implements ICategory
 	
 	
 	@Override
-	public List<CategoryModel> listCategories(Integer... params) {
+	public List<CategoryModel> list(Integer... params) {
 		StringBuilder sql = new StringBuilder("Select * from category ");
 		int len = params.length;
 		if(len > 0) {
@@ -70,6 +70,12 @@ public class CategoryDAO extends AbstractDAO<CategoryModel> implements ICategory
 	public CategoryModel get(int id) {
 		StringBuilder sql = new StringBuilder("Select * from category where id = ?");
 		return super.get(sql, new CatergoryMapper(), id);
+	}
+
+	@Override
+	public int getRowCount() {
+		StringBuilder sql = new StringBuilder("select count(id) from category");
+		return rowCount(sql);
 	}
 	
 	

@@ -27,7 +27,7 @@ public class testProductDAO {
 	
 	@Test
 	public void testListProducts() {
-		List<ProductModel> list = productDAO.listProducts();
+		List<ProductModel> list = productDAO.list();
 		String path ="F:\\OneDrive - Danang University of Education\\Downloads\\images\\a.jpg";
 		String imagePath ="F:\\OneDrive - Danang University of Education\\Downloads\\images\\broccoli.jpg";
 		try {

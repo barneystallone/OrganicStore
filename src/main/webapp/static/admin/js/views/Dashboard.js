@@ -6,7 +6,8 @@ export default class Dashboard extends AbstractView {
 	constructor(params) {
 		super(params);
 		this.setTitle("Dashboard");
-        
+        this.getHtml();
+        this.getScript();
 	}
     
 	createTable() {
@@ -56,7 +57,7 @@ export default class Dashboard extends AbstractView {
             tBody.insertAdjacentHTML("afterbegin",rowHtml) ; 
         }).catch(error => console.log(error));
 	}
-	getHtml(elem) {
+	getHtml() {
 		let content = `
         <div class="cardBox">
             <div class="card">
@@ -313,7 +314,7 @@ export default class Dashboard extends AbstractView {
         </div>
         
         `;
-        elem.innerHTML= content ; 
+        this.mainElement.innerHTML= content ; 
         // TableUtil.addClickEventToSort();
         AddSortByClickEvent();
        
