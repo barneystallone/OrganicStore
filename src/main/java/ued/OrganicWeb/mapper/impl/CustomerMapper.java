@@ -21,6 +21,7 @@ public class CustomerMapper implements MapModel<CustomerModel>{
 				customer.setCity(rs.getString("city"));
 				customer.setDistrict(rs.getString("district"));
 				customer.setSubDistrict(rs.getString("subdistrict"));
+				customer.setAreaId(rs.getInt("area_id"));
 				return customer;
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

@@ -41,6 +41,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.connector.version}</version>
+
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

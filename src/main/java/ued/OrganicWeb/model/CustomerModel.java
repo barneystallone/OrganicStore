@@ -9,8 +9,14 @@ public class CustomerModel extends AbstractModel {
 	private String houseStreet;
 	private String district;
 	private String subDistrict;
+	private int areaId;
 	
-	
+	public int getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
+	}
 	public String getName() {
 		return name;
 	}

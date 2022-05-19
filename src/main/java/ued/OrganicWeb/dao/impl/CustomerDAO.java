@@ -23,76 +23,82 @@ public class CustomerDAO extends AbstractDAO<CustomerModel> implements ICustomer
 		return instance;
 	}
 	
+	
 	@Override
-	public List<CustomerModel> listCustomers(Integer... params) {
-		StringBuilder sql = new StringBuilder("select * from ViewCustomers ");
+	public List<CustomerModel> list(Integer... params) {
+		StringBuilder sql = new StringBuilder("Select c.*,a.city,a.district,a.subdistrict");
+		sql.append(" from Customer as c join area as a on c.area_id = a.id");
 		int len = params.length;
 		if (len>0) {
-			sql = new StringBuilder("select v.* from  ");
-			StringBuilder sql2 = new StringBuilder(" (select id from customer ");
-			String sql3 = ") c join ViewCustomers v on v.id = c.id";
-			
 			int maxLen = Math.min(len, 2);
-			String[] arr = { " LIMIT ?"," order by id " ," where id >= ?" }; 
+			String[] arr = { " LIMIT ?"," order by c.id " ," where c.id >= ?" }; 
 			
 			/**	len = 1 -> LIMIT  	: 	len =2 -> OFFSET, LIMIT */
 			for (int i = maxLen  ; i >= 0 ; i--) {
-				sql2.append(arr[i]);
+				sql.append(arr[i]);
 			}
-			sql.append(sql2.toString()).append(sql3);
 			return query(sql, new CustomerMapper(), params);
 		}
+		
 		return query(sql,new CustomerMapper());
+	
 	}
-
+	
 	@Override
 	public int save(CustomerModel c) {
-		StringBuilder sql = new StringBuilder("CALL add_customer"
-							+ "(?, ?, ?, ?, ?, ?, ?)");
-	return insert( sql, c.getName(),c.getEmail(),c.getPhoneNumber()
-			,c.getHouseStreet(),c.getSubDistrict(),c.getDistrict(),c.getCity());
-				
+		StringBuilder sql = new StringBuilder("insert into customer(");
+		String sql2 = ") values (?,?,?,?,?)";
+		int len = Constants.CUSTOMER_TITLE.length;
+		for(int i=0;i<len-1;i++) {
+			sql.append(Constants.CUSTOMER_TITLE[i]).append(",");
+		}
+		sql.deleteCharAt(sql.length()-1).append(sql2);
+
+		return insert( sql, c.getName(),c.getEmail(),c.getPhoneNumber()
+				,c.getHouseStreet(),c.getAreaId());
+					
 	}
 	
 	@Override
 	public void delete(CustomerModel customer) {
 		StringBuilder sql = new StringBuilder("DELETE FROM CUSTOMER WHERE ID  = ?");
-		super.update(sql,customer.getId());
-		
+		super.update(sql,customer.getId());	
 	}
 	
-
-	@Override
 	public void update(CustomerModel customer) {
 		StringBuilder sql = new StringBuilder("Update customer set ");
-		StringBuilder sql2 = new StringBuilder(" area_id = (select id from area where "
-				+ "subdistrict = ? and district = ? and city = ?) , ");
-		String sql3 = " where id = ? ;";
+		int len  = Constants.CUSTOMER_TITLE.length;
+		for(int i=0;i<len-1;i++) {	
+			sql.append(Constants.CUSTOMER_TITLE[i]).append(" = ? , ");
+		}
+		sql.deleteCharAt(sql.length() - 2 ).append(" where id = ?");
 		List<Object> fields = new ArrayList<>();
 		fields.add(customer.getName());
 		fields.add(customer.getEmail());
 		fields.add(customer.getPhoneNumber());
 		fields.add(customer.getHouseStreet());
-
-		List<Object> fieldUpdate = new ArrayList<>();
-		int len = fields.size();
-
-		for(int i=0;i<len;i++) {
-			if (fields.get(i)!=null) {
-				sql.append(Constants.CUSTOMER_TITLE[i]).append(" = ? , ");
-				fieldUpdate.add(fields.get(i));
-			}
-		}
-		if (customer.getCity()!= null) {
-			sql.append(sql2);
-			fieldUpdate.add(customer.getSubDistrict());
-			fieldUpdate.add(customer.getDistrict());
-			fieldUpdate.add(customer.getCity());
-		}
-		fieldUpdate.add(customer.getId());
-		sql.deleteCharAt(sql.length() - 2 ).append(sql3);
+		fields.add(customer.getAreaId());
+		fields.add(customer.getId());
 		
-		super.update(sql, fieldUpdate.toArray(new Object[0]));
+		super.update(sql, fields.toArray(new Object[0]));
+	
+	}
+
+
+	@Override
+	public CustomerModel get(int id) {
+		StringBuilder sql = new StringBuilder("Select c.*,a.city,a.district,a.subdistrict ");
+		sql.append("from Customer as c join area as a on c.area_id = a.id") ;
+		sql.append(" where c.id = ?"); 
+		
+		return super.get(sql, new CustomerMapper(), id);
+		
+	}
+
+	@Override
+	public int getRowCount() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	

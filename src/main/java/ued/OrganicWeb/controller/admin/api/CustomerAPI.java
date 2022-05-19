@@ -2,7 +2,6 @@ package ued.OrganicWeb.controller.admin.api;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,13 +17,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ued.OrganicWeb.model.CustomerModel;
 import ued.OrganicWeb.service.ICustomerService;
-import ued.OrganicWeb.utils.HttpUtil;
+import ued.OrganicWeb.utils.RestUtil;
 
 /**
  * HP
  */
-@WebServlet(urlPatterns = { "/api-customer-admin" })
-public class CustomerAPI extends HttpServlet {
+@WebServlet(urlPatterns = { "/api-customer" })
+public class CustomerAPI extends HttpServlet{
 	@Inject
 	private ICustomerService customerService;
 
@@ -50,28 +49,30 @@ public class CustomerAPI extends HttpServlet {
 	 */
 		
 		// full access 
-		resp.setHeader("Access-Control-Allow-Origin","*");
 		
 		ObjectMapper mapper = new ObjectMapper();
 		req.setCharacterEncoding("UTF-8");
+		resp.setHeader("Access-Control-Allow-Origin","*");
 		resp.setContentType("application/json");
-		String sLimit  = (req.getParameter("limit")==null) ? "" : req.getParameter("limit");
-		String sOffset  = (req.getParameter("offset")==null) ? "" : req.getParameter("offset");
-
-		List<CustomerModel> results = new ArrayList<>();
-		if (sLimit.matches("^\\d+$")){
-			int limit = Integer.parseInt(sLimit);
-			if(sOffset.matches("^\\d+$")) {
-				int offset = Integer.parseInt(sOffset);
-				results = customerService.listCustomers(offset , limit );							
-			} else {
-				results = customerService.listCustomers(limit);							
-			}
-		} else {
-			results = customerService.listCustomers();	
+		
+		String customerId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
+		
+		if (customerId.matches("^\\d+$")) {
+			
+			CustomerModel result = customerService.get(Integer.parseInt(customerId));
+			mapper.writeValue(resp.getOutputStream(), result);
+		
+		} else if(customerId.equals("")) {
+		
+			List<CustomerModel> results = RestUtil.getList(customerService, req, resp);
+			mapper.writeValue(resp.getOutputStream(), results);
+		} else {			
+		
+			ObjectNode message = mapper.createObjectNode();
+			message.put("Message", "Invalid ID");
+			mapper.writeValue(resp.getOutputStream(), message);
+			
 		}
-
-		mapper.writeValue(resp.getOutputStream(), results);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class CustomerAPI extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
-		CustomerModel customer = HttpUtil.of(req.getReader()).toModel(CustomerModel.class);
+		CustomerModel customer = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 		int id = customerService.save(customer);
 
 		 ObjectNode idObject = mapper.createObjectNode();
@@ -89,14 +90,18 @@ public class CustomerAPI extends HttpServlet {
 	}
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ObjectMapper mapper = new  ObjectMapper();
 		req.setCharacterEncoding("UTF-8");
-		CustomerModel customer = HttpUtil.of(req.getReader()).toModel(CustomerModel.class);
+		resp.setContentType("application/json");
+		CustomerModel customer = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 		customerService.update(customer);
+		customer = customerService.get(customer.getId());
+		mapper.writeValue(resp.getOutputStream(), customer);
 	}
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
-		CustomerModel customer = HttpUtil.of(req.getReader()).toModel(CustomerModel.class);
+		CustomerModel customer = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 		customerService.delete(customer);
 	}
 }

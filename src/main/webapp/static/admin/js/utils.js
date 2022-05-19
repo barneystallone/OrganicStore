@@ -3,22 +3,17 @@
  */
 export default class TableUtil {
     constructor() { }
-    /**
-     * Sort HTML Table
-     * 
-     * @param {table}  table The table to sort
-     * @param {column} column The index of the column to sort
-     * @param {asc} asc default asc sorting
-     * @param {options} options Options is object  {type :"th"} or {type:"td"}
-     */
+    
     static sortTableByColumn(table, column, asc = true, options = { type: 'td' }) {
 
         // thead td or thead th
+
         const colTag = options.type
         const typeSort = asc ? 1 : -1;
         const tbody = table.tBodies[0];
         const rows = Array.from(tbody.querySelectorAll('tr'));
 
+        // a-> current , b-> prev , -1 -> swap, 0 -> nothing
         const sortedRows = rows.sort((a, b) => {
             const aColText = a.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
             const bColText = b.querySelector(`td:nth-child(${column + 1})`).textContent.trim();

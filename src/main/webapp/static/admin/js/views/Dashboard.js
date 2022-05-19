@@ -1,14 +1,18 @@
-import AbstractView from "/OrganicStore/static/admin/js/views/AbstractView.js";
-import TableUtil from "/OrganicStore/static/admin/js/utils.js";
 import { myChart, config, config2 } from "/OrganicStore/static/admin/js/myChart.js";
+import AbstractView from "/OrganicStore/static/admin/js/views/AbstractView.js";
+// import TableUtil from "/OrganicStore/static/admin/js/utils.js";
+import {AddSortByClickEvent} from "/OrganicStore/static/common/utils.js";
 export default class Dashboard extends AbstractView {
 	constructor(params) {
 		super(params);
 		this.setTitle("Dashboard");
+        this.getHtml();
+        this.getScript();
 	}
+    
 	createTable() {
         const html = `
-            <div class="data-table-wrapper ">
+            <div class="data-table-wrapper " >
                 <div class="data-table">
                     <div class="cardHeader">
                         <h2>Customer</h2>
@@ -54,7 +58,7 @@ export default class Dashboard extends AbstractView {
         }).catch(error => console.log(error));
 	}
 	getHtml() {
-		return `
+		let content = `
         <div class="cardBox">
             <div class="card">
                 <div>
@@ -310,13 +314,15 @@ export default class Dashboard extends AbstractView {
         </div>
         
         `;
+        this.mainElement.innerHTML= content ; 
+        // TableUtil.addClickEventToSort();
+        AddSortByClickEvent();
+       
+
 	}
 	getScript() {
-		myChart.drawChart(config);
-		myChart.drawChart(config2);
-		TableUtil.addClickEventToSort();
-
-		
+        myChart.drawChart(config);
+        myChart.drawChart(config2);	
 	}
 }
 
