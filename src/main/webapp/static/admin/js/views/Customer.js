@@ -185,77 +185,7 @@ export default class Customer extends AbstractView {
 
         })
     }
-    // AddEventListener(){
-        
-    //     const subDistrictElem = document.querySelector("#subDistrict");
-    //     const districtElem = document.querySelector("#district");
-    //     const cityElem = document.querySelector("#city");
 
-    //     initArea(cityElem,districtElem,subDistrictElem);
-
-    //     const nameElem = document.querySelector("#name");
-    //     const emailElem = document.querySelector("#email");
-    //     const houseStreetElem = document.querySelector("#houseStreet");
-    //     const phoneNumberElem = document.querySelector("#phoneNumber");
-    //     const idElem = document.querySelector("#cId");
-    //     const flatten = arr => [].concat(...arr);
-    //     const saveELem = document.querySelector("#modal-btn");
-
-    //     // fetch data -> modal
-    //     document.querySelectorAll(".edit").forEach(elem=>{            
-    //         elem.addEventListener('click',e=>{
-    //             const id = Number(elem.dataset.id);
-    //             const url = `http://localhost:8080/OrganicStore/api-customer?id=${id}`;
-    //             fetch(url)
-    //                 .then ( res => res.json())
-    //                 .then (data => {
-    //                     document.querySelector(".modal-header span").innerText = `#${data.id}`;
-    //                     nameElem.value = data.name;
-    //                     emailElem.value = data.email;
-    //                     houseStreetElem.value = data.houseStreet;
-    //                     phoneNumberElem.value = data.phoneNumber;
-    //                     idElem.innerText = `${data.id}`;
-    //                     const subSelected = subDistrictElem.querySelector(`option[value='${data.areaId}']`);
-    //                     subSelected.selected = true;;
-    //                     districtElem.querySelector(`option[value="${subSelected.getAttribute("districtIndex")}"]`).selected = true;
-    //                 })
-    //         })
-
-    //     })
-
-    //     // Edit customer , update row table
-    //     saveELem.addEventListener('click',e => {
-    //         e.preventDefault();     // button type default = submit
-    //         const payLoad = {
-    //             id : Number(idElem.innerText),
-    //             name : nameElem.value,
-    //             email: emailElem.value,
-    //             phoneNumber : phoneNumberElem.value,
-    //             houseStreet : houseStreetElem.value,
-    //             areaId : Number(subDistrictElem.value)
-    //         }
-
-    //         fetch("http://localhost:8080/OrganicStore/api-customer",{
-    //             method: "PUT",
-    //             body  : JSON.stringify(payLoad)    
-    //         })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             const rowData = document.querySelector(`td[data-id='${data.id}']`).closest("tr");
-    //             const cellSet = [...rowData.children];
-    //             const updataSet = flatten([[...cellSet[1].children],cellSet[2],cellSet[3]]);
-    //             const dataValues = [data.name, data.email, data.phoneNumber,
-    //                 `${data.houseStreet}, ${data.subDistrict}, ${data.district}, ${data.city}`]
-                
-    //             updataSet.map((e,index)=>e.innerText=dataValues[index]);
-    //         })
-
-    //     })
-
-    //     AddAreaEventListener(districtElem,subDistrictElem);
-    //     this.popupModal(document.querySelector(".modal"));
-
-    // }
 
     getHtml(){
         this.mainElement.classList.add("d-none");
@@ -312,7 +242,8 @@ export default class Customer extends AbstractView {
                     </table>
                 </div>
             </div>`
-            this.mainElement.insertAdjacentHTML("afterbegin",content) ; 
+            this.mainElement.innerHTML = content ; 
+            // this.mainElement.insertAdjacentHTML("afterbegin",content) ; 
             this.mainElement.insertAdjacentHTML("beforeend",this.modal);
             this.AddModalEvent();
     }

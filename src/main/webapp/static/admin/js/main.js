@@ -42,17 +42,10 @@ const router = () => {
         };
         navigateTo("/OrganicStore/admin/");
     }
-    const view = new match.route.view(getParams(match));
-    // if(location.pathname!="/OrganicStore/login"){
-    //     document.querySelector("body").classList.remove("hidden");
-    // }
-    // view.getAsync();
-    // view.getHtml();
-		
-    // view.getScript();
+    new match.route.view(getParams(match)); // get view
 };
 
-window.addEventListener("popstate", router);
+window.addEventListener("popstate", router ,true);
 
 document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
@@ -66,6 +59,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     router();
+
+    // Logout -> refresh history api
+    document.querySelector('.navigation li:last-child a').addEventListener('click',(e)=>{
+		e.preventDefault();
+        fetch(e.target.closest("a").href,{method:'GET'})
+        .then(() => {
+            history.go(0);
+        })
+	})
 });
 
 

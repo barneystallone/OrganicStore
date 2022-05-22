@@ -6,4 +6,5 @@ import ued.OrganicWeb.model.ProductModel;
 
 public interface IProductService extends IGenericService<ProductModel>{
 //	List<ProductModel> listProducts(Integer... params);
+	List<ProductModel> listDiscountProduct();
 }

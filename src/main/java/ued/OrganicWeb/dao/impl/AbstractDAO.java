@@ -1,18 +1,23 @@
 package ued.OrganicWeb.dao.impl;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.naming.java.javaURLContextFactory;
 
 import ued.OrganicWeb.dao.IAbstractDAO;
 import ued.OrganicWeb.mapper.MapModel;
+import ued.OrganicWeb.utils.RestUtil;
+import ued.OrganicWeb.utils.SessionUtil;
 
 public class AbstractDAO<T> implements IAbstractDAO<T> {
 
@@ -45,6 +50,9 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 				}
 				else if (param instanceof byte[]){
 					 stmt.setBytes(i+1, (byte[]) param);
+				}
+				else if (param instanceof Date) {
+					stmt.setDate(i+1, new java.sql.Date(((Date) param).getTime()));
 				}
 				
 
@@ -135,19 +143,39 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 		ResultSet rs =null;
 		if (conn != null) {
 			try {
-				stmt = conn.prepareStatement(sql.toString(),stmt.RETURN_GENERATED_KEYS);
+				stmt = conn.prepareStatement(sql.toString(),Statement.RETURN_GENERATED_KEYS);
 				setParams(stmt, params);
 				stmt.executeUpdate();
 //				
 				rs = stmt.getGeneratedKeys();
 				
+//				int[] a= 
 				if (rs.next()) {
 					// getGeneratedKeys
 					return rs.getInt(1);
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
-				return 0;
+				if(e.getSQLState().equals("45000")) {
+					StringBuilder message =RestUtil.message;
+					message.delete(0,RestUtil.message.length());
+					message.append("45000 ").append(e.getMessage());
+				}else {
+					e.printStackTrace();					
+				}
+				return -1;
+			} finally {
+				try {
+					conn.close();
+					
+					if (stmt != null) {
+						stmt.close();
+					}
+					if (rs != null) {
+						rs.close();
+					}
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
 			}
 			
 		}
@@ -167,9 +195,8 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 				e.printStackTrace();
 			} finally {
 				try {
-					if (conn != null) {
-						conn.close();
-					}
+					conn.close();
+					
 					if (stmt != null) {
 						stmt.close();
 					}
@@ -201,9 +228,8 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 				e.printStackTrace();
 			} finally {
 				try {
-					if (conn != null) {
-						conn.close();
-					}
+					conn.close();
+					
 					if (stmt != null) {
 						stmt.close();
 					}

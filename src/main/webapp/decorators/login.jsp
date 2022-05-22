@@ -25,10 +25,21 @@
                         Save
                     </button>
                 </div>
+
                 <div class="login-form__links">
-                    <a class="login-form__link" href="/OrganicStore/admin/home">Forgot your password?</a>
+                    <a class="login-form__link" href="#">Forgot your password?</a>
                 </div>
             </div>
         </form>
+        <script defer type="text/javascript">
+         setTimeout(()=>{
+            if("${message}" != ""){
+                 alert("${message}");        		
+             }
+            if(location.href.match(/\?\w+$/g)){
+                location.href=location.href.replace(/\?\w+/g,"");
+            }
+         },100);
+        </script>
     </body>
 </html>

@@ -14,13 +14,15 @@
 
 
 <!-- Js Plugins -->
-<script src="${root}/static/web/js/jquery-3.3.1.min.js"></script>
-<script src="${root}/static/web/js/bootstrap.min.js"></script>
-<script src="${root}/static/web/js/jquery.nice-select.min.js"></script>
-<script src="${root}/static/web/js/jquery-ui.min.js"></script>
-<script src="${root}/static/web/js/jquery.slicknav.js"></script>
-<script src="${root}/static/web/js/mixitup.min.js"></script>
-<script src="${root}/static/web/js/owl.carousel.min.js"></script>
+<script type="module" src="${root}/static/web/js/index.js"></script>
+<script defer src="${root}/static/web/js/jquery-3.3.1.min.js"></script>
+<script defer src="${root}/static/web/js/bootstrap.min.js"></script>
+<script defer src="${root}/static/web/js/jquery.nice-select.min.js"></script>
+<script defer src="${root}/static/web/js/jquery-ui.min.js"></script>
+<script defer src="${root}/static/web/js/jquery.slicknav.js"></script>
+<script defer src="${root}/static/web/js/mixitup.min.js"></script>
+<script defer src="${root}/static/web/js/owl.carousel.min.js"></script>
+<script defer src="${root}/static/web/js/main.js"></script>
 
 <!-- Google Font -->
 <link
@@ -55,16 +57,18 @@
 	<!-- header  -->
 	<%@ include file="/common/web/header.jsp"%>
 	<!-- header -->
+	<div class="main">
 
-	<dec:body />
+	</div>
 
 	<!-- footer  -->
 	<%@ include file="/common/web/footer.jsp"%>
 	<!-- footer -->
 
 	<!-- custom js -->
-	<script src="${root}/static/web/js/main.js">"></script>
-
+	
+	
+	
 
 </body>
 

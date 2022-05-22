@@ -6,12 +6,14 @@ export default class Dashboard extends AbstractView {
 	constructor(params) {
 		super(params);
 		this.setTitle("Dashboard");
+        // this.createTable();
         this.getHtml();
         this.getScript();
 	}
     
 	createTable() {
-        const html = `
+        const html =
+        `
             <div class="data-table-wrapper " >
                 <div class="data-table">
                     <div class="cardHeader">

@@ -87,5 +87,10 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 		StringBuilder sql = new StringBuilder("select count(id) from product");
 		return rowCount(sql);
 	}
-	
+
+	@Override
+	public List<ProductModel> listDiscountProduct() {
+		StringBuilder sql = new StringBuilder("select * from product  where saleOff>0 order by saleOff");
+		return query(sql, new ProductMapper());
+	}
 }

@@ -38,6 +38,10 @@ public class CategoryService implements ICategoryService {
 	public int getRowCount() {
 		return categoryDAO.getRowCount();
 	}
+	@Override
+	public List<CategoryModel> listParentCategory() {
+		return categoryDAO.listParentCategory();
+	}
 	
 	
 }

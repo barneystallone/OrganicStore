@@ -3,6 +3,7 @@
     <!-- Any urls that are excluded will never be decorated by Sitemesh -->
     <excludes>
         <pattern>/api*</pattern>
+        <pattern>/static*</pattern>
     </excludes>
     
     <!-- apply Sitemesh default template -->
