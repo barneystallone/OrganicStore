@@ -55,19 +55,22 @@ export default class Shopping  extends AbstractViewWithCart{
         this.mainElement.querySelectorAll('.list__product .addSP').forEach(e=>{
             e.addEventListener('click',evt=>{
                 
-                const   base64Img = e.closest('.col-lg-4').querySelector('.set-bg').getAttribute('data-setbg'),
-                name = e.dataset.name,
+                const    
+                        base64Img = e.closest('.col-lg-4').querySelector('.set-bg').getAttribute('data-setbg'),
+                        name =e.dataset.name,
                         id = e.dataset.id*1,
                         price = e.dataset.price*1;
-                        let options = {
-                            name : name,
+
+                let options = {
+                    name : name,
                     price: price,
                     base64Img: base64Img
                 }
                 this.addToCart(id,1,options).then(data=>{
-                    console.log({data});
-                }).catch(err=>{console.log(err)});
-                // evt.preventDefault();
+                    this.ToggleToast();
+                }).catch(err=>{
+                    this.ToggleToast(false);
+                });
                
             })
 
@@ -84,7 +87,7 @@ export default class Shopping  extends AbstractViewWithCart{
                         format = this.currencyFormat(price),
                         old_format = this.currencyFormat(item.price);
                     let  sliderContent = `
-                    <a href="/OrganicStore/details/${item.id}" data-link class="latest-product__item" data-id="${item.id} data-price="${price}">
+                    <a href="/OrganicStore/details/${item.id}" data-link class="latest-product__item" data-id="${item.id}" data-price="${price}">
                         <div class="latest-product__item__pic">
                             <img src="data:image/jpg;base64,${item.base64Images}" alt="">
                         </div>
@@ -130,9 +133,9 @@ export default class Shopping  extends AbstractViewWithCart{
                                         <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                         <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
                                         <li>
-                                            <a href="#" data-id="${item.id}" data-price="${price}" data-name="${item.name}" class="addSP" >
+                                            <button  data-id="${item.id}" data-price="${price}" data-name="${item.name}" class="addSP" >
                                                 <i class="fa fa-shopping-cart"></i>
-                                            </a>
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>
@@ -150,7 +153,7 @@ export default class Shopping  extends AbstractViewWithCart{
                                 <ul class="product__item__pic__hover">
                                     <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                     <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
-                                    <li><a href="#" data-id="${item.id}" data-price="${price}" class="addSP"><i class="fa fa-shopping-cart"></i></a></li>
+                                    <li><button type="button" data-id="${item.id}" data-price="${price}" data-name="${item.name}" class="addSP"><i class="fa fa-shopping-cart"></i></button></li>
                                 </ul>
                             </div>
                             <div class="product__item__text" >
@@ -164,7 +167,7 @@ export default class Shopping  extends AbstractViewWithCart{
                    
                 }
                 this.mainElement.querySelector('.list__product').append(...product);
-                this.addListener();
+                
 
                 document.querySelectorAll('[data-setbg]').forEach(e=>{
                     const bg = e.dataset.setbg;
@@ -178,6 +181,7 @@ export default class Shopping  extends AbstractViewWithCart{
                         }
                     })
                 })
+                this.addListener();
                 resolve(product);
             }).catch(err => reject(err));
         })

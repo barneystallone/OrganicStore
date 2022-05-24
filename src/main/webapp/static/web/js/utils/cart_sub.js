@@ -8,6 +8,7 @@ class CartSub {
     }
     addListener(){
         this.elements.main.addEventListener('click',(e)=>{
+            
             if(e.target.closest('.mount-btn')) {
                 const   input = e.target.closest('.mount').querySelector('input'),
                         oldValue = input.value*1;
@@ -67,7 +68,8 @@ class CartSub {
         const   subTotalElem = cart_right.querySelector('b.tongtiensp'),
                 quantity = cart_right.querySelector('.mount input').value,
                 totalPriceElem = this.elements.footer.querySelector('span.total b'),
-                price = cart_right.querySelector('.sale b').innerText.replace(/\./g,""),
+                // price = cart_right.querySelector('.sale b').innerText.replace(/,/g,""),
+                price = cart_right.querySelector('.sale b').innerText.replace(/,/g,""),
                 oldValue = subTotalElem.innerText.replace(/,/g,"")*1;
         let newValue =  quantity * price,
             totalPrice = totalPriceElem.innerText.replace(/,/g,"")*1;

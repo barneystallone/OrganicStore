@@ -41,10 +41,10 @@ import AbstractViewWithCart from "/OrganicStore/static/web/js/views/AbstractView
                      <li><b>Weight</b> <span>0.5 kg</span></li>
                      <li><b>Share on</b>
                          <div class="share">
-                             <a href="#"><i class="fa fa-facebook"></i></a>
-                             <a href="#"><i class="fa fa-twitter"></i></a>
-                             <a href="#"><i class="fa fa-instagram"></i></a>
-                             <a href="#"><i class="fa fa-pinterest"></i></a>
+                             <a href="#"><i class="fa-brands fa-facebook-f"></i></i></a>
+                             <a href="#"><i class="fa-brands fa-twitter"></i></i></a>
+                             <a href="#"><i class="fa-brands fa-linkedin-in"></i></i></a>
+                             <a href="#"><i class="fa-brands fa-pinterest-p"></i></i></a>
                          </div>
                      </li>
                  </ul>
@@ -174,37 +174,45 @@ export default class DetailItem  extends AbstractViewWithCart{
         this.setTitle('Shopping');
         this.getView();
         this.orderClick = 1;
-    }
-    ToggleToast(toast){
-        const 
-            closeIcon = toast.querySelector(".close"),
-            progress = toast.querySelector(".progress");
-            toast.setAttribute('index',this.orderClick++);
-        document.querySelector('.toast-wrapper').insertAdjacentElement('afterbegin',toast);
-        let timer1, timer2;
 
-        toast.classList.add("active");
-        progress.classList.add("active");
+    }
+    // ToggleToast(toast){
+    //     const 
+    //         closeIcon = toast.querySelector(".close"),
+    //         wrapper = document.querySelector('.toast-wrapper'),
+    //         progress = toast.querySelector(".progress");
+    //         toast.setAttribute('index',this.orderClick++);
+    //     wrapper.classList.remove('display-none');  
+    //     wrapper.innerHTML ="";
+    //     wrapper.insertAdjacentElement('afterbegin',toast);
         
-        timer1 = setTimeout(() => {
-            toast.classList.remove("active");
-        }, 4200); //1s = 1000 milliseconds
+    //     clearTimeout(this.timer1);
+    //     clearTimeout(this.timer2);
 
-        timer2 = setTimeout(() => {
-            progress.classList.remove("active");
-        }, 4500);
-        closeIcon.addEventListener("click", () => {
-            toast.classList.remove("active");
+    //     toast.classList.add("active");
+    //     progress.classList.add("active");
+        
+    //     this.timer1 = setTimeout(() => {
+    //         toast.classList.remove("active");
+    //     }, 4200); //1s = 1000 milliseconds
+
+    //     this.timer2 = setTimeout(() => {
+    //         progress.classList.remove("active");
+    //         wrapper.classList.add('display-none');
+    //     }, 4500);
+    //     closeIcon.addEventListener("click", () => {
+    //         toast.classList.remove("active");
             
-            setTimeout(() => {
-            progress.classList.remove("active");
-            }, 300);
+    //         setTimeout(() => {
+    //             progress.classList.remove("active");
+    //             wrapper.classList.add('display-none');
+    //         }, 300);
 
-            clearTimeout(timer1);
-            clearTimeout(timer2);
-        });
+    //         clearTimeout(this.timer1);
+    //         clearTimeout(this.timer2);
+    //     });
 
-    }
+    // }
     addOrderEvent(){
         document.querySelector('.add-btn').addEventListener('click',()=>{
             let payLoad = {
@@ -224,9 +232,9 @@ export default class DetailItem  extends AbstractViewWithCart{
             }
          
             this.addToCart(this.params[":id"],quantity,options).then(data=>{
-                this.ToggleToast(this.creatElementFromText(toastCheck));
+                this.ToggleToast();
             }).catch(()=>{
-                this.ToggleToast(this.creatElementFromText(toastFail));
+                this.ToggleToast(false);
             })
 
                // fetch(" http://localhost:8080/OrganicStore/api-shopping-cart",{

@@ -3506,14 +3506,6 @@ ol {
     position: fixed;
     top: 25px;
     right: 30px;
-    /* border-radius: 12px;
-    background: #fff;
-    padding: 20px 35px 20px 25px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-    border-left: 6px solid #198754;
-    overflow: hidden;
-    transform: translateX(calc(100% + 30px));
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.35); */
 }
 .toast__custom{
     position: relative;
@@ -3522,10 +3514,18 @@ ol {
     background: #fff;
     padding: 20px 35px 20px 25px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-    border-left: 6px solid #198754;
+    /* border-left: 6px solid #198754; */
     overflow: hidden;
     transform: translateX(calc(100% + 30px));
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.35);
+}
+.toast__custom.danger{
+    
+    border-left: 6px solid #f32013;
+}
+.toast__custom.success{
+    
+    border-left: 6px solid #198754;
 }
 
 .toast__custom.active{
@@ -3600,7 +3600,13 @@ ol {
     right: 0;
     height: 100%;
     width: 100%;
-    background-color: #198754;
+}
+
+.toast__custom.danger .progress:before {
+	background-color: #f32013;
+}
+.toast__custom.success .progress:before {
+	background-color: #198754;
 }
 
 .progress.active:before{
@@ -3784,4 +3790,8 @@ ul.cart_subs li,
 #showcartresprice {
 	text-align: right;
 	padding-right: 10px;
+}
+
+.display-none {
+	display: none;
 }
