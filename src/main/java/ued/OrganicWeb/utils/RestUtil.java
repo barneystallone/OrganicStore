@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ued.OrganicWeb.service.IGenericService;
@@ -31,9 +32,17 @@ public class RestUtil {
 		}
 		return null;
 	}
-	public <T> List<T> toListModels(Class<T[]> classType) {
+//	public <T> List<T> toListModels(Class<T[]> classType) {
+//		try {
+//			return Arrays.asList(new ObjectMapper().readValue(this.strJson, classType));
+//		} catch (JsonProcessingException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
+	public <T> T toListModels(TypeReference<T> classType) {
 		try {
-			return Arrays.asList(new ObjectMapper().readValue(this.strJson, classType));
+			return new ObjectMapper().readValue(this.strJson, classType);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return null;

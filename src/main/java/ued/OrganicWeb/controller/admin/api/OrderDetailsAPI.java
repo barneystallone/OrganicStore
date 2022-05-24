@@ -49,7 +49,9 @@ public class OrderDetailsAPI extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode resData = mapper.createObjectNode();
 		
-		List<OrderDetailsModel> listModels = RestUtil.of(req.getReader()).toListModels(OrderDetailsModel[].class);
+//		List<OrderDetailsModel> listModels = RestUtil.of(req.getReader()).toListModels(OrderDetailsModel[].class);
+		List<OrderDetailsModel> listModels = RestUtil.of(req.getReader())
+				.toListModels(new TypeReference<>(){});
 		
 		orderDetailsService.saveMulti(listModels);
 		if(RestUtil.message.toString().startsWith("45000")) {

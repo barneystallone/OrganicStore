@@ -1,4 +1,5 @@
-import AbstractView from "/OrganicStore/static/web/js/views/AbstractView.js";
+import AbstractViewWithCart from "/OrganicStore/static/web/js/views/AbstractViewWithCart.js";
+// import AbstractView from "/OrganicStore/static/web/js/views/AbstractView.js";
 
  const html = `
  <section class="product-details spad">
@@ -33,8 +34,7 @@ import AbstractView from "/OrganicStore/static/web/js/views/AbstractView.js";
                          </div>
                      </div>
                  </div>
-                 <a href="#" class="primary-btn">ADD TO CARD</a>
-                 <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                 <button type="button" class="primary-btn add-btn" style="border:none;">ADD TO CARD</button>
                  <ul>
                      <li><b>Availability</b> <span>In Stock</span></li>
                      <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
@@ -134,19 +134,119 @@ import AbstractView from "/OrganicStore/static/web/js/views/AbstractView.js";
  </div>
 </section>
 `;
-export default class DetailItem  extends AbstractView{
+const toastCheck= `
+    <div class="toast__custom">
+        <div class="toast__custom-content">
+            <i class="fas fa-solid fa-check check"></i>
+
+            <div class="message">
+                <span class="text text-1">Success</span>
+                <span class="text text-2">Đã cập nhật giỏ hàng</span>
+            </div>
+        </div>
+        <i class="fa-solid fa-xmark close"></i>
+
+        <div class="progress"></div>
+    </div>
+`;
+const toastFail = `
+    <div class="toast__custom">
+    <div class="toast__custom-content">
+        <i class="fas fa-solid fa-xmark danger"></i>
+
+        <div class="message">
+            <span class="text text-1">Error</span>
+            <span class="text text-2">Chưa thể thêm vào giỏ hàng</span>
+        </div>
+    </div>
+    <i class="fa-solid fa-xmark close"></i>
+
+    <div class="progress"></div>
+    </div>
+`;
+export default class DetailItem  extends AbstractViewWithCart{
 
     constructor(params) {
         super(params);
-        this.loadProductData(5);
+        console.log(params[":id"].split(/[^\d]/g)[0].replace(/0+/g,"")*1);
+        this.productId = params[":id"].split(/[^\d]/g)[0].replace(/0+/g,"")*1;
+        this.loadProductData(this.productId);
         this.setTitle('Shopping');
         this.getView();
+        this.orderClick = 1;
+    }
+    ToggleToast(toast){
+        const 
+            closeIcon = toast.querySelector(".close"),
+            progress = toast.querySelector(".progress");
+            toast.setAttribute('index',this.orderClick++);
+        document.querySelector('.toast-wrapper').insertAdjacentElement('afterbegin',toast);
+        let timer1, timer2;
+
+        toast.classList.add("active");
+        progress.classList.add("active");
+        
+        timer1 = setTimeout(() => {
+            toast.classList.remove("active");
+        }, 4200); //1s = 1000 milliseconds
+
+        timer2 = setTimeout(() => {
+            progress.classList.remove("active");
+        }, 4500);
+        closeIcon.addEventListener("click", () => {
+            toast.classList.remove("active");
+            
+            setTimeout(() => {
+            progress.classList.remove("active");
+            }, 300);
+
+            clearTimeout(timer1);
+            clearTimeout(timer2);
+        });
+
+    }
+    addOrderEvent(){
+        document.querySelector('.add-btn').addEventListener('click',()=>{
+            let payLoad = {
+                product_id : document.querySelector('.product-details').dataset.id*1,
+                quantity : document.querySelector('.pro-qty input').value*1
+            }
+            const   quantity =  document.querySelector('.pro-qty input').value*1,
+                    name = document.querySelector('#sanPham').innerText,
+                    price = document.querySelector('.product__details__price').dataset.price,
+                    base64Img = document.querySelector('.product__details__pic__item--large').getAttribute('src');
+            
+            let options = {
+                name : name,
+                price: price,
+                base64Img: base64Img
+
+            }
+         
+            this.addToCart(this.params[":id"],quantity,options).then(data=>{
+                this.ToggleToast(this.creatElementFromText(toastCheck));
+            }).catch(()=>{
+                this.ToggleToast(this.creatElementFromText(toastFail));
+            })
+
+               // fetch(" http://localhost:8080/OrganicStore/api-shopping-cart",{
+            //     method : 'POST',
+            //     body : JSON.stringify(payLoad)
+            // })
+            // .then(res=>res.json())
+            // .then(()=>{
+            //     this.ToggleToast(this.creatElementFromText(toastCheck));
+            // })
+        })
     }
     loadProductData(id){
         fetch(`http://localhost:8080/OrganicStore/api-product?id=${id}`)
         .then(res=>res.json())
         .then(data=>{
+            let format = this.currencyFormat(data.price)
+                
             console.log(data);
+            document.querySelector('.product-details').setAttribute('data-id',data.id);
             let elem = document.querySelector('.product__details__pic__item');
             elem.appendChild(this.creatElementFromText(`
             <img class="product__details__pic__item--large"
@@ -156,15 +256,25 @@ export default class DetailItem  extends AbstractView{
             elem =  document.querySelector('.product__details__rating');
             elem.insertAdjacentHTML('beforebegin', 
                 `
-                    <h3>${data.name}</h3>
+                    <h3 id="sanPham">${data.name}</h3>
                 `
             );
-            elem.insertAdjacentHTML('beforeend',
+            if(data.saleOff>0){
+                let newPrice = data.price*(100-data.saleOff)/100,
+                    newformat = this.currencyFormat(newPrice);
+                elem.insertAdjacentHTML('afterend',
+                    `
+                    <div class="product__details__price" data-price="${newPrice}">${newformat}<span>${format}</span></div> 
+                    `
+                );
+            } else {
+                elem.insertAdjacentHTML('afterend',
                 `
-                <div class="product__details__price">${data.price}</div> 
+                <div class="product__details__price" data-price="${data.price}">${format}</div> 
                 `
             );
-
+            }
+            document.querySelector('.product__details__text ul li:first-child span').innerText = `${data.in_stock} sản phẩm`;
             elem = document.querySelector('.product__details__pic__slider.owl-carousel');
             for (let i=0;i<4;i++){
                 elem.appendChild(this.creatElementFromText(
@@ -199,6 +309,7 @@ export default class DetailItem  extends AbstractView{
     }
     getView() {
         this.mainElement.innerHTML = html;
+        this.addOrderEvent();
         var proQty = $('.pro-qty');
         proQty.prepend('<span class="dec qtybtn">-</span>');
         proQty.append('<span class="inc qtybtn">+</span>');
@@ -208,7 +319,6 @@ export default class DetailItem  extends AbstractView{
             if ($button.hasClass('inc')) {
                 var newVal = parseFloat(oldValue) + 1;
             } else {
-                // Don't allow decrementing below zero
                 if (oldValue > 0) {
                     var newVal = parseFloat(oldValue) - 1;
                 } else {
@@ -217,6 +327,19 @@ export default class DetailItem  extends AbstractView{
             }
             $button.parent().find('input').val(newVal);
         });
+        
+        document.querySelector('.pro-qty input').addEventListener('keydown',(e)=>{
+            let key =e.key;
+            if(!((key >= '0' && key <= '9')||key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace')){
+                e.preventDefault();
+            }
+        })
+        document.querySelector('.pro-qty input').addEventListener('keyup',(e)=>{
+            e.target.value = e.target.value.replace(/(^0+)(\d+)/g,"$2")
+           if(e.target.value==""){
+               e.target.value = "0";
+           }
+       })
         let elem = document.querySelector('.product__details__pic__item');
         while (elem.firstChild) {
             elem.removeChild(elem.firstChild);
@@ -225,6 +348,7 @@ export default class DetailItem  extends AbstractView{
         while(elem.firstChild){
             elem.removeChild(elem.firstChild);
         }
+        
     }
 
 }

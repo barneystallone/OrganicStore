@@ -725,13 +725,14 @@ input::-webkit-inner-spin-button {
 .modal-container {
     width: 500px;
     top: 10px;
+    margin-top: 35px;
     position: relative;
     background: #fff;
     border-radius: 8px;
     --growth-from:0.6;
     --growth-to:1;
     animation: growth ease 0.3s;
-    transform-origin: calc(100%) top;
+    transform-origin:   right ;
 
 }
 .modal-header {

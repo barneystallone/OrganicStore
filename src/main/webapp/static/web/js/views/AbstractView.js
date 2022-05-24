@@ -14,4 +14,7 @@ export default class AbstractView {
         template.innerHTML = html.trim();
         return template.content.firstElementChild;
     }
+    currencyFormat(price) {
+        return price.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
+    }
 }

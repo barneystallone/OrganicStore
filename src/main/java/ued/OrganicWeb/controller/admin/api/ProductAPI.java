@@ -50,7 +50,7 @@ public class ProductAPI extends HttpServlet {
 		String productId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
 		
 		if(req.getServletPath().startsWith("/api-product-discount")) {
-			List<ProductModel> results = RestUtil.getList(productService, req, resp);
+			List<ProductModel> results = productService.listDiscountProduct();
 			mapper.writeValue(resp.getOutputStream(), results);
 		} 
 		// api-product

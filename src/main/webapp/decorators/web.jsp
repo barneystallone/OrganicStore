@@ -33,9 +33,10 @@
 <link rel="stylesheet"
 	href="${root}/static/web/css/bootstrap.min.css"
 	type="text/css">
-<link rel="stylesheet"
+<!-- <link rel="stylesheet"
 	href="${root}/static/web/css/font-awesome.min.css"
-	type="text/css">
+	type="text/css"> -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 <link rel="stylesheet"
 	href="${root}/static/web/css/elegant-icons.css"
 	type="text/css">
@@ -61,13 +62,48 @@
 
 	</div>
 
+	<div class="toast-wrapper">
+		<!-- <div class="toast__custom">
+			<div class="toast__custom-content">
+				<i class="fas fa-solid fa-check check"></i>
+	
+				<div class="message">
+					<span class="text text-1">Success</span>
+					<span class="text text-2">aaaaaaaaaaaaaaaaaaaa</span>
+				</div>
+			</div>
+			<i class="fa-solid fa-xmark close"></i>
+	
+			<div class="progress"></div>
+		</div> -->
+	</div>
 	<!-- footer  -->
 	<%@ include file="/common/web/footer.jsp"%>
 	<!-- footer -->
 
 	<!-- custom js -->
-	
-	
+
+	<script>
+     /*
+        document.querySelectorAll('.mount').forEach(elem=>{
+            elem.addEventListener('click',e=>{
+                const   input = e.target.closest('.mount').querySelector('input'),
+                        oldValue = input.value*1;
+                
+                const isIncrease = e.target.closest('button').classList.contains('incr') ;
+                const isDecrease = e.target.closest('button').classList.contains('descr') ;
+                let newVal;
+                if(isIncrease) {
+                    newVal = oldValue+1;
+                    input.value = newVal;
+                } else if (isDecrease) {
+                    newVal = (oldValue>1) ? (oldValue - 1 ): 1;
+                    input.value = newVal;
+                }
+            })
+        })
+        */
+    </script>
 	
 
 </body>
