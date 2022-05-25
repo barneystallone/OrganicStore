@@ -141,84 +141,10 @@
 								<ul class="cart_subs">
 									<li class="first">
 										<ul id="showcartresitem" class="cart_page_content">
-											<!-- <li class="cart_info" id-cart="6341">
-												<div class="cart_info_left">
-													<div class="summary_cart">
-														<div class="cart_mobile">
-															<div class="left">
-																<img src="https://image.fmstyle.com.vn/images/products/783541_327698534_2201VDUFMF2241---4.jpg" alt="">
-															</div>
-															<div class="right">
-																<div class="top">
-																	<div class="title">
-																		<span class="name">Váy Nhung Hoa Cổ Bèo</span>
-																	</div>
-																	<div class="price_and_sale">
-																		<span class="sale"><b data-price-id="6341">265.000</b><span class="vnd"></span></span>
-																		<span class="price"></span>
-																	</div>
-																</div>
-																<div class="choose_size_and_mount">
-																	<div class="size">
-																		<span>Còn: 4</span>
-																		<div class="mount ">
-																			
-																			<button type="" class="descr mount-btn" data-price-id="6341"><i class="fas fa-minus"></i></button>
-																			<input type="text" class="change_mount" name="change_mount"  value="3">
-																			<button type="" class="incr mount-btn" data-price-id="6341"><i class="fas fa-plus"></i></button>
-																		</div>
-																	</div>
-																	<div class="total">
-																		<button value="6341" class="btn xoacart"> <i class="far fa-trash-alt trash_cart"></i></button>
-																		<span> Tổng cộng: <b class="tongtiensp" data-price-id="6341">795,000</b><span class="vnd"></span></span>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="cart_info" id-cart="5991">
-												<div class="cart_info_left">
-													<div class="summary_cart">
-														<div class="cart_mobile">
-															<div class="left">
-																<img src="https://image.fmstyle.com.vn/images/products/761047_1635597529.jpg" alt="">
-															</div>
-															<div class="right">
-																<div class="top">
-																	<div class="title">
-																		<span class="name">LEN NAM CỔ TRÒN THÊU MÀU NGỰC VAI</span>
-																	</div>
-																	<div class="price_and_sale">
-																		<span class="sale"><b data-price-id="5991">345.000</b><span class="vnd"></span></span>
-																		<span class="price"></span>
-																	</div>
-																</div>
-																<div class="choose_size_and_mount">
-																	<div class="size">
-																		<span>Còn: 4</span>
-																		<div class="mount">
-																			<button type="" class="descr mount-btn" data-price-id="5991"><i class="fas fa-minus"></i></button>
-																			<input type="text" class="change_mount" name="change_mount"  value="1">
-																			<button type="" class="incr mount-btn" data-price-id="5991"><i class="fas fa-plus"></i></button>
-																		</div>
-																	</div>
-																	<div class="total">
-																		<button value="5991" class="btn xoacart"> <i class="far fa-trash-alt trash_cart"></i></button>
-																		<span> Tổng cộng: <b class="tongtiensp" data-price-id="5991">345,000</b><span class="vnd"></span></span>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</li> -->
 											
 										</ul>
 									</li>
 									<li class="last">
-										<!--  <p>Đủ điều kiện nhận <span>VẬN CHUYỂN KINH TẾ MIỄN PHÍ!</span></p> -->
 										<div class="viewcart">
 											<div id="showcartresprice" class="price">
 												<div>
