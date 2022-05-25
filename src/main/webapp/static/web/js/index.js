@@ -30,10 +30,10 @@ const loader = ()=>{
 const router = () => {
     const routes = [
         // {path:"/OrganicStore/" , view : Home},
-        {path:"/OrganicStore/shopping/cart" , view : ShoppingCart},
         // {path:"/OrganicStore/details/:id/:a" , view : Details},
+        {path:"/OrganicStore/shopping" , view : Shopping},
         {path:"/OrganicStore/details/:id" , view : Details},
-        {path:"/OrganicStore/shopping" , view : Shopping}
+        {path:"/OrganicStore/shopping/cart" , view : ShoppingCart}
     ]
     const mapRouteMatchs = routes.map(route => {
         console.log(location.pathname.match(pathToRegex(route.path)));
@@ -50,9 +50,10 @@ const router = () => {
             result: [location.pathname]
         };
         navigateTo("/OrganicStore/shopping");
+    }else {
+        new match.route.view(getParams(match)); // get view
+        loader();
     }
-    new match.route.view(getParams(match)); // get view
-    loader();
     
 };
 
