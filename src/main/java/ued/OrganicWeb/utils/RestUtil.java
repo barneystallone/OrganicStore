@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ued.OrganicWeb.service.IGenericService;
@@ -17,7 +18,7 @@ import ued.OrganicWeb.service.IGenericService;
 public class RestUtil {
 
 	private String strJson;
-
+	public static StringBuilder message= new StringBuilder("a v");
 	public RestUtil(String strJson) {
 		this.strJson = strJson;
 	}
@@ -31,7 +32,22 @@ public class RestUtil {
 		}
 		return null;
 	}
-
+//	public <T> List<T> toListModels(Class<T[]> classType) {
+//		try {
+//			return Arrays.asList(new ObjectMapper().readValue(this.strJson, classType));
+//		} catch (JsonProcessingException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
+	public <T> T toListModels(TypeReference<T> classType) {
+		try {
+			return new ObjectMapper().readValue(this.strJson, classType);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	public static RestUtil of(BufferedReader reader) {
 		StringBuffer sb = new StringBuffer();
 		try {
@@ -44,6 +60,7 @@ public class RestUtil {
 		}
 		return new RestUtil(sb.toString());
 	}
+	// limit , offset
 	public static <T> List<T> getList(IGenericService<T> service,HttpServletRequest req, HttpServletResponse resp){
 		String sLimit  = (req.getParameter("limit")==null) ? "" : req.getParameter("limit");
 		String sOffset  = (req.getParameter("offset")==null) ? "" : req.getParameter("offset");

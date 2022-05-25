@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -19,12 +21,13 @@ import org.apache.commons.beanutils.BeanUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import ued.OrganicWeb.model.CustomerModel;
 import ued.OrganicWeb.model.ProductModel;
 import ued.OrganicWeb.service.IProductService;
 import ued.OrganicWeb.utils.FormDataUtil;
 import ued.OrganicWeb.utils.RestUtil;
 
-@WebServlet(urlPatterns = {"/api-product"})
+@WebServlet(urlPatterns = {"/api-product","/api-product-discount"})
 @MultipartConfig(maxFileSize = 16177215) 
 public class ProductAPI extends HttpServlet {
 	
@@ -46,11 +49,19 @@ public class ProductAPI extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		String productId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
 		
-		if (productId.matches("^\\d+$")) {
+		if(req.getServletPath().startsWith("/api-product-discount")) {
+			List<ProductModel> results = productService.listDiscountProduct();
+			mapper.writeValue(resp.getOutputStream(), results);
+		} 
+		// api-product
+		else if (productId.matches("^\\d+$")) {
 			ProductModel result = productService.get(Integer.parseInt(productId));
 			mapper.writeValue(resp.getOutputStream(), result);
 		} else if(productId.equals("")) {
 			List<ProductModel> results = RestUtil.getList(productService, req, resp);
+//			Map<Boolean, List<ProductModel>> result =
+//					results.stream().collect(Collectors.partitioningBy(e -> e.getSaleOff() > 0));
+//			System.out.println(result);
 			mapper.writeValue(resp.getOutputStream(), results);
 		} else {			
 		

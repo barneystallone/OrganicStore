@@ -21,7 +21,7 @@ public class AdminHomeServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		RequestDispatcher rd = req.getRequestDispatcher("../decorators/admin.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("/decorators/admin.jsp");
 		rd.forward(req, resp);
 	}	
 }

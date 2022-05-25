@@ -23,6 +23,15 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO{
 	public List<UserModel> list(Integer... params) {
 		StringBuilder sql = new StringBuilder("Select id, username, customer_id, "
 				+ "role_id,status from User ");
+		
+		int len = params.length;
+		if(len > 0) {
+			int maxLen = Math.min(len, 2);
+			String[] a = {" limit ? "," order by id" ," where id >= ?"};
+			for(int i = maxLen;i>=0;i--) {
+				sql.append(a[i]);
+			}
+		}
 		return super.query(sql, new UserMapper(),params);
 	}
 

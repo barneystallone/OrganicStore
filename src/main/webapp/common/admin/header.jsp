@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="${root}/logout">
                         <span class="icon">
                             <ion-icon class="icon-outline" name="log-out-outline"></ion-icon>
                             <ion-icon class="icon-full" name="log-out"></ion-icon>

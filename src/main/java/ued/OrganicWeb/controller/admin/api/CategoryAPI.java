@@ -33,24 +33,29 @@ public class CategoryAPI extends HttpServlet {
 		resp.setHeader("Access-Control-Allow-Origin","*");
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
-
 		ObjectMapper mapper = new ObjectMapper();
-		String categoryId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
-		if (req.getParameter("count")!=null) {
-			int count = categoryService.getRowCount();
-			ObjectNode data = mapper.createObjectNode();
-			data.put("count", count);
-			mapper.writeValue(resp.getOutputStream(), data);
-		}else if (categoryId.matches("^\\d+$")) {
-			CategoryModel result = categoryService.get(Integer.parseInt(categoryId));
-			mapper.writeValue(resp.getOutputStream(), result);
-			
-		} else if(categoryId.equals("")) {
-			List<CategoryModel> results = RestUtil.getList(categoryService, req, resp);
+		if( req.getParameter("type")!=null && req.getParameter("type").equals("parent")) {
+			List<CategoryModel> results = categoryService.listParentCategory();
 			mapper.writeValue(resp.getOutputStream(), results);
 		} else {
-			mapper.writeValue(resp.getOutputStream(), "Invalid category id");
+			String categoryId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
+			if (req.getParameter("count")!=null) {
+				int count = categoryService.getRowCount();
+				ObjectNode data = mapper.createObjectNode();
+				data.put("count", count);
+				mapper.writeValue(resp.getOutputStream(), data);
+			}else if (categoryId.matches("^\\d+$")) {
+				CategoryModel result = categoryService.get(Integer.parseInt(categoryId));
+				mapper.writeValue(resp.getOutputStream(), result);
+				
+			} else if(categoryId.equals("")) {
+				List<CategoryModel> results = RestUtil.getList(categoryService, req, resp);
+				mapper.writeValue(resp.getOutputStream(), results);
+			} else {
+				mapper.writeValue(resp.getOutputStream(), "Invalid category id");
+			}
 		}
+		
 	}
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

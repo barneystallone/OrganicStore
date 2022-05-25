@@ -19,5 +19,8 @@ public class SessionUtil {
 	public void put(HttpServletRequest req, String key, Object value) {
 		req.getSession().setAttribute(key, value);
 	}
+	public void remove(HttpServletRequest req, String key) {
+		req.getSession().removeAttribute(key);
+	}
 	
 }

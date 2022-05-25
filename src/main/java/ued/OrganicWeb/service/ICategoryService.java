@@ -7,4 +7,5 @@ import ued.OrganicWeb.model.CategoryModel;
 public interface ICategoryService extends IGenericService<CategoryModel>{
 //	List<CategoryModel> listCategories(Integer... params);	
 	int getRowCount();
+	List<CategoryModel> listParentCategory();
 }

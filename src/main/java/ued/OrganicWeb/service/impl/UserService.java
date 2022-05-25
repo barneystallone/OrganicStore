@@ -2,13 +2,15 @@ package ued.OrganicWeb.service.impl;
 
 import java.util.List;
 
+import ued.OrganicWeb.dao.IUserDAO;
 import ued.OrganicWeb.dao.impl.UserDAO;
 import ued.OrganicWeb.model.UserModel;
 import ued.OrganicWeb.service.IUserService;
 
 public class UserService implements IUserService {
 
-	UserDAO userDAO = UserDAO.getInstance();
+	private IUserDAO userDAO = UserDAO.getInstance();
+	
 	@Override
 	public List<UserModel> list(Integer... params) {
 		return userDAO.list(params);

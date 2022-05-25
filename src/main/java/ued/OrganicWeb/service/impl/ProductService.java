@@ -2,13 +2,14 @@ package ued.OrganicWeb.service.impl;
 
 import java.util.List;
 
+import ued.OrganicWeb.dao.IProductDAO;
 import ued.OrganicWeb.dao.impl.ProductDAO;
 import ued.OrganicWeb.model.ProductModel;
 import ued.OrganicWeb.service.IProductService;
 
 public class ProductService implements IProductService{
 
-	ProductDAO productDAO = ProductDAO.getInstance();
+	private IProductDAO productDAO = ProductDAO.getInstance();
 	
 	@Override
 	public int save(ProductModel model) {
@@ -39,6 +40,11 @@ public class ProductService implements IProductService{
 	@Override
 	public List<ProductModel> list(Integer... params) {
 		return productDAO.list(params);
+	}
+
+	@Override
+	public List<ProductModel> listDiscountProduct() {
+		return productDAO.listDiscountProduct();
 	}
 	
 }
