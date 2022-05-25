@@ -134,36 +134,7 @@ import AbstractViewWithCart from "/OrganicStore/static/web/js/views/AbstractView
  </div>
 </section>
 `;
-const toastCheck= `
-    <div class="toast__custom">
-        <div class="toast__custom-content">
-            <i class="fas fa-solid fa-check check"></i>
 
-            <div class="message">
-                <span class="text text-1">Success</span>
-                <span class="text text-2">Đã cập nhật giỏ hàng</span>
-            </div>
-        </div>
-        <i class="fa-solid fa-xmark close"></i>
-
-        <div class="progress"></div>
-    </div>
-`;
-const toastFail = `
-    <div class="toast__custom">
-    <div class="toast__custom-content">
-        <i class="fas fa-solid fa-xmark danger"></i>
-
-        <div class="message">
-            <span class="text text-1">Error</span>
-            <span class="text text-2">Chưa thể thêm vào giỏ hàng</span>
-        </div>
-    </div>
-    <i class="fa-solid fa-xmark close"></i>
-
-    <div class="progress"></div>
-    </div>
-`;
 export default class DetailItem  extends AbstractViewWithCart{
 
     constructor(params) {
@@ -173,78 +144,37 @@ export default class DetailItem  extends AbstractViewWithCart{
         this.loadProductData(this.productId);
         this.setTitle('Shopping');
         this.getView();
-        this.orderClick = 1;
 
     }
-    // ToggleToast(toast){
-    //     const 
-    //         closeIcon = toast.querySelector(".close"),
-    //         wrapper = document.querySelector('.toast-wrapper'),
-    //         progress = toast.querySelector(".progress");
-    //         toast.setAttribute('index',this.orderClick++);
-    //     wrapper.classList.remove('display-none');  
-    //     wrapper.innerHTML ="";
-    //     wrapper.insertAdjacentElement('afterbegin',toast);
-        
-    //     clearTimeout(this.timer1);
-    //     clearTimeout(this.timer2);
-
-    //     toast.classList.add("active");
-    //     progress.classList.add("active");
-        
-    //     this.timer1 = setTimeout(() => {
-    //         toast.classList.remove("active");
-    //     }, 4200); //1s = 1000 milliseconds
-
-    //     this.timer2 = setTimeout(() => {
-    //         progress.classList.remove("active");
-    //         wrapper.classList.add('display-none');
-    //     }, 4500);
-    //     closeIcon.addEventListener("click", () => {
-    //         toast.classList.remove("active");
-            
-    //         setTimeout(() => {
-    //             progress.classList.remove("active");
-    //             wrapper.classList.add('display-none');
-    //         }, 300);
-
-    //         clearTimeout(this.timer1);
-    //         clearTimeout(this.timer2);
-    //     });
-
-    // }
     addOrderEvent(){
-        document.querySelector('.add-btn').addEventListener('click',()=>{
-            let payLoad = {
-                product_id : document.querySelector('.product-details').dataset.id*1,
-                quantity : document.querySelector('.pro-qty input').value*1
-            }
-            const   quantity =  document.querySelector('.pro-qty input').value*1,
-                    name = document.querySelector('#sanPham').innerText,
-                    price = document.querySelector('.product__details__price').dataset.price,
-                    base64Img = document.querySelector('.product__details__pic__item--large').getAttribute('src');
-            
-            let options = {
-                name : name,
-                price: price,
-                base64Img: base64Img
+        document.querySelector('.add-btn').addEventListener('click',(e)=>{
+            if(e.target.closest('.add-btn').previousElementSibling.querySelector('.quantity input').value!="0"){
+                let payLoad = {
+                    product_id : document.querySelector('.product-details').dataset.id*1,
+                    quantity : document.querySelector('.pro-qty input').value*1
+                }
+                const   quantity =  document.querySelector('.pro-qty input').value*1,
+                        name = document.querySelector('#sanPham').innerText,
+                        price = document.querySelector('.product__details__price').dataset.price,
+                        base64Img = document.querySelector('.product__details__pic__item--large').getAttribute('src');
+                
+                let options = {
+                    name : name,
+                    price: price,
+                    base64Img: base64Img
+    
+                }
+             
+                DetailItem.addToCart(this.params[":id"],quantity,options).then(data=>{
+                    this.ToggleToast();
+                }).catch(()=>{
+                    this.ToggleToast(false);
+                })
 
-            }
-         
-            this.addToCart(this.params[":id"],quantity,options).then(data=>{
-                this.ToggleToast();
-            }).catch(()=>{
+            } else {
                 this.ToggleToast(false);
-            })
+            }
 
-               // fetch(" http://localhost:8080/OrganicStore/api-shopping-cart",{
-            //     method : 'POST',
-            //     body : JSON.stringify(payLoad)
-            // })
-            // .then(res=>res.json())
-            // .then(()=>{
-            //     this.ToggleToast(this.creatElementFromText(toastCheck));
-            // })
         })
     }
     loadProductData(id){
@@ -316,38 +246,39 @@ export default class DetailItem  extends AbstractViewWithCart{
         })
     }
     getView() {
-        this.mainElement.innerHTML = html;
+        this.elements.main.innerHTML = html;
         this.addOrderEvent();
-        var proQty = $('.pro-qty');
-        proQty.prepend('<span class="dec qtybtn">-</span>');
-        proQty.append('<span class="inc qtybtn">+</span>');
-        proQty.on('click', '.qtybtn', function() {
-            var $button = $(this);
-            var oldValue = $button.parent().find('input').val();
-            if ($button.hasClass('inc')) {
-                var newVal = parseFloat(oldValue) + 1;
-            } else {
-                if (oldValue > 0) {
-                    var newVal = parseFloat(oldValue) - 1;
-                } else {
-                    newVal = 0;
-                }
-            }
-            $button.parent().find('input').val(newVal);
-        });
+        this.AddMountButton();
+    //     var proQty = $('.pro-qty');
+    //     proQty.prepend('<span class="dec qtybtn">-</span>');
+    //     proQty.append('<span class="inc qtybtn">+</span>');
+    //     proQty.on('click', '.qtybtn', function() {
+    //         var $button = $(this);
+    //         var oldValue = $button.parent().find('input').val();
+    //         if ($button.hasClass('inc')) {
+    //             var newVal = parseFloat(oldValue) + 1;
+    //         } else {
+    //             if (oldValue > 0) {
+    //                 var newVal = parseFloat(oldValue) - 1;
+    //             } else {
+    //                 newVal = 0;
+    //             }
+    //         }
+    //         $button.parent().find('input').val(newVal);
+    //     });
         
-        document.querySelector('.pro-qty input').addEventListener('keydown',(e)=>{
-            let key =e.key;
-            if(!((key >= '0' && key <= '9')||key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace')){
-                e.preventDefault();
-            }
-        })
-        document.querySelector('.pro-qty input').addEventListener('keyup',(e)=>{
-            e.target.value = e.target.value.replace(/(^0+)(\d+)/g,"$2")
-           if(e.target.value==""){
-               e.target.value = "0";
-           }
-       })
+    //     document.querySelector('.pro-qty input').addEventListener('keydown',(e)=>{
+    //         let key =e.key;
+    //         if(!((key >= '0' && key <= '9')||key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace')){
+    //             e.preventDefault();
+    //         }
+    //     })
+    //     document.querySelector('.pro-qty input').addEventListener('keyup',(e)=>{
+    //         e.target.value = e.target.value.replace(/(^0+)(\d+)/g,"$2")
+    //        if(e.target.value==""){
+    //            e.target.value = "0";
+    //        }
+    //    })
         let elem = document.querySelector('.product__details__pic__item');
         while (elem.firstChild) {
             elem.removeChild(elem.firstChild);

@@ -71,17 +71,44 @@ const toastFail = `
 `;
 
 export default class AbstractViewWithCart extends AbstractView {
-
     constructor(params) {
         super(params);
-        // this.elements = {
-        //     // cart_subs : document.querySelector('.cart_subs'),
-        //     // main : document.querySelector('#showcartresitem'),
-        //     cart_info : this.creatElementFromText(cart_info),
-        // }
-    }
+        
+        this.getCartInSesssion()
+            .then(message=>console.log(message))
+            .catch(err=>console.log(err));
 
-    addToCart(idSanPham,quantity,options) {
+    }
+    getCartInSesssion(){
+        const showCart = document.querySelector('#showcartresitem');
+        while(showCart.firstChild){
+            showCart.removeChild(showCart.firstChild);
+        }
+        return new Promise((resolve,reject)=>{
+            fetch("http://localhost:8080/OrganicStore/api-shopping-cart")
+            .then(res=>res.json())
+            .then(data=>{
+                if(Array.isArray(data)){
+                    let options;
+                    data.forEach(item=>{
+                        options = {
+                            name : item.product.name,
+                            price:  item.product.price*(100-item.product.saleOff)/100,
+                            base64Img:  "data:image/jpg;base64,"+ item.product.base64Images
+                        }
+                        AbstractViewWithCart.AddCartPreview(
+                            // this.creatElementFromText(cartHtml),
+                            item.product_id,
+                            item.quantity,
+                            options 
+                        );
+                    })
+                }
+                resolve('success');
+            }).catch(err=>reject(err));
+        })
+    }
+    static addToCart(idSanPham,quantity,options,isUpdated=true) {
         let payLoad = {
             product_id : idSanPham*1,
             quantity :quantity*1
@@ -93,48 +120,62 @@ export default class AbstractViewWithCart extends AbstractView {
             })
             .then(res=>res.json())
             .then(data=>{
-                const cartInfo = this.creatElementFromText(cartHtml);
-                const item = document.querySelector(`.cart_info[id-cart="${idSanPham*1}"]`)
-                if(item==null) {
-                    cartInfo.setAttribute('id-cart',`${idSanPham*1}`);
-                    const 
-                        img = cartInfo.querySelector('.left img'),
-                        price = cartInfo.querySelector('span.sale b'),
-                        subPrice = cartInfo.querySelector('.total .tongtiensp'),
-                        mount = cartInfo.querySelector('.choose_size_and_mount .mount input'),
-                        total =document.querySelector('#showcartresprice .total b'),
-                        name =  cartInfo.querySelector('.right span.name');
-
-                    img.setAttribute('src',`${options.base64Img}`);
-                    name.textContent = options.name;
-                    price.textContent = (options.price*1).toLocaleString('vi-VN').replace(/\./g,",");
-                    mount.value = quantity;
-                    
-                    let totalPrice = total.textContent.replace(/,/g,"")*1;
-                    subPrice.textContent = (options.price * quantity).toLocaleString('vi-VN').replace(/\./g,",");
-                    total.textContent = (totalPrice + options.price * quantity).toLocaleString('vi-VN').replace(/\./g,",");
-
-                    document.querySelector('#showcartresitem').insertAdjacentElement('afterbegin',cartInfo);
-                } else {
-                    // const item = document.querySelector(`.cart_info[id-cart="${idSanPham*1}"]`);
-                    const 
-                        subPrice = item.querySelector('.total .tongtiensp'),
-                        mount = item.querySelector('.choose_size_and_mount .mount input'),
-                        total =document.querySelector('#showcartresprice .total b');
-                    
-                    mount.value = mount.value*1 + quantity;
-                    let oldSubValue = subPrice.textContent.replace(/,/g,"")*1,
-                        newSubValue = mount.value*options.price,
-                        oldTotalValue= total.textContent.replace(/,/g,"")*1;
-                    subPrice.textContent =newSubValue.toLocaleString('vi-VN').replace(/\./g,",");
-                    total.textContent = (oldTotalValue+ newSubValue-oldSubValue).toLocaleString('vi-VN').replace(/\./g,",")
-
+                if(isUpdated){
+                    const item = document.querySelector(`.cart_info[id-cart="${idSanPham*1}"]`);
+                    if(item) {
+                        AbstractViewWithCart.UpdateCartQuantity(item,{quantity: quantity, price: options.price});
+                    } else {
+                        AbstractViewWithCart.AddCartPreview(
+                            idSanPham,
+                            quantity,
+                            options 
+                        );
+                    }
                 }
                 resolve(data);
             }).catch(err=>reject(err));
         })
     }
 
+    static AddCartPreview(idSanPham,quantity,options) {
+        const template = document.createElement('template');
+        template.innerHTML = cartHtml.trim();
+        const cartInfo = template.content.firstElementChild;
+        cartInfo.setAttribute('id-cart',`${idSanPham*1}`);
+        const 
+            img = cartInfo.querySelector('.left img'),
+            price = cartInfo.querySelector('span.sale b'),
+            subPrice = cartInfo.querySelector('.total .tongtiensp'),
+            mount = cartInfo.querySelector('.choose_size_and_mount .mount input'),
+            total =document.querySelector('#showcartresprice .total b'),
+            name =  cartInfo.querySelector('.right span.name');
+
+        img.setAttribute('src',`${options.base64Img}`);
+        name.textContent = options.name;
+        price.textContent = (options.price*1).toLocaleString('vi-VN').replace(/\./g,",");
+        mount.value = quantity;
+        
+        let totalPrice = total.textContent.replace(/,/g,"")*1;
+        subPrice.textContent = (options.price * quantity).toLocaleString('vi-VN').replace(/\./g,",");
+        total.textContent = (totalPrice + options.price * quantity).toLocaleString('vi-VN').replace(/\./g,",");
+
+        document.querySelector('#showcartresitem').insertAdjacentElement('afterbegin',cartInfo);
+    } 
+
+    static UpdateCartQuantity(item,options) {
+        const 
+                subPrice = item.querySelector('.total .tongtiensp'),
+                mount = item.querySelector('.choose_size_and_mount .mount input'),
+                total =document.querySelector('#showcartresprice .total b');
+            
+            mount.value = mount.value*1 + options.quantity;
+            let oldSubValue = subPrice.textContent.replace(/,/g,"")*1,
+                newSubValue = mount.value*options.price,
+                oldTotalValue= total.textContent.replace(/,/g,"")*1;
+            subPrice.textContent =newSubValue.toLocaleString('vi-VN').replace(/\./g,",");
+            total.textContent = (oldTotalValue+ newSubValue-oldSubValue).toLocaleString('vi-VN').replace(/\./g,",")
+    }
+    
     ToggleToast(status=true){
         const 
             toast = status ? this.creatElementFromText(toastCheck) : this.creatElementFromText(toastFail),
@@ -173,5 +214,58 @@ export default class AbstractViewWithCart extends AbstractView {
             clearTimeout(this.timer2);
         });
 
+    }
+
+    static DeleteCart(item,idSanPham) {
+        return new Promise((resolve,reject)=>{
+            fetch(' http://localhost:8080/OrganicStore/api-shopping-cart',{
+                method : 'DELETE',
+                body : JSON.stringify({product_id : idSanPham})
+            })
+            .then(res=>res.json())
+            .then(message=>{
+                if(message.success){
+                    let subPrice = item.querySelector('.tongtiensp').textContent.replace(/,/g,""),
+                        totalPriceTag = document.querySelector('#showcartresprice .total b'),
+                        temp = totalPriceTag.textContent.replace(/,/g,"") - subPrice;
+                    console.log({subPrice,temp});
+                    totalPriceTag.textContent = ((temp>0) ? temp : 0).toLocaleString('vi-VN').replace(/\./g,",");
+                    item.remove();
+                }
+            })
+        })
+    }
+
+    AddMountButton () {
+        var proQty = $('.pro-qty');
+        proQty.prepend('<span class="dec qtybtn">-</span>');
+        proQty.append('<span class="inc qtybtn">+</span>');
+        proQty.on('click', '.qtybtn', function() {
+            var $button = $(this);
+            var oldValue = $button.parent().find('input').val();
+            if ($button.hasClass('inc')) {
+                var newVal = parseFloat(oldValue) + 1;
+            } else {
+                if (oldValue > 1) {
+                    var newVal = parseFloat(oldValue) - 1;
+                } else {
+                    newVal = 1;
+                }
+            }
+            $button.parent().find('input').val(newVal);
+        });
+        
+        document.querySelector('.pro-qty input').addEventListener('keydown',(e)=>{
+            let key =e.key;
+            if(!((key >= '0' && key <= '9')||key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace')){
+                e.preventDefault();
+            }
+        })
+        document.querySelector('.pro-qty input').addEventListener('keyup',(e)=>{
+            e.target.value = e.target.value.replace(/(^0+)(\d+)/g,"$2")
+           if(e.target.value==""){
+               e.target.value = "0";
+           }
+       })
     }
 }

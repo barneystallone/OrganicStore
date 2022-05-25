@@ -8,6 +8,8 @@ public class OrderDetailsModel {
 	private int subTotalPrice;
 	private int Order_id;
 	private int product_id;
+	private ProductModel product;
+	
 	
 	public OrderDetailsModel() {}
 	
@@ -26,6 +28,16 @@ public class OrderDetailsModel {
 		this.product_id = product_id;
 	}
 
+	
+
+	public ProductModel getProduct() {
+		return product;
+	}
+
+
+	public void setProduct(ProductModel product) {
+		this.product = product;
+	}
 
 
 	public int getQuantity() {

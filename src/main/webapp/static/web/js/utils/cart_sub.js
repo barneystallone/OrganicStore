@@ -1,3 +1,6 @@
+import AbstractViewWithCart from "/OrganicStore/static/web/js/views/AbstractViewWithCart.js";
+
+// const cartClass = new AbstractViewWithCart();
 class CartSub {
     constructor(cartSub) {
         this.elements = {
@@ -7,39 +10,70 @@ class CartSub {
         this.addListener();
     }
     addListener(){
+        let delay, oldInputValue;
         this.elements.main.addEventListener('click',(e)=>{
-            
+            if(e.target.closest('input')){
+                oldInputValue =  e.target.closest('input').value;
+            }
+            if(e.target.closest('.btn.xoacart')){
+                const cartDelete = e.target.closest('.cart_info');
+                AbstractViewWithCart.DeleteCart(cartDelete,cartDelete.getAttribute('id-cart'));
+            }
             if(e.target.closest('.mount-btn')) {
                 const   input = e.target.closest('.mount').querySelector('input'),
                         oldValue = input.value*1;
+
                 // this.addChangeEvent(input);
                 let button = e.target.closest('.mount-btn');
-                let newVal;
+                let quantity,
+                    price = input.closest('.right').querySelector('b[data-price-id]').innerText.replace(/,/g,"");
+                    
+
                 if(button.classList.contains('incr')) {
-                    newVal = oldValue+1;
-                    // input.value = newVal;
+                    quantity = 1;
                 } else if (button.classList.contains('descr')) {
-                    newVal = (oldValue>1) ? (oldValue - 1 ): 1;
+                    quantity = (oldValue>1) ? -1: 0;
                 }
-                input.value = newVal;
-                this.updateSubPrice(e.target.closest('.right'));
+                // update 
+                AbstractViewWithCart.addToCart(
+                    input.closest(`[id-cart]`).getAttribute('id-cart'),quantity, {price:price}
+                )
+
             }
         })
-        let delay;
-        this.elements.main.addEventListener('keyup',(e)=>{
+
+        this.elements.main.addEventListener('input',(e)=>{
+            
             const   input = e.target.closest('input.change_mount');
             if(input) {
-                input.value = input.value.replace(/^0+$/g,"");
-                input.value = input.value.replace(/^0+(\d+)/g,"$1")
-                if(input.value==""){
-                    delay = setTimeout(()=>{
-                        input.value = "1";
-                        this.updateSubPrice(e.target.closest('.right'));
-                    },500)
-                } else {
-                    this.updateSubPrice(e.target.closest('.right'));
-                }
+                clearTimeout(delay);
+                let quantity,
+                    price = input.closest('.right').querySelector('b[data-price-id]').innerText.replace(/,/g,"");
+                // const val = input.value;
 
+                delay = setTimeout(()=>{
+                    input.value = input.value.replace(/^0+(\d*)/g,"$1");
+                    if(input.value==""){ 
+                        input.value = "1";
+                        quantity =  input.value - oldInputValue;
+                        console.log(quantity);
+                        AbstractViewWithCart.addToCart(
+                            input.closest(`[id-cart]`).getAttribute('id-cart'),quantity, {price:price}, false
+                        )
+                        this.updateSubPrice(e.target.closest('.right'));
+                        oldInputValue = input.value;
+                        console.log({quantity});
+                    } else {
+                        quantity =  input.value - oldInputValue ;
+                    
+                        AbstractViewWithCart.addToCart(
+                            input.closest(`[id-cart]`).getAttribute('id-cart'),quantity, {price:price}, false
+                        )
+                        this.updateSubPrice(e.target.closest('.right'));
+                        oldInputValue = input.value;
+                        console.log({quantity});
+                    }
+                },500)                
             } else {
                 e.preventDefault();
             }
@@ -52,12 +86,7 @@ class CartSub {
                 let key = e.key;
                 if(!((key >= '0' && key <= '9')||key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace')) {
                     e.preventDefault();
-                } else {
-                    if(input.value=="" ){
-                        clearTimeout(delay);
-                    }
-                   
-                }
+                } 
             } else {
                 e.preventDefault();
             }

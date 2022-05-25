@@ -1,6 +1,7 @@
 import Shopping from "/OrganicStore/static/web/js/views/Shopping.js";
 import Details from "/OrganicStore/static/web/js/views/Details.js";
 import CartSub from "/OrganicStore/static/web/js/utils/cart_sub.js";
+import ShoppingCart from "/OrganicStore/static/web/js/views/ShoppingCartDetails.js";
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
 
@@ -29,7 +30,7 @@ const loader = ()=>{
 const router = () => {
     const routes = [
         // {path:"/OrganicStore/" , view : Home},
-        // {path:"/OrganicStore/admin/category" , view : Category},
+        {path:"/OrganicStore/shopping/cart" , view : ShoppingCart},
         // {path:"/OrganicStore/details/:id/:a" , view : Details},
         {path:"/OrganicStore/details/:id" , view : Details},
         {path:"/OrganicStore/shopping" , view : Shopping}

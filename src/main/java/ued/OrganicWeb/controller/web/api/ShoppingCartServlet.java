@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,12 +18,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import ued.OrganicWeb.model.OrderDetailsModel;
+import ued.OrganicWeb.service.IProductService;
 import ued.OrganicWeb.utils.RestUtil;
 import ued.OrganicWeb.utils.SessionUtil;
 
 @WebServlet(urlPatterns = {"/api-shopping-cart"})
-public class AddToCartServlet extends HttpServlet {
-
+public class ShoppingCartServlet extends HttpServlet {
+	
+	@Inject
+	IProductService productService;
 	/**
 	 * 
 	 */
@@ -34,7 +39,13 @@ public class AddToCartServlet extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		Map<Integer, Integer> items = (HashMap<Integer, Integer>)SessionUtil.getInstance().getValue(req, "listItems");
 		if(items!=null) {
-			mapper.writeValue(resp.getOutputStream(), items);
+			List<OrderDetailsModel> listItems = items.entrySet().parallelStream().map(e->{
+				OrderDetailsModel model = new OrderDetailsModel(e.getKey(), e.getValue());
+				model.setProduct(productService.get(model.getProduct_id()));
+				model.setSubTotalPrice(model.getProduct().getPrice()*model.getQuantity());
+				return  model;
+			}).collect(Collectors.toList());
+			mapper.writeValue(resp.getOutputStream(), listItems);
 		} else {
 			mapper.writeValue(resp.getOutputStream(), mapper.createObjectNode()
 					.put("message", "Giỏ hàng trống"));
@@ -95,6 +106,28 @@ public class AddToCartServlet extends HttpServlet {
 			} else {
 				resMessage.put(values.get(0).toString(), "Thất bại. Không tìm thấy sản phẩm");
 			}
+		}			
+		mapper.writeValue(resp.getOutputStream(), resMessage);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setContentType("application/json");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Map<Integer, Integer> listItems = (HashMap<Integer, Integer> )SessionUtil.getInstance().getValue(req, "listItems");
+		ObjectNode resMessage =mapper.createObjectNode();
+		Map.Entry<String, Integer> body= RestUtil.of(req.getReader()).toListModels(new TypeReference<>() {
+		});
+		int product_id = body.getValue();
+		if(listItems!=null&&listItems.containsKey(product_id)) {
+			listItems.remove(product_id);
+			resMessage.put("success", "Xóa thành công sản phẩm" + product_id);
+
+		} else {
+			resMessage.put(((Integer)product_id).toString(), "sản phẩm không tồn tại trong giỏ hang");
 		}
 		mapper.writeValue(resp.getOutputStream(), resMessage);
 	}

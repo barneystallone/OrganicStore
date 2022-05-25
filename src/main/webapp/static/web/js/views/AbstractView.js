@@ -2,7 +2,10 @@ export default class AbstractView {
 
     constructor(params) {
         this.params = params;
-        this.mainElement = document.querySelector('.main'); 
+        this.elements = {
+            main : document.querySelector('.main')
+        }
+        // this.mainElement = document.querySelector('.main'); 
     }
 
     setTitle(title) {

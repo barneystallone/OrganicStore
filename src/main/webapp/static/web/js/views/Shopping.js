@@ -52,7 +52,7 @@ export default class Shopping  extends AbstractViewWithCart{
     }
 
     addListener(){
-        this.mainElement.querySelectorAll('.list__product .addSP').forEach(e=>{
+        this.elements.main.querySelectorAll('.list__product .addSP').forEach(e=>{
             e.addEventListener('click',evt=>{
                 
                 const    
@@ -66,7 +66,7 @@ export default class Shopping  extends AbstractViewWithCart{
                     price: price,
                     base64Img: base64Img
                 }
-                this.addToCart(id,1,options).then(data=>{
+                AbstractViewWithCart.addToCart(id,1,options).then(data=>{
                     this.ToggleToast();
                 }).catch(err=>{
                     this.ToggleToast(false);
@@ -105,7 +105,7 @@ export default class Shopping  extends AbstractViewWithCart{
                     let arr = saleProduct.slice(i,i+num);
                     const wrapper = this.creatElementFromText(`<div class="latest-product__slider__item"></div>`);
                     wrapper.append(...arr);
-                    this.mainElement.querySelector('.latest-product__slider.owl-carousel').appendChild(wrapper);
+                    this.elements.main.querySelector('.latest-product__slider.owl-carousel').appendChild(wrapper);
                 }
                 resolve(saleProduct);
             }).catch(err=>reject(err));
@@ -117,7 +117,6 @@ export default class Shopping  extends AbstractViewWithCart{
             .then(res=>res.json())
             .then(data=>{
                 let product = new Array() ;
-                let saleProduct = new Array();
                 for(const item of data) {
                     let text , sliderContent;
                     let price = item.price*(100-item.saleOff)/100,
@@ -166,7 +165,7 @@ export default class Shopping  extends AbstractViewWithCart{
                     product.push(this.creatElementFromText(text));
                    
                 }
-                this.mainElement.querySelector('.list__product').append(...product);
+                this.elements.main.querySelector('.list__product').append(...product);
                 
 
                 document.querySelectorAll('[data-setbg]').forEach(e=>{
@@ -197,7 +196,7 @@ export default class Shopping  extends AbstractViewWithCart{
                 for(const item of data) {
                     listCategory.push(this.creatElementFromText(`<li data-id=${item.id}><a href="#">${item.name}</a></li>`));
                 }
-                this.mainElement.querySelector('.sidebar .sidebar__item ul').append(...listCategory);
+                this.elements.main.querySelector('.sidebar .sidebar__item ul').append(...listCategory);
                 resolve(listCategory);
             }).catch(err => reject(err));
         })
@@ -224,7 +223,7 @@ export default class Shopping  extends AbstractViewWithCart{
         
     }
     getView() {
-        this.mainElement.innerHTML = html;
+        this.elements.main.innerHTML = html;
 
 
     }
