@@ -86,6 +86,10 @@ export default class ShoppingCartDetails extends AbstractViewWithCart {
         super(params);
         this.loadIntoTable();
         this.getHtml();
+
+        // this.getCartInSesssion()
+        //     .then(message=>console.log(message))
+        //     .catch(err=>console.log(err));
     }
 
     loadIntoTable() {

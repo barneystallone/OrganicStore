@@ -48,6 +48,10 @@ export default class Shopping  extends AbstractViewWithCart{
         this.getData();
         this.setTitle('Shopping');
         this.getView();
+
+        // this.getCartInSesssion()
+        //     .then(message=>console.log(message))
+        //     .catch(err=>console.log(err));
         // this.addProductItem();
     }
 
