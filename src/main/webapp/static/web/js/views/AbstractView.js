@@ -18,7 +18,7 @@ export default class AbstractView {
         return template.content.firstElementChild;
     }
     currencyFormat(price) {
-        return price.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
+        return (price*1).toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
     }
 
     

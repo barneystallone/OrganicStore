@@ -100,37 +100,6 @@ public class ProductAPI extends HttpServlet {
 			mapper.writeValue(resp.getOutputStream(), resData);
 			
 		}
-//		if(req.getContentType().split(";")[0].equals("multipart/form-data")) {
-//			ProductModel productModel = new ProductModel();
-//			try {
-//				BeanUtils.populate(productModel, req.getParameterMap());
-//				Part part = req.getPart("image");
-//				if(part!=null && part.getSize()>0) {
-//					long size = part.getSize();
-//					byte[] imageBytes = new byte[(int)size];
-//					InputStream inputStream = part.getInputStream();
-//					inputStream.read(imageBytes);
-//					inputStream.close();
-//					productModel.setImage(imageBytes);
-//					int id = productService.save(productModel);
-//					
-//					resData.put("id", id);
-//					mapper.writeValue(resp.getOutputStream(), resData);
-//				} else {
-//					resData.put("message", "Error");
-//					mapper.writeValue(resp.getOutputStream(), resData);
-//				}
-//			} catch (IllegalAccessException |InvocationTargetException e) {
-//				e.printStackTrace();
-//			} 
-//		} else {
-//			ProductModel productModel = RestUtil.of(req.getReader()).toModel(ProductModel.class);
-//			int id = productService.save(productModel);
-//			
-//			resData.put("id", id);
-//			mapper.writeValue(resp.getOutputStream(), resData);
-//			
-//		}
 	}
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

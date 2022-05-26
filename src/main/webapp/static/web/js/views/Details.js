@@ -139,7 +139,10 @@ export default class DetailItem  extends AbstractViewWithCart{
 
     constructor(params) {
         super(params);
-        console.log(params[":id"].split(/[^\d]/g)[0].replace(/0+/g,"")*1);
+        this.getCartInSesssion()
+            .then()
+            .catch(err=>console.log(err));
+        // console.log(params[":id"].split(/[^\d]/g)[0].replace(/0+/g,"")*1);
         this.productId = params[":id"].split(/[^\d]/g)[0].replace(/0+/g,"")*1;
         this.loadProductData(this.productId);
         this.setTitle('Shopping');
@@ -148,7 +151,8 @@ export default class DetailItem  extends AbstractViewWithCart{
     }
     addOrderEvent(){
         document.querySelector('.add-btn').addEventListener('click',(e)=>{
-            if(e.target.closest('.add-btn').previousElementSibling.querySelector('.quantity input').value!="0"){
+            let inputVal = e.target.closest('.add-btn').previousElementSibling.querySelector('.quantity input').value;
+            if(inputVal!="0"&&inputVal!=""){
                 let payLoad = {
                     product_id : document.querySelector('.product-details').dataset.id*1,
                     quantity : document.querySelector('.pro-qty input').value*1
@@ -249,6 +253,7 @@ export default class DetailItem  extends AbstractViewWithCart{
         this.elements.main.innerHTML = html;
         this.addOrderEvent();
         this.AddMountButton();
+        this.AddInputListener();
     //     var proQty = $('.pro-qty');
     //     proQty.prepend('<span class="dec qtybtn">-</span>');
     //     proQty.append('<span class="inc qtybtn">+</span>');
