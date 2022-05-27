@@ -69,9 +69,9 @@ export default class Shopping  extends AbstractViewWithCart{
                     base64Img: base64Img
                 }
                 AbstractViewWithCart.addToCart(id,1,options).then(data=>{
-                    this.ToggleToast();
+                    this.ToggleToast(this.elements.successToggle);
                 }).catch(err=>{
-                    this.ToggleToast(false);
+                    this.ToggleToast(this.elements.failToggle,false);
                 });
                
             })

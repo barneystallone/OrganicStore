@@ -45,7 +45,7 @@
 					<ul class="header__menu__dropdown">
 						<li><a href="${root}/shopping" data-link>Shop Details</a></li>
 						<li><a href="${root}/shopping" data-link>Shoping Cart</a></li>
-						<li><a href="${root}/shopping" data-link>Check Out</a></li>
+						<li><a href="${root}/checkout" data-link>Check Out</a></li>
 						<li><a href="${root}/shopping" data-link>Blog Details</a></li>
 					</ul>
 				</li>
@@ -123,7 +123,7 @@
 								<ul class="header__menu__dropdown">
 									<li><a href="${root}/shopping" data-link>Shop Details</a></li>
 									<li><a href="${root}/shopping" data-link>Shoping Cart</a></li>
-									<li><a href="${root}/shopping" data-link>Check Out</a></li>
+									<li><a href="${root}/checkout" data-link>Check Out</a></li>
 									<li><a href="${root}/shopping" data-link>Blog Details</a></li>
 								</ul>
 							</li>

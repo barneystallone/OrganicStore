@@ -170,13 +170,13 @@ export default class DetailItem  extends AbstractViewWithCart{
                 }
              
                 DetailItem.addToCart(this.params[":id"],quantity,options).then(data=>{
-                    this.ToggleToast();
+                    this.ToggleToast(this.elements.successToggle);
                 }).catch(()=>{
-                    this.ToggleToast(false);
+                    this.ToggleToast(this.elements.failToggle,false);
                 })
 
             } else {
-                this.ToggleToast(false);
+                this.ToggleToast(this.elements.failToggle,false);
             }
 
         })

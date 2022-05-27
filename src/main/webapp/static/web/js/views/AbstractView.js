@@ -3,7 +3,15 @@ export default class AbstractView {
     constructor(params) {
         this.params = params;
         this.elements = {
-            main : document.querySelector('.main')
+            main : document.querySelector('.main'),
+            successToggle : {
+                text1:"Success",
+                text2:"Cập nhật giỏ hàng thành công"
+            },
+            failToggle : {
+                text1:"Error",
+                text2:"Chưa thể thêm vào giỏ hàng"
+            },
         }
         // this.mainElement = document.querySelector('.main'); 
     }

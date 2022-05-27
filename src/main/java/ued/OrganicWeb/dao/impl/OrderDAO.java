@@ -61,7 +61,7 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO{
 
 	@Override
 	public void delete(OrderModel model) {
-		StringBuilder sql = new StringBuilder("select * from BillOrder where status = 0 and id = ? ");
+		StringBuilder sql = new StringBuilder("delete from BillOrder where id = ? ");
 		super.update(sql,model.getId());
 	}
 

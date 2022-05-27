@@ -3798,3 +3798,8 @@ ul.cart_subs li,
 .display-none {
 	display: none;
 }
+
+.checkout.spad select {
+	width: 100%;
+	height: 46px;
+}

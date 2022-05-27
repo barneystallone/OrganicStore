@@ -2,6 +2,7 @@ import Shopping from "/OrganicStore/static/web/js/views/Shopping.js";
 import Details from "/OrganicStore/static/web/js/views/Details.js";
 import CartSub from "/OrganicStore/static/web/js/utils/cart_sub.js";
 import ShoppingCart from "/OrganicStore/static/web/js/views/ShoppingCartDetails.js";
+import CheckOut from "/OrganicStore/static/web/js/views/CheckOut.js";
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
 
@@ -29,11 +30,11 @@ const loader = ()=>{
 
 const router = () => {
     const routes = [
-        // {path:"/OrganicStore/" , view : Home},
         // {path:"/OrganicStore/details/:id/:a" , view : Details},
         {path:"/OrganicStore/shopping" , view : Shopping},
         {path:"/OrganicStore/details/:id" , view : Details},
-        {path:"/OrganicStore/shopping/cart" , view : ShoppingCart}
+        {path:"/OrganicStore/shopping/cart" , view : ShoppingCart},
+        {path:"/OrganicStore/checkout" , view : CheckOut}
     ]
     const mapRouteMatchs = routes.map(route => {
         console.log(location.pathname.match(pathToRegex(route.path)));

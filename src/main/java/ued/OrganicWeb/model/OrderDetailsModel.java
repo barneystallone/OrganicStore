@@ -21,6 +21,11 @@ public class OrderDetailsModel {
 
 
 
+	public OrderDetailsModel(int product_id, int quantity, int order_id) {
+		this.quantity = quantity;
+		Order_id = order_id;
+		this.product_id = product_id;
+	}
 	public OrderDetailsModel(int quantity, int subTotalPrice, int order_id, int product_id) {
 		this.quantity = quantity;
 		this.subTotalPrice = subTotalPrice;

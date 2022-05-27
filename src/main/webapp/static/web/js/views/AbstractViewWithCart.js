@@ -174,13 +174,15 @@ export default class AbstractViewWithCart extends AbstractView {
             total.textContent = (oldTotalValue+ newSubValue-oldSubValue).toLocaleString('vi-VN').replace(/\./g,",")
     }
     
-    ToggleToast(status=true){
+    ToggleToast(message,status=true){
         const 
             toast = status ? this.creatElementFromText(toastCheck) : this.creatElementFromText(toastFail),
             closeIcon = toast.querySelector(".close"),
             wrapper = document.querySelector('.toast-wrapper'),
             progress = toast.querySelector(".progress");
             toast.setAttribute('index',this.orderClick++);
+            toast.querySelector('.message .text-1').textContent = message.text1
+            toast.querySelector('.message .text-2').textContent = message.text2
 
         wrapper.classList.remove('display-none');  
         wrapper.innerHTML ="";
