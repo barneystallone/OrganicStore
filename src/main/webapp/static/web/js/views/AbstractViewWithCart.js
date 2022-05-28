@@ -73,17 +73,15 @@ const toastFail = `
 export default class AbstractViewWithCart extends AbstractView {
     constructor(params) {
         super(params);
-        
-        this.getCartInSesssion()
-            .then(message=>console.log(message))
-            .catch(err=>console.log(err));
-
     }
     getCartInSesssion(){
+        // reset
         const showCart = document.querySelector('#showcartresitem');
         while(showCart.firstChild){
             showCart.removeChild(showCart.firstChild);
         }
+        document.querySelector('#showcartresprice .total b').textContent = "0";
+        // end reset
         return new Promise((resolve,reject)=>{
             fetch("http://localhost:8080/OrganicStore/api-shopping-cart")
             .then(res=>res.json())
@@ -104,7 +102,7 @@ export default class AbstractViewWithCart extends AbstractView {
                         );
                     })
                 }
-                resolve('success');
+                resolve(data);
             }).catch(err=>reject(err));
         })
     }
@@ -176,13 +174,15 @@ export default class AbstractViewWithCart extends AbstractView {
             total.textContent = (oldTotalValue+ newSubValue-oldSubValue).toLocaleString('vi-VN').replace(/\./g,",")
     }
     
-    ToggleToast(status=true){
+    ToggleToast(message,status=true){
         const 
             toast = status ? this.creatElementFromText(toastCheck) : this.creatElementFromText(toastFail),
             closeIcon = toast.querySelector(".close"),
             wrapper = document.querySelector('.toast-wrapper'),
             progress = toast.querySelector(".progress");
             toast.setAttribute('index',this.orderClick++);
+            toast.querySelector('.message .text-1').textContent = message.text1
+            toast.querySelector('.message .text-2').textContent = message.text2
 
         wrapper.classList.remove('display-none');  
         wrapper.innerHTML ="";
@@ -236,7 +236,10 @@ export default class AbstractViewWithCart extends AbstractView {
         })
     }
 
-    AddMountButton () {
+    AddMountButton (options=null) {
+        let subTotal,total,price,delay,
+            // isChangeSubTotal = options ?(options.priceQuery!=null&&options.subTotalQuery!=null) : false;
+            isChangeSubTotal = options ?(options.priceQuery!=null&&options.subTotalQuery!=null&&options.tempTotalQuery) : false;
         var proQty = $('.pro-qty');
         proQty.prepend('<span class="dec qtybtn">-</span>');
         proQty.append('<span class="inc qtybtn">+</span>');
@@ -245,6 +248,7 @@ export default class AbstractViewWithCart extends AbstractView {
             var oldValue = $button.parent().find('input').val();
             if ($button.hasClass('inc')) {
                 var newVal = parseFloat(oldValue) + 1;
+               
             } else {
                 if (oldValue > 1) {
                     var newVal = parseFloat(oldValue) - 1;
@@ -253,19 +257,86 @@ export default class AbstractViewWithCart extends AbstractView {
                 }
             }
             $button.parent().find('input').val(newVal);
-        });
-        
-        document.querySelector('.pro-qty input').addEventListener('keydown',(e)=>{
-            let key =e.key;
-            if(!((key >= '0' && key <= '9')||key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace')){
-                e.preventDefault();
+            if(isChangeSubTotal){
+                total = document.querySelector(options.tempTotalQuery);
+                price = $button.closest('tr').find(options.priceQuery).text().replace(/[^0-9]/g,"");
+                let subTotalelem = $button.closest('tr').find(options.subTotalQuery),
+                    oldSubPrice = subTotalelem.text().replace(/[^0-9]/g,""),
+                    newSubPrice = price*newVal;
+                total.textContent = total.textContent.replace(/[^0-9]/g,"")*1 + newSubPrice - oldSubPrice;
+                total.textContent = (total.textContent*1).toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
+                subTotal = $button.closest('tr').find(options.subTotalQuery).text(
+                    (price*newVal).toLocaleString('vi-VN')
+                );
+                if(options.totalQuery) {
+                    document.querySelector(options.totalQuery).textContent = total.textContent;
+                }
             }
+        });
+    };
+    setTotal (tempTotalQuery,totalQuery=null) {
+        if(tempTotalQuery) {
+            this.delay2 = setTimeout(()=>{
+                let total,
+                    tempTotal = document.querySelector(tempTotalQuery);
+                total = [...document.querySelectorAll('.shoping__cart__total')].reduce((acc,curr)=>{
+                    return acc*1 + curr.textContent.replace(/[^0-9]/g,"")*1;
+                },0)
+                tempTotal.textContent = total.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
+                if(totalQuery) {
+                    document.querySelector(totalQuery).textContent = tempTotal.textContent;
+                }
+            },0)
+        }
+    }
+    AddInputListener(options=null) {
+        let subTotal,price,delay ,
+            isChangeSubTotal = options ?(options.parentQuery!=null&&options.priceQuery!=null&&options.subTotalQuery!=null) : false;
+        
+
+        
+        document.querySelectorAll('.pro-qty input').forEach(elem=>{
+            elem.addEventListener('keydown',(e)=>{
+                let key =e.key;
+                if(!((key >= '0' && key <= '9')||key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace')){
+                    e.preventDefault();
+                } else {
+                    clearTimeout(delay);
+                    clearTimeout(this.delay2);
+                }
+            })
         })
-        document.querySelector('.pro-qty input').addEventListener('keyup',(e)=>{
-            e.target.value = e.target.value.replace(/(^0+)(\d+)/g,"$2")
-           if(e.target.value==""){
-               e.target.value = "0";
-           }
+
+        document.querySelectorAll('.pro-qty input').forEach(elem=>{
+            elem.addEventListener('keyup',(e)=>{
+                
+                e.target.value = e.target.value.replace(/(^0+)(\d+)/g,"$2");
+               
+                if(e.target.value==""||e.target.value=="0"){
+                    delay = setTimeout(()=>{
+                        e.target.value = "1";
+                        if(isChangeSubTotal) {
+                            subTotal = e.target.closest(options.parentQuery).querySelector(options.subTotalQuery);
+                            price = e.target.closest(options.parentQuery).querySelector(options.priceQuery).textContent.replace(/[^0-9]/,"");
+                            subTotal.textContent = (price*1).toLocaleString('vi-VN');
+
+                            let totalQuery  = (options.totalQuery) ? options.totalQuery : null;
+                            this.setTotal(options.tempTotalQuery,totalQuery);
+
+                        }
+                    },500)
+                } else {
+                    if(isChangeSubTotal) {
+                        subTotal = e.target.closest(options.parentQuery).querySelector(options.subTotalQuery);
+                        price = e.target.closest(options.parentQuery).querySelector(options.priceQuery).textContent.replace(/[^0-9]/,"");
+                        subTotal.textContent = (price*e.target.value).toLocaleString('vi-VN');
+
+                        let totalQuery  = (options.totalQuery) ? options.totalQuery : null;
+                        this.setTotal(options.tempTotalQuery,totalQuery);
+
+                    }
+                }
+            })
        })
     }
 }

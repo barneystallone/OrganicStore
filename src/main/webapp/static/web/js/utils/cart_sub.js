@@ -8,6 +8,7 @@ class CartSub {
             footer : cartSub.querySelector('li.last'),
         };
         this.addListener();
+        this.navigateToCartPage();
     }
     addListener(){
         let delay, oldInputValue;
@@ -105,6 +106,14 @@ class CartSub {
         console.log({totalPrice});
         subTotalElem.innerText = newValue.toLocaleString('vi-VN').replace(/\./g,",");
         totalPriceElem.innerText = (totalPrice + newValue - oldValue).toLocaleString('vi-VN').replace(/\./g,",");
+    }
+
+    navigateToCartPage() {
+        document.querySelector('#show_login_cart_desktop').addEventListener('click',e=>{
+            if(e.target.matches('a')==false) {
+                e.target.querySelector('a').click();
+            }
+        })
     }
 }
 

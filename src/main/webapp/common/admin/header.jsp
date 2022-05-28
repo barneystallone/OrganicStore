@@ -43,12 +43,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${root}/login" data-link>
+                    <a href="${root}/admin/product" data-link>
                         <span class="icon">
                             <ion-icon class="icon-outline" name="restaurant-outline"></ion-icon>
                             <ion-icon class="icon-full" name="restaurant"></ion-icon>
                         </span>
-                        <span class="title">Help</span>
+                        <span class="title">Product</span>
                     </a>
                 </li>
                 <li>

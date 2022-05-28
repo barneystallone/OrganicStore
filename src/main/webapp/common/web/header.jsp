@@ -15,7 +15,7 @@
 			<ul>
 				<li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
 				<li>
-					<a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+					<a href="/OrganicStore/shopping/cart" data-link><i class="fa fa-shopping-bag"></i> <span>3</span></a>
 					
 				</li>
 			</ul>
@@ -45,7 +45,7 @@
 					<ul class="header__menu__dropdown">
 						<li><a href="${root}/shopping" data-link>Shop Details</a></li>
 						<li><a href="${root}/shopping" data-link>Shoping Cart</a></li>
-						<li><a href="${root}/shopping" data-link>Check Out</a></li>
+						<li><a href="${root}/checkout" data-link>Check Out</a></li>
 						<li><a href="${root}/shopping" data-link>Blog Details</a></li>
 					</ul>
 				</li>
@@ -123,7 +123,7 @@
 								<ul class="header__menu__dropdown">
 									<li><a href="${root}/shopping" data-link>Shop Details</a></li>
 									<li><a href="${root}/shopping" data-link>Shoping Cart</a></li>
-									<li><a href="${root}/shopping" data-link>Check Out</a></li>
+									<li><a href="${root}/checkout" data-link>Check Out</a></li>
 									<li><a href="${root}/shopping" data-link>Blog Details</a></li>
 								</ul>
 							</li>
@@ -137,7 +137,7 @@
 						<ul>
 							<li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
 							<li>
-								<a href="#"><i class="fa fa-shopping-cart"></i><span>3</span></a>
+								<a href="/OrganicStore/shopping/cart" data-link><i class="fa fa-shopping-cart"></i><span>3</span></a>
 								<ul class="cart_subs">
 									<li class="first">
 										<ul id="showcartresitem" class="cart_page_content">
@@ -149,10 +149,10 @@
 											<div id="showcartresprice" class="price">
 												<div>
 													<span>Tổng cộng:</span><span class="total"> <b>0</b>
-													<span class="vnd" style=""></span></span>
+													<span class="vnd" ></span></span>
 												</div>
 											</div>
-											<button id="show_login_cart_desktop" class="btn btn-redbold"><a class="text-white" href="https://fmstyle.com.vn/gio-hang.html">Xem giỏ
+											<button id="show_login_cart_desktop" class="btn btn-redbold"><a class="text-white" data-link href="/OrganicStore/shopping/cart">Xem giỏ
 											hàng</a></button>
 										</div>
 									</li>

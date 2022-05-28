@@ -32,7 +32,7 @@ public class OrderService implements IOrderService {
 	@Override
 	public void delete(OrderModel model) {
 		// TODO Auto-generated method stub
-		
+		orderDAO.delete(model);
 	}
 
 	@Override

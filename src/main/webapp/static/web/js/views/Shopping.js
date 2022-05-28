@@ -45,14 +45,12 @@ export default class Shopping  extends AbstractViewWithCart{
 
     constructor(params) {
         super(params);
+        this.getCartInSesssion()
+        .then()
+        .catch(err=>console.log(err));
         this.getData();
         this.setTitle('Shopping');
         this.getView();
-
-        // this.getCartInSesssion()
-        //     .then(message=>console.log(message))
-        //     .catch(err=>console.log(err));
-        // this.addProductItem();
     }
 
     addListener(){
@@ -71,9 +69,9 @@ export default class Shopping  extends AbstractViewWithCart{
                     base64Img: base64Img
                 }
                 AbstractViewWithCart.addToCart(id,1,options).then(data=>{
-                    this.ToggleToast();
+                    this.ToggleToast(this.elements.successToggle);
                 }).catch(err=>{
-                    this.ToggleToast(false);
+                    this.ToggleToast(this.elements.failToggle,false);
                 });
                
             })

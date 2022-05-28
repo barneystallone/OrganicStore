@@ -2,7 +2,7 @@
 import Dashboard from "/OrganicStore/static/admin/js/views/Dashboard.js";
 import Customer from "/OrganicStore/static/admin/js/views/Customer.js";
 import Category from "/OrganicStore/static/admin/js/views/Category.js";
-import {Login} from "/OrganicStore/static/admin/js/views/login.js";
+import Product from "/OrganicStore/static/admin/js/views/Product.js";
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
 
@@ -25,7 +25,7 @@ const router = () => {
         {path:"/OrganicStore/admin/" , view : Dashboard},
         {path:"/OrganicStore/admin/customer" , view : Customer},
         {path:"/OrganicStore/admin/category" , view : Category},
-        // {path:"/OrganicStore/login" , view : Login}
+        {path:"/OrganicStore/admin/product" , view : Product}
     ]
     const mapRouteMatchs = routes.map(route => {
         return {
@@ -35,14 +35,16 @@ const router = () => {
     });
     let match = mapRouteMatchs.find(routeMatch => routeMatch.result !== null );
 
-    if (!match) {
-        match = {
-            route: routes[0],
-            result: [location.pathname]
-        };
-        navigateTo("/OrganicStore/admin/");
+    if (!match) {  
+        // match = {
+        //     route: routes[0],
+        //     result: [location.pathname]
+        // };
+        // navigateTo("/OrganicStore/admin/");
+        location.pathname = "/OrganicStore/admin/";
+    } else{
+        new match.route.view(getParams(match)); // get view
     }
-    new match.route.view(getParams(match)); // get view
 };
 
 window.addEventListener("popstate", router ,true);

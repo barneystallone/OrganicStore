@@ -42,7 +42,7 @@ public class ShoppingCartServlet extends HttpServlet {
 			List<OrderDetailsModel> listItems = items.entrySet().parallelStream().map(e->{
 				OrderDetailsModel model = new OrderDetailsModel(e.getKey(), e.getValue());
 				model.setProduct(productService.get(model.getProduct_id()));
-				model.setSubTotalPrice(model.getProduct().getPrice()*model.getQuantity());
+				model.setSubTotalPrice(model.getProduct().getPrice()*model.getQuantity()*(100-model.getProduct().getSaleOff())/100);
 				return  model;
 			}).collect(Collectors.toList());
 			mapper.writeValue(resp.getOutputStream(), listItems);
