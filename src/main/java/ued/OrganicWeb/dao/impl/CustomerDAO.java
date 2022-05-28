@@ -72,13 +72,15 @@ public class CustomerDAO extends AbstractDAO<CustomerModel> implements ICustomer
 			sql.append(Constants.CUSTOMER_TITLE[i]).append(" = ? , ");
 		}
 		sql.deleteCharAt(sql.length() - 2 ).append(" where id = ?");
-		List<Object> fields = new ArrayList<>();
-		fields.add(customer.getName());
-		fields.add(customer.getEmail());
-		fields.add(customer.getPhoneNumber());
-		fields.add(customer.getHouseStreet());
-		fields.add(customer.getAreaId());
-		fields.add(customer.getId());
+		List<Object> fields = List.of(
+			customer.getName(),
+			customer.getEmail(),
+			customer.getPhoneNumber(),
+			customer.getHouseStreet(),
+			customer.getAreaId(),
+			customer.getId()
+		);
+		
 		
 		super.update(sql, fields.toArray(new Object[0]));
 	

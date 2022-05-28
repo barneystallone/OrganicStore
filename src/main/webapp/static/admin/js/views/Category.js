@@ -29,8 +29,21 @@ export default class Category extends AbstractView{
     }
     loadSelectCustom() {
         let optionContainer = document.querySelector('.options-container');
+        let superCategory  = this.categoryData.filter(e=>e.parent_id==0); 
+        let selectTag = document.querySelector('#selectCat');
+        selectTag.appendChild(this.elementFrom(`
+            <option value="0">--- Danh mục lớn</option>
+        `))
+        // select add category
+        const select_add = (e) => {
+            selectTag.appendChild(this.elementFrom(`
+                <option value="${e.id}">${e.name}</option>
+            `))
+        }
+
+        // select filter table
         if(optionContainer.childElementCount==1){
-            this.categoryData.filter(e=>e.parent_id==0).forEach(e=>{
+            superCategory.forEach(e=>{
                 let config = {
                     id : 'id'+e.id,
                     name : 'category',
@@ -38,8 +51,11 @@ export default class Category extends AbstractView{
                     "data-value" : e.name, 
                 }
                 optionContainer.appendChild(this.SelectCustom.creatOptionTag(config));
+                select_add(e);
             })
            this.SelectCustom.AddListener(); 
+        } else {
+            superCategory.forEach(e=>select_add(e));
         }
     }
     getTotalItem(){ 
@@ -98,8 +114,10 @@ export default class Category extends AbstractView{
                         <input id="cateName" name="name" type="text" class="form-input" placeholder="Nhập tên danh mục" required>
                     </div>
                     <div class="form-body ">
-                        <label for="cateName">Chọn danh mục cha</label>
-                        <select id="password"  class="form-input" placeholder="Password" name="password" required></select>
+                        <label for="selectCat">Thuộc danh mục </label>
+                        <select id="selectCat"  class="form-input" name="superCategory" >
+
+                        </select>
                     </div>
                     
                     
