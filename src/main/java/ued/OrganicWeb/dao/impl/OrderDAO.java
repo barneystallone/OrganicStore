@@ -40,17 +40,15 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO{
 			+ "(createDate,status,totalPrice,shipping_address,"
 			+ "recipient_name,recipient_phone,payment_method,customer_id,area_id) "
 			+ "values(?,?,0,?,?,?,?,?,?)");
-		List<Object> fields = List.of(
-			model.getCreateDate(),
-			model.getStatus(),
-			model.getShipping_address(),
-			model.getRecipient_name(),
-			model.getRecipient_phone(),
-			model.getPayment_method(),
-			model.getCustomer_id(),
-			model.getArea_id()			
-		);
-
+		List<Object> fields = new ArrayList<>();
+		fields.add(model.getCreateDate());
+		fields.add(model.getStatus());
+		fields.add(model.getShipping_address());
+		fields.add(model.getRecipient_name());
+		fields.add(model.getRecipient_phone());
+		fields.add(model.getPayment_method());
+		fields.add(model.getCustomer_id());
+		fields.add(model.getArea_id());
 		return insert(sql, fields.toArray(new Object[0]));
 	}
 

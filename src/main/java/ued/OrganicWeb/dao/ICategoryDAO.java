@@ -9,7 +9,6 @@ import ued.OrganicWeb.model.CategoryModel;
 
 public interface ICategoryDAO extends GenericDAO<CategoryModel> {
 	List<CategoryModel> listParentCategory();
-	List<CategoryModel> listChildCategory();
 //	//=========================================
 //	List<CategoryModel> list(Integer... params);
 //	int save(CategoryModel category);

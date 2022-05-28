@@ -15,7 +15,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${root}/admin/" data-link>
+                    <a href="${root}/admin/home" data-link>
                         <span class="icon">
                             <ion-icon class="icon-outline" name="home-outline"></ion-icon>
                             <ion-icon class="icon-full" name="home"></ion-icon>

@@ -42,10 +42,6 @@ public class CategoryService implements ICategoryService {
 	public List<CategoryModel> listParentCategory() {
 		return categoryDAO.listParentCategory();
 	}
-	@Override
-	public List<CategoryModel> listChildCategory() {
-		return categoryDAO.listChildCategory();
-	}
 	
 	
 }
