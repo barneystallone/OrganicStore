@@ -38,14 +38,12 @@ public class OrderDetailsDAO extends AbstractDAO<OrderDetailsModel> implements I
 	public int saveMulti(List<OrderDetailsModel> listModel) {
 		StringBuilder sql = new StringBuilder("Insert into orderdetails values");
 		List<Object> itemFields = new ArrayList<>();
-//		List<List<Object>> items = new ArrayList<>();
 		for (OrderDetailsModel model : listModel) {
 			sql.append("(?,?,?,?), ");
 			itemFields.add(model.getQuantity());
 			itemFields.add(model.getSubTotalPrice());
 			itemFields.add(model.getOrder_id());
 			itemFields.add(model.getProduct_id());
-//			items.add(itemFields);
 		}
 		sql.deleteCharAt(sql.length()-2);
 		return insert(sql , itemFields.toArray(new Object[0]));

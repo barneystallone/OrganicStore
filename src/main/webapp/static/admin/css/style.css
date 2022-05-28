@@ -885,6 +885,9 @@ button#modal-btn:focus,.modal-textarea:focus,.modal-input:focus{
     text-align: center;
   }
 
+.unsetBg.drop-zone__thumb::after{
+    background: unset;
+}
  
 .modal-textarea {
     width: 100%;

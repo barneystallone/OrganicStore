@@ -1,6 +1,8 @@
 package ued.OrganicWeb.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ued.OrganicWeb.dao.IProductDAO;
 import ued.OrganicWeb.mapper.impl.ProductMapper;
@@ -53,20 +55,25 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 	@Override
 	public void update(ProductModel product) {
 		// TODO Auto-generated method stub
-		StringBuilder sql = new StringBuilder("Update product set name = ?, description = ?, image = ?,"
-				+ " in_stock = ?, categoryId = ?, price = ?, saleOff = ?, hsd = ? where id = ?");
-		super.update(
-				sql, 
+		StringBuilder sql = new StringBuilder("Update product set name = ?, description = ?,"
+				+ " in_stock = ?, categoryId = ?, price = ?, saleOff = ?, hsd= ? ");
+		List<Object> fields = List.of(
 				product.getName(),
 				product.getDescription(),
-				product.getImage(),
 				product.getIn_stock(),
 				product.getCategoryId(),
 				product.getPrice(),
 				product.getSaleOff(),
-				product.getHsd(),
-				product.getId()
-			);	
+				product.getHsd()
+		);
+		fields =  fields.stream().collect(Collectors.toList());
+		if(product.getImage()!=null) {
+			fields.add(product.getImage());
+			sql.append(", image = ? ");
+		}
+		fields.add(product.getId());
+		sql.append("where id = ?");
+		super.update(sql,fields.toArray(new Object[0]));	
 	}
 
 	@Override
