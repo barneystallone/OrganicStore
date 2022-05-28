@@ -83,12 +83,6 @@ public class CategoryDAO extends AbstractDAO<CategoryModel> implements ICategory
 		StringBuilder sql = new StringBuilder("Select * from category where parent_id is null");
 		return query(sql, new CatergoryMapper() );
 	}
-
-	@Override
-	public List<CategoryModel> listChildCategory() {
-		StringBuilder sql = new StringBuilder("Select * from category where parent_id is not null");
-		return query(sql, new CatergoryMapper() );
-	}
 	
 
 	

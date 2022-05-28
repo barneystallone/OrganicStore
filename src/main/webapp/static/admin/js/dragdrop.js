@@ -52,7 +52,7 @@ export default class DragUploadFile {
             thumbnailElement.classList.add("drop-zone__thumb");
             dropZoneElement.appendChild(thumbnailElement);
         }
-        thumbnailElement.classList.remove('unsetBg');
+
         thumbnailElement.dataset.label = file.name;
 
         // preview image

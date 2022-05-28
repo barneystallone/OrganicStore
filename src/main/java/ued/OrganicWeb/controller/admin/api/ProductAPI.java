@@ -84,13 +84,9 @@ public class ProductAPI extends HttpServlet {
 			if(imageBytes!=null) {
 				productModel.setImage(imageBytes);
 				int id = productService.save(productModel);
-				if(id>0) {
-					mapper.writeValue(resp.getOutputStream(), productService.get(id));
-				} else {
-					resData.put("fail", "true");
-//					resp.se
-					mapper.writeValue(resp.getOutputStream(), resData);		
-				}
+
+				resData.put("id", id);
+				mapper.writeValue(resp.getOutputStream(), resData);
 			} else {
 				resData.put("message", "Image not found");
 				mapper.writeValue(resp.getOutputStream(), resData);
@@ -99,12 +95,9 @@ public class ProductAPI extends HttpServlet {
 		} else {
 			ProductModel productModel = RestUtil.of(req.getReader()).toModel(ProductModel.class);
 			int id = productService.save(productModel);
-			if(id>0) {
-				mapper.writeValue(resp.getOutputStream(), productService.get(id));
-			} else {
-				resData.put("fail", "true");
-				mapper.writeValue(resp.getOutputStream(), resData);				
-			}
+
+			resData.put("id", id);
+			mapper.writeValue(resp.getOutputStream(), resData);
 			
 		}
 	}
@@ -112,42 +105,12 @@ public class ProductAPI extends HttpServlet {
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
+		ProductModel productModel = RestUtil.of(req.getReader()).toModel(ProductModel.class);
+		productService.update(productModel);
+		productModel = productService.get(productModel.getId());
+		
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode resData = mapper.createObjectNode();
-		if(req.getContentType().split(";")[0].equals("multipart/form-data")) {
-			ProductModel productModel = FormDataUtil.toModel(ProductModel.class, req);
-			if(productModel.getId()>0) {
-				byte[] imageBytes = FormDataUtil.getImageBytes(req.getPart("image"));
-				if(imageBytes!=null) {
-					productModel.setImage(imageBytes);
-					productService.update(productModel);
-					mapper.writeValue(resp.getOutputStream(), productService.get(productModel.getId()));
-				
-				} else {
-					resData.put("message", "Image not found");
-					resData.put("fail", "true");
-					mapper.writeValue(resp.getOutputStream(), resData);
-				}
-				
-			} else {
-				resData.put("message", "Id sản phẩm không hợp lệ");
-				resData.put("fail", "true");
-				mapper.writeValue(resp.getOutputStream(), resData);
-			}
-		
-		} else {
-			ProductModel productModel = RestUtil.of(req.getReader()).toModel(ProductModel.class);
-			if(productModel.getId()>0) {
-				productService.update(productModel);
-				productModel = productService.get(productModel.getId());		
-				mapper.writeValue(resp.getOutputStream(), productService.get(productModel.getId()));
-			}else {
-				resData.put("message", "Id sản phẩm không hợp lệ");
-				resData.put("fail", "true");
-				mapper.writeValue(resp.getOutputStream(), resData);
-			}
-		}
-		
+		mapper.writeValue(resp.getOutputStream(), productModel);
 	}
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

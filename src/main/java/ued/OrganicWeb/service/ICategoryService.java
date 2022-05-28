@@ -8,5 +8,4 @@ public interface ICategoryService extends IGenericService<CategoryModel>{
 //	List<CategoryModel> listCategories(Integer... params);	
 	int getRowCount();
 	List<CategoryModel> listParentCategory();
-	List<CategoryModel> listChildCategory();
 }

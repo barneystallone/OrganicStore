@@ -18,7 +18,7 @@ public class ProductService implements IProductService{
 
 	@Override
 	public void update(ProductModel model) {
-		productDAO.update(model);
+		productDAO.save(model);
 	}
 
 	@Override

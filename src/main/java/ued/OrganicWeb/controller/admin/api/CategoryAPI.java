@@ -37,9 +37,6 @@ public class CategoryAPI extends HttpServlet {
 		if( req.getParameter("type")!=null && req.getParameter("type").equals("parent")) {
 			List<CategoryModel> results = categoryService.listParentCategory();
 			mapper.writeValue(resp.getOutputStream(), results);
-		} else if (req.getParameter("type")!=null && req.getParameter("type").equals("child")) {
-			List<CategoryModel> results = categoryService.listChildCategory();
-			mapper.writeValue(resp.getOutputStream(), results);
 		} else {
 			String categoryId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
 			if (req.getParameter("count")!=null) {
