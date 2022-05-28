@@ -22,9 +22,7 @@ public class ProductMapper implements MapModel<ProductModel>{
 			product.setCategory(CategoryDAO.getInstance().get(product.getCategoryId()));
 			product.setPrice(rs.getInt("price"));
 			product.setHsd(rs.getInt("hsd"));
-//			if(rs.getInt("saleOff")!= 0) {
-				product.setSaleOff(rs.getInt("saleOff"));
-//			}
+			product.setSaleOff(rs.getInt("saleOff"));
 			return product;
 		} catch (SQLException e) {
 			e.printStackTrace();
