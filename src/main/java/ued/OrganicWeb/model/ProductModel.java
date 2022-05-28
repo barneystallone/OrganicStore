@@ -11,17 +11,18 @@ public class ProductModel extends AbstractModel {
 	private byte[] image;
 	private int in_stock; 
 	private int categoryId;
+	private CategoryModel category;
 	private int price;
 	private int saleOff;
 	private int hsd;
 	private String base64Images;
 	
-	public String getBase64Images() {
-		base64Images = Base64.getEncoder().encodeToString(image);
-		return base64Images;
+	
+	public CategoryModel getCategory() {
+		return category;
 	}
-	public void setBase64Images(String base64Images) {
-		this.base64Images = base64Images;
+	public void setCategory(CategoryModel category) {
+		this.category = category;
 	}
 	public String getName() {
 		return name;
@@ -72,5 +73,12 @@ public class ProductModel extends AbstractModel {
 		this.hsd = hsd;
 	}
 	
+	public String getBase64Images() {
+		base64Images = Base64.getEncoder().encodeToString(image);
+		return base64Images;
+	}
+	public void setBase64Images(String base64Images) {
+		this.base64Images = base64Images;
+	}
 	
 }
