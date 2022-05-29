@@ -50,6 +50,7 @@ export const AddSortByClickEvent = () => {
 
 export const initPagination = (totalItem, itemPerPage) => {
     const element = document.querySelector(".pagination ul");
+    element.innerHTML = "";
     const totalPages = Math.ceil(totalItem / itemPerPage);
     let liTag = '';
     liTag += `<li class="btn prev"><span><i class="fas fa-angle-left"></i> Prev</span></li>`;

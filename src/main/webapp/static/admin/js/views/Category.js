@@ -13,7 +13,7 @@ export default class Category extends AbstractView{
     }
 
     addRowListener(row,modal){
-        let editBtn = row.querySelector('td.edit');
+        let editBtn = row.querySelector('[name="create-outline"]');
         editBtn.addEventListener('click',()=>{
             if(modal.classList.contains("active")==false){
                 modal.style.opacity = 1;
@@ -23,6 +23,9 @@ export default class Category extends AbstractView{
             modal.setAttribute('data-old_parent_id',row.dataset.parentid);
             modal.querySelector('#editCateName').value = row.dataset.name;
             modal.querySelector('#superCate').value = row.dataset.parentid;
+        })
+        row.querySelector('.delete-prod').addEventListener('click',(e)=>{
+            this.DeleteCategory(e.target.closest('tr'));
         })
     }
 
@@ -62,13 +65,12 @@ export default class Category extends AbstractView{
             rowEdit.dataset.name = data.name;
             rowEdit.dataset.parent_id = data.parent_id;
             rowEdit.querySelector('h5').textContent = data.name;
-            for(const [index,value] of Object.entries(this.categoryData)) {
             
-                if(value.id == data.id) {
-                    this.categoryData[index] = data;
-                }
+            let tBody = rowEdit.closest('tbody');
+            let offset = Array.prototype.indexOf.call(tBody.children,rowEdit),
+                index = offset + (document.querySelector('li.number.active').dataset.page -1 )*this.itemPerPage;
             
-            }
+            this.categoryData[index] = data;
         })
     }
 
@@ -82,7 +84,13 @@ export default class Category extends AbstractView{
                             <h5>${row.name}</h5>
                         </td>
                         <td class="d-none" ></td>
-                        <td class="edit"><ion-icon name="create-outline" ></ion-icon></td>
+                        <td class='icon-wrapper'>
+                            <div class='icon-group'>
+                                <ion-icon class="edit " name="create-outline" ></ion-icon>
+                                <ion-icon class="edit delete-prod" name="close-outline" ></ion-icon>
+                            </div>           
+                        </td>
+                       <!-- <td class="edit"><ion-icon name="create-outline" ></ion-icon></td> -->
                     </tr>
                 `
             }).join("");
@@ -220,6 +228,7 @@ export default class Category extends AbstractView{
         this.mainElement.insertAdjacentHTML("beforeend",modalCategory);
         this.addModalListener(this.mainElement.querySelector('.modal'));
         document.querySelector('.cardHeader').insertAdjacentHTML('beforeend',this.SelectCustom.elements.selectHtml);
+        this.addCreateButtonEvent();
     }
     getScript(){
         document.querySelector(".pagination").addEventListener('click',()=>{
@@ -231,6 +240,57 @@ export default class Category extends AbstractView{
         })
            
     }
+    addCreateButtonEvent() {
+        let self = this;
+        document.querySelector('#form-btn').addEventListener('click',e=>{
+            const name = e.target.closest('.form-container').querySelector('#cateName').value;
+            if(name=="") {
+                alert('Chưa nhập tên danh mục');
+            } else {
+                let payLoad = {
+                    name :  name,
+                    parent_id : e.target.closest('.form-container').querySelector('#selectCat').value
+                }
+                self.addCategory(payLoad)
+            }
+        })
+    }
+    addCategory(payLoad) {
+        fetch('http://localhost:8080/OrganicStore/api-category',{
+            method : 'POST',
+            body : JSON.stringify(payLoad)
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.id> 0) {
+                location.pathname = location.pathname;
+            } else {
+                alert("Thêm sản phẩm thất bại");
+            }
+        })
+    }
+    //
+    DeleteCategory(row) {
+        let payLoad = {
+            id : row.dataset.id,
+        }
+        fetch('http://localhost:8080/OrganicStore/api-category',{
+            method : 'DELETE',
+            body : JSON.stringify(payLoad)
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.success!=null) {
+                let tBody = row.closest('tbody');
+                let offset = Array.prototype.indexOf.call(tBody.children,row),
+                    activePage = document.querySelector('li.number.active'),
+                    index = offset + (activePage.dataset.page -1 )*this.itemPerPage;
+                this.categoryData.splice(index,1);
+                activePage.click();
+            } else if (data.message!=null) {
+                alert(data.message);
+            } 
+        })
+    }
+
 }
 
 const modalCategory = `
