@@ -159,7 +159,12 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 					StringBuilder message =RestUtil.message;
 					message.delete(0,RestUtil.message.length());
 					message.append("45000 ").append(e.getMessage());
-				}else {
+				}else if (e.getErrorCode()==1648) {
+					StringBuilder message =RestUtil.message;
+					message.delete(0,RestUtil.message.length());
+					message.append("45000 ").append("Trong kho không đủ để bán");
+				}
+				else {
 					e.printStackTrace();					
 				}
 				return -1;
@@ -192,7 +197,13 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 				setParams(stmt, params );
 				stmt.executeUpdate();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getErrorCode()==1451){
+					StringBuilder message =RestUtil.message;
+					message.delete(0,RestUtil.message.length());
+					message.append("1451").append(e.getMessage());
+				}else {
+					e.printStackTrace();					
+				}
 			} finally {
 				try {
 					conn.close();
