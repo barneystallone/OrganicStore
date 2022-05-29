@@ -152,7 +152,15 @@ public class ProductAPI extends HttpServlet {
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
+		resp.setContentType("Application/json");
 		ProductModel productModel = RestUtil.of(req.getReader()).toModel(ProductModel.class);
 		productService.delete(productModel);
+		ObjectMapper mapper = new ObjectMapper();
+		if(RestUtil.message.toString().startsWith("1451")) {
+			mapper.writeValue(resp.getOutputStream(), mapper.createObjectNode().put("message", "Không thể xóa do ràng buộc dữ liệu"));
+			RestUtil.message.delete(0, RestUtil.message.length());
+		} else {
+			mapper.writeValue(resp.getOutputStream(), mapper.createObjectNode().put("success", "Xóa sản phẩm thành công"));
+		}
 	}
 }

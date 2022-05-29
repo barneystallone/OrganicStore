@@ -42,7 +42,7 @@ export default class CheckOut extends AbstractViewWithCart {
                         text1 : data.message.split('.')[0],
                         text2 : data.message.split('.')[1]
                     }
-                    new AbstractViewWithCart().oggleToast( this.elements.failToggle,false);
+                    new AbstractViewWithCart().ToggleToast( this.elements.failToggle,false);
                 }
                 else {
                     new AbstractViewWithCart().ToggleToast( this.elements.successToggle);

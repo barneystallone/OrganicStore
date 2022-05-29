@@ -85,8 +85,15 @@ public class CategoryAPI extends HttpServlet {
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
+		ObjectMapper mapper = new ObjectMapper();
 		CategoryModel categoryModel = RestUtil.of(req.getReader()).toModel(CategoryModel.class);
 		categoryService.delete(categoryModel);
+		if(RestUtil.message.toString().startsWith("1451")) {
+			mapper.writeValue(resp.getOutputStream(), mapper.createObjectNode().put("message", "Không thể xóa do ràng buộc dữ liệu"));
+			RestUtil.message.delete(0, RestUtil.message.length());
+		} else {
+			mapper.writeValue(resp.getOutputStream(), mapper.createObjectNode().put("success", "Xóa danh mục thành công"));
+		}
 //		ObjectMapper mapper = new ObjectMapper();
 	}
 }
