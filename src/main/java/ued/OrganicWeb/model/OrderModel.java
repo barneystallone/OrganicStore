@@ -50,7 +50,7 @@ public class OrderModel extends AbstractModel{
 		this.strPurchaseDate = strPurchaseDate;
 	}
 	public Date getCreateDate() {
-		if(strCreateDate!=null) {
+		if(createDate==null&&strCreateDate!=null) {
 			createDate = DateUtil.parse(strCreateDate);			
 		}
 		return createDate;

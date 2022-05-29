@@ -46,7 +46,7 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO{
 			model.getShipping_address(),
 			model.getRecipient_name(),
 			model.getRecipient_phone(),
-			model.getPayment_method(),
+			"cod",
 			model.getCustomer_id(),
 			model.getArea_id()			
 		);
