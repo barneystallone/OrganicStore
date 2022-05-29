@@ -7,160 +7,18 @@ export default class Product extends AbstractView {
         this.getHtml();
         this.DragUploadFile = new DragUploadFile();
     }
+
+    getHtml() {
+        this.mainElement.classList.add("d-none");
+        this.mainElement.innerHTML = html ; 
+        this.mainElement.insertAdjacentHTML("beforeend",modalHtml);
+    }
     getAsync() {
         Promise.all([this.getCategory(),this,this.getProducts()])
         .then(([categories,products])=> {
             console.log({categories});
             console.log({products})
         })
-    }
-    popupModal(modal){
-        document.querySelectorAll(".modal-toggle").forEach(elem =>{
-            elem.addEventListener('click',(e)=>{
-                if(e.target.matches('a.add')){
-                    e.preventDefault();
-                } else if(e.target.matches('.modal-toggle.edit')) {
-                    document.querySelector('#form').setAttribute('data-id',e.target.dataset.id);
-                    this.loadOneProduct(e.target.dataset.id);
-                }
-                if(modal.classList.contains("active")){
-                    modal.style.opacity = 0;
-                    setTimeout(()=>{
-                        modal.classList.toggle("active");
-                    },300)
-                }
-                else{
-                    modal.style.opacity = 1;
-                    modal.classList.toggle("active");
-                }
-            })
-        });
-    }
-    // Cho button Save và Add -> sau khi call api
-    addListener() {
-         
-        let self = this,
-            editBtn = document.querySelector('.modal-toggle.edit'), 
-            addBtn =  document.querySelector('.modal-toggle.add') ;
-        let typeArr = ['Edit','Add'];
-        [editBtn,addBtn].forEach((e,index)=>{
-            e.addEventListener('click',()=>{
-                document.querySelector('#modal-btn').textContent = typeArr[index];
-                self.type = typeArr[index];
-            })
-        })
-
-        const form = document.querySelector('#form');
-        form.addEventListener('submit',e=>{
-            e.preventDefault();
-            if(self.type =='Add') {
-                if(document.querySelector('.drop-zone__input').files[0].type.startsWith('image')) {
-                    self.AddProduct(form);
-                }
-            } else if(self.type == 'Edit') {
-                // if(document.querySelector('.drop-zone__input').files[0].type.startsWith('image')) {
-                //     self.AddProduct(form);
-                // }
-            }
-        })
-    }
-    loadOneProduct(id) {
-        fetch(`http://localhost:8080/OrganicStore/api-product?id=${id}`)
-        .then(res=>res.json())
-        .then(data=>{
-            
-            let productData = {
-                "[name='name']" : data.name,
-                "[name='categoryId']" : data.categoryId,
-                "[name='price']" : data.price,
-                "[name='in_stock']" : data.in_stock,
-                "[name='saleOff']" : data.saleOff,
-                "[name='description']" : data.description
-            }
-            this.updateModalContent(productData,data.base64Images);
-            // console.log(data);
-
-
-        }).catch(err=>console.log(err));  
-    }
-    updateModalContent(productData,base64Img) {
-        let form = this.mainElement.querySelector('#form');
-        for(const [key,value] of Object.entries(productData)) {
-            form.querySelector(key).value = value;
-        }
-        let dropZoneElement = document.querySelector('.drop-zone'),
-            thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
-
-        if (dropZoneElement.querySelector(".drop-zone__prompt")) {
-            dropZoneElement.querySelector(".drop-zone__prompt").remove();
-        }
-        
-        if (thumbnailElement) {
-            thumbnailElement.remove();
-        }
-        thumbnailElement = document.createElement("div");
-        thumbnailElement.classList.add("drop-zone__thumb");
-        dropZoneElement.appendChild(thumbnailElement);
-
-        thumbnailElement.style.backgroundImage = `url('data:image/jpeg;base64,${base64Img}')`;
-        thumbnailElement.classList.add('unsetBg');
-    }
-    UpdateProduct(form) {
-        const callUpdateAPI = (payLoad) => {
-            fetch('http://localhost:8080/OrganicStore/api-product',{
-                method :'PUT',
-                body : payLoad
-            }).then(res=>res.json())
-            .then(data=>{
-                if(data.fail!=true) {
-                    this.mainElement.querySelector('tbody').appendChild(this.elementFrom(this.getRowHTML({
-                        id : data.id,
-                        base64 : 'data:image/jpg;base64,'+ data.base64Images,
-                        name : data.name,
-                        category : data.category.name,
-                        price : data.price,
-                        mountInStock : data.in_stock,
-                    })))
-                }
-                console.log(data);
-
-            }).catch(err=>console.log(err));  
-        }
-        if(document.querySelector('.drop-zone__input').files[0].type.startsWith('image')){
-            const formData = new FormData(form);
-            formData.append('id',form.dataset.id);
-            callUpdateAPI(formData);
-        } else {
-
-        };
-    }
-    AddProduct(formElement) {
-        const formData = new FormData(formElement);
-        console.log([...formData.entries()]);
-        fetch('http://localhost:8080/OrganicStore/api-product',{
-            method :'POST',
-            body : formData
-        }).then(res=>res.json())
-        .then(data=>{
-            if(data.fail!=true) {
-                this.mainElement.querySelector('tbody').appendChild(this.elementFrom(this.getRowHTML({
-                    id : data.id,
-                    base64 : 'data:image/jpg;base64,'+ data.base64Images,
-                    name : data.name,
-                    category : data.category.name,
-                    price : data.price,
-                    mountInStock : data.in_stock,
-                })))
-            }
-            console.log(data);
-
-        }).catch(err=>console.log(err));
-    }
-    
-    getHtml() {
-        this.mainElement.classList.add("d-none");
-        this.mainElement.innerHTML = html ; 
-        this.mainElement.insertAdjacentHTML("beforeend",modalHtml);
     }
     getProducts() {
         return new Promise((resolve,reject)=>{
@@ -206,6 +64,67 @@ export default class Product extends AbstractView {
             })
         });
     }
+    // Cho button Save và Add -> sau khi call api
+    addListener() {
+         
+        let self = this,
+            typeArr = ['Edit','Add','Delete'];
+
+        document.querySelectorAll('.delete-prod').forEach(e=>{
+            e.addEventListener('click',()=>{
+                self.type = typeArr[2];
+
+            })
+        })
+        
+        document.querySelectorAll('.modal-toggle.edit').forEach(e=>{
+            e.addEventListener('click',()=>{
+                document.querySelector('#modal-btn').textContent = typeArr[0];
+                self.type = typeArr[0];
+            })
+        })
+        document.querySelectorAll('.modal-toggle.add').forEach(e=>{
+            e.addEventListener('click',()=>{
+                document.querySelector('#modal-btn').textContent = typeArr[1];
+                self.type = typeArr[1];
+            })
+        })
+
+        const form = document.querySelector('#form');
+        form.addEventListener('submit',e=>{
+            e.preventDefault();
+            if(self.type =='Add') {
+                if(document.querySelector('.drop-zone__input').files[0].type.startsWith('image')) {
+                    self.AddProduct(form);
+                }
+            } else if(self.type == 'Edit') {
+                self.UpdateProduct(form);
+            }
+        })
+    }
+    // Add product feature
+    AddProduct(formElement) {
+        const formData = new FormData(formElement);
+        console.log([...formData.entries()]);
+        fetch('http://localhost:8080/OrganicStore/api-product',{
+            method :'POST',
+            body : formData
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.fail!=true) {
+                this.mainElement.querySelector('tbody').appendChild(this.elementFrom(this.getRowHTML({
+                    id : data.id,
+                    base64 : 'data:image/jpg;base64,'+ data.base64Images,
+                    name : data.name,
+                    category : data.category.name,
+                    price : data.price,
+                    mountInStock : data.in_stock,
+                })))
+            }
+            console.log(data);
+
+        }).catch(err=>console.log(err));
+    }
     getRowHTML(product) {
         let price = product.price.toLocaleString('vi-VN');
         return `
@@ -224,7 +143,7 @@ export default class Product extends AbstractView {
         <td class='icon-wrapper'>
             <div class='icon-group'>
                 <ion-icon class="modal-toggle edit " name="create-outline"  data-id="${product.id}"></ion-icon>
-                <ion-icon class="edit " name="close-outline" ></ion-icon>
+                <ion-icon class="edit delete-prod" name="close-outline" ></ion-icon>
             </div>           
             
         </td>
@@ -232,28 +151,125 @@ export default class Product extends AbstractView {
     </tr>
         ` ;
     }
+    // End add product feature
+
+    // Start Update Product feature
+    UpdateProduct(form) {
+        let hasFile =  document.querySelector('.drop-zone__input').files.length>0,
+            fileIsImg = (hasFile)? document.querySelector('.drop-zone__input').files[0].type.startsWith('image') : false;
+        
+        if(hasFile && fileIsImg){
+            const formData = new FormData(form);
+            formData.append('id',form.dataset.id);
+            this.callUpdateAPI(formData);
+        } else {
+            const payLoad = {
+                id : form.dataset.id,
+                name : form.querySelector('[name="name"]').value,
+                description: form.querySelector('[name="description"]').value,
+                in_stock: form.querySelector('[name="in_stock"]').value,
+                categoryId: form.querySelector('[name="categoryId"]').value,
+                price : form.querySelector('[name="price"]').value,
+                saleOff: form.querySelector('[name="saleOff"]').value,
+            }
+            this.callUpdateAPI(JSON.stringify(payLoad));
+        };
+    }
+    callUpdateAPI (payLoad) {
+        fetch('http://localhost:8080/OrganicStore/api-product',{
+            method :'PUT',
+            body : payLoad
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.fail!=true) {
+                const row = this.mainElement.querySelector(`tr[data-id="${data.id}"]`);
+                row.querySelector('[data-img]').setAttribute('src','data:image/jpg;base64,'+ data.base64Images);
+                row.querySelector('[data-name]').textContent = data.name;
+                row.querySelector('[data-category]').textContent = data.category.name;
+                row.querySelector('.prod-price').textContent = data.price.toLocaleString('vi-VN');
+                row.querySelector('.mountInStock').textContent = data.in_stock;
+                
+            }
+            console.log(data);
+
+        }).catch(err=>console.log(err));  
+    }
+    // End Update Product feature
+
+    // Start Delete Product feature
+    DeleteProduct() {
+        
+    }
+    // End Delete Product feature
+    
+    // Start Modal Toggle Event
+    popupModal(modal){
+        document.querySelectorAll(".modal-toggle").forEach(elem =>{
+            elem.addEventListener('click',(e)=>{
+                if(e.target.matches('a.add')){
+                    e.preventDefault();
+                } else if(e.target.matches('.modal-toggle.edit')) {
+                    document.querySelector('#form').setAttribute('data-id',e.target.dataset.id);
+                    this.loadOneProduct(e.target.dataset.id);
+                }
+                if(modal.classList.contains("active")){
+                    modal.style.opacity = 0;
+                    setTimeout(()=>{
+                        modal.classList.toggle("active");
+                    },300)
+                }
+                else{
+                    modal.style.opacity = 1;
+                    modal.classList.toggle("active");
+                }
+            })
+        });
+    }
+    loadOneProduct(id) {
+        fetch(`http://localhost:8080/OrganicStore/api-product?id=${id}`)
+        .then(res=>res.json())
+        .then(data=>{
+            
+            let productData = {
+                "[name='name']" : data.name,
+                "[name='categoryId']" : data.categoryId,
+                "[name='price']" : data.price,
+                "[name='in_stock']" : data.in_stock,
+                "[name='saleOff']" : data.saleOff,
+                "[name='description']" : data.description
+            }
+            this.updateModalContent(productData,data.base64Images);
+            // console.log(data);
+
+
+        }).catch(err=>console.log(err));  
+    }
+    updateModalContent(productData,base64Img) {
+        let form = this.mainElement.querySelector('#form');
+        for(const [key,value] of Object.entries(productData)) {
+            form.querySelector(key).value = value;
+        }
+        let dropZoneElement = document.querySelector('.drop-zone'),
+            thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
+
+        if (dropZoneElement.querySelector(".drop-zone__prompt")) {
+            dropZoneElement.querySelector(".drop-zone__prompt").remove();
+        }
+        
+        if (thumbnailElement) {
+            thumbnailElement.remove();
+        }
+        thumbnailElement = document.createElement("div");
+        thumbnailElement.classList.add("drop-zone__thumb");
+        dropZoneElement.appendChild(thumbnailElement);
+
+        thumbnailElement.style.backgroundImage = `url('data:image/jpeg;base64,${base64Img}')`;
+        thumbnailElement.classList.add('unsetBg');
+    }
+     // end Modal Toggle Event
 }
 
-//
-{/* <div>
-        <img class="prod-img"src=" alt="">
-    </div> */}
-let prod = `
-<td >
-    <div class="prod-info">
-        <img class="prod-img"src=" alt="">
-        <div class="prod-text">
-            <h5>aaaaaaaaaaaaaaaa</h5>
-            <p>aaaa</p>
-        </div>
-    </div>
-    
-</td>
-<td class='prod-price'>aaaa</td>
-<td class='mountInStock'>aaaaaaa</td>
-<td class="edit"><ion-icon name="create-outline" ></ion-icon></td>
-` ;
-//
+// component html
 const html = `
 <div class="data-table-wrapper " style="margin-top:80px;">
     <div class="data-table product">
