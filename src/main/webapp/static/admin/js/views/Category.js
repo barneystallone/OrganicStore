@@ -262,7 +262,9 @@ export default class Category extends AbstractView{
         }).then(res=>res.json())
         .then(data=>{
             if(data.id> 0) {
-                location.pathname = location.pathname;
+                // location.pathname = location.pathname;
+                document.querySelector('a[href="/OrganicStore/admin/category"]').click();
+                
             } else {
                 alert("Thêm sản phẩm thất bại");
             }
