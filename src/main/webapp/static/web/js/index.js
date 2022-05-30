@@ -3,6 +3,8 @@ import Details from "/OrganicStore/static/web/js/views/Details.js";
 import CartSub from "/OrganicStore/static/web/js/utils/cart_sub.js";
 import ShoppingCart from "/OrganicStore/static/web/js/views/ShoppingCartDetails.js";
 import CheckOut from "/OrganicStore/static/web/js/views/CheckOut.js";
+import LoginModal from "/OrganicStore/static/web/js/utils/LoginModal.js";
+
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
 
@@ -71,6 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     new CartSub(document.querySelector('.cart_subs'));
+    new LoginModal({
+        modal : document.querySelector('.modal') ,
+        loginBtn : document.querySelector('#login') ,
+        signUpBtn :document.querySelector('#sign-up')
+    });
     router();
 
 });

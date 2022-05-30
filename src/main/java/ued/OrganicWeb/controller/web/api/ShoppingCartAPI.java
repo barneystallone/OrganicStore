@@ -24,7 +24,7 @@ import ued.OrganicWeb.utils.RestUtil;
 import ued.OrganicWeb.utils.SessionUtil;
 
 @WebServlet(urlPatterns = {"/api-shopping-cart"})
-public class ShoppingCartServlet extends HttpServlet {
+public class ShoppingCartAPI extends HttpServlet {
 	
 	@Inject
 	IProductService productService;

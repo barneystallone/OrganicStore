@@ -269,23 +269,25 @@ const container = document.querySelector(".container_login"),
         });
     })
 
-const modalToggle = () => {
-	const modal = document.querySelector(".modal");
-	if(modal.classList.contains("active")){
-		modal.style.opacity = 0;
-		setTimeout(()=>{
-			modal.classList.toggle("active");
-		},500)
-	}
-	else{
-		modal.style.opacity = 1;
-		modal.classList.toggle("active");
-	}
-}
+// const modalToggle = () => {
+// 	const modal = document.querySelector(".modal");
+// 	if(modal.classList.contains("active")){
+// 		modal.style.opacity = 0;
+// 		setTimeout(()=>{
+// 			modal.classList.toggle("active");
+// 		},500)
+// 	}
+// 	else{
+// 		modal.style.opacity = 1;
+// 		modal.classList.toggle("active");
+// 	}
+// }
 
-document.querySelectorAll('.header__top__right__auth').forEach(e=>{
-	e.addEventListener('click',evt=>{
-		evt.preventDefault();
-		modalToggle();
-	})
-})
+// document.querySelectorAll('.header__top__right__auth').forEach(e=>{
+// 	e.addEventListener('click',evt=>{
+// 		evt.preventDefault();
+// 		if(e.classList.contains('logout')==false) {
+// 			modalToggle();
+// 		}
+// 	})
+// })
