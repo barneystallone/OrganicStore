@@ -58,8 +58,8 @@ public class CategoryAPI extends HttpServlet {
 				mapper.writeValue(resp.getOutputStream(), "Invalid category id");
 			}
 		}
-		
 	}
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
@@ -71,6 +71,7 @@ public class CategoryAPI extends HttpServlet {
 		data.put("id", id);
 		mapper.writeValue(resp.getOutputStream(), data);
 	}
+	
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
@@ -81,6 +82,7 @@ public class CategoryAPI extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(resp.getOutputStream(), categoryModel);
 	}
+	
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
