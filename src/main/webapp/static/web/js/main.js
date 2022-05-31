@@ -223,3 +223,71 @@
 
 
 })(jQuery);
+
+const container = document.querySelector(".container_login"),
+      pwShowHide = document.querySelectorAll(".showHidePw"),
+      pwFields = document.querySelectorAll(".password"),
+      signUp = document.querySelector(".signup-link"),
+    //   checkout = document.querySelector(".checkout-link");
+      login = document.querySelector(".login-link");
+
+    pwShowHide.forEach(eyeIcon =>{
+        eyeIcon.addEventListener("click", ()=>{
+            pwFields.forEach(pwField =>{
+                if(pwField.type ==="password"){
+                    pwField.type = "text";
+
+                    pwShowHide.forEach(icon =>{
+                        icon.classList.replace("uil-eye-slash", "uil-eye");
+                    })
+                }else{
+                    pwField.type = "password";
+
+                    pwShowHide.forEach(icon =>{
+                        icon.classList.replace("uil-eye", "uil-eye-slash");
+                    })
+                }
+            }) 
+        })
+    })
+
+    signUp.addEventListener("click", (e)=>{
+		e.preventDefault();
+        container.classList.add("active");
+    });
+    login.addEventListener("click", (e)=>{
+		e.preventDefault();
+        container.classList.remove("active");
+    });
+    // checkout.addEventListener("click", ( )=>{
+    //     container.classList.toggle("active2");
+    // });
+    document.querySelectorAll(".checkout-link").forEach(e=>{
+        e.addEventListener("click", (evt)=>{
+			evt.preventDefault();
+            container.classList.toggle("active2");
+        });
+    })
+
+// const modalToggle = () => {
+// 	const modal = document.querySelector(".modal");
+// 	if(modal.classList.contains("active")){
+// 		modal.style.opacity = 0;
+// 		setTimeout(()=>{
+// 			modal.classList.toggle("active");
+// 		},500)
+// 	}
+// 	else{
+// 		modal.style.opacity = 1;
+// 		modal.classList.toggle("active");
+// 	}
+// }
+
+// document.querySelectorAll('.header__top__right__auth').forEach(e=>{
+// 	e.addEventListener('click',evt=>{
+// 		evt.preventDefault();
+// 		if(e.classList.contains('logout')==false) {
+// 			modalToggle();
+// 		}
+// 	})
+// })

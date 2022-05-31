@@ -23,7 +23,7 @@ public class AuthenticationServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = req.getServletPath();
 		if(path.equals("/login")) {
-			String status = req.getParameter("status"); 
+//			String status = req.getParameter("status"); 
 			
 			UserModel user = (UserModel) SessionUtil.getInstance().getValue(req,"user");
 			if(user!=null ) {

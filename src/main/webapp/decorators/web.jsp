@@ -51,6 +51,7 @@
 <link rel="stylesheet"
 	href="${root}/static/web/css/slicknav.min.css"
 	type="text/css">
+	<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 <link rel="stylesheet" href="${root}/static/web/css/style.css"
 	type="text/css">
 </head>
@@ -61,7 +62,9 @@
 	<div class="main">
 
 	</div>
-
+	<!-- loginModal  -->
+	<%@ include file="/common/web/loginModal.jsp"%>
+	<!-- loginModal -->
 	<div class="toast-wrapper">
 		<!-- <div class="toast__custom">
 			<div class="toast__custom-content">
