@@ -44,6 +44,8 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 				}
 				else if (param instanceof String) {
 					stmt.setString(i + 1, (String) param);
+				} else if (param instanceof Boolean) {
+					stmt.setBoolean(i + 1, (Boolean) param);
 				}
 				else if (param == null ) {
 					stmt.setNull(i+1, java.sql.Types.NULL );

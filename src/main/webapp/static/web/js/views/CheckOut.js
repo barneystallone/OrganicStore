@@ -5,14 +5,23 @@ export default class CheckOut extends AbstractViewWithCart {
     constructor(params) {
         super(params);
         this.getCartInSesssion()
-        .then()
-        .catch(err=>console.log(err));
+        .then(()=>{
+            this.InitOrderList();
+            const self = this;
+            document.querySelector('.cart_container').addEventListener('mouseleave',()=>{
+                if(document.querySelector('.checkout__order')){
+                    self.InitOrderList();
+                }
+            });
+        }).catch(err=>console.log(err));
+        
         this.getHTML();
         this.SubmitListener();
         this.elements.successToggle = {
             text1: "Success",
             text2: "Thanh toán thành công. Reset giỏ hàng",
         }
+        this.editCartSubListener();
     }
 
     getHTML() {
@@ -21,6 +30,21 @@ export default class CheckOut extends AbstractViewWithCart {
         AddAreaEventListener(mainInner.querySelector('#district'),mainInner.querySelector('#subDistrict'));
         this.elements.main.innerHTML = "";
         this.elements.main.appendChild(mainInner);
+        
+        
+    }
+    InitOrderList(){
+        const orderList = document.querySelector('.order-list'),
+              total = this.currencyFormat(document.querySelector('#showcartresprice .total b').textContent.replace(/[^0-9]/g,""));
+        orderList.innerHTML="";
+        [...document.querySelector('#showcartresitem').children].forEach(e=>{
+            const   name = e.querySelector('span.name').textContent,
+                    id = e.getAttribute('id-cart'),
+                    subTotal= this.currencyFormat(e.querySelector('.tongtiensp').textContent.replace(/[^0-9]/g,""));
+            orderList.insertAdjacentHTML('beforeend',`<li data-id=${id}>${name} <span>${subTotal}</span></li>`)
+        })
+        document.querySelector('.checkout__order__subtotal span').textContent = total;
+        document.querySelector('.checkout__order__total span').textContent = total;
     }
     SubmitListener() {
         document.querySelector('[order-submit]').addEventListener('click',(e)=>{
@@ -128,7 +152,7 @@ const html = `<div class="checkout spad">
                     <div class="checkout__order">
                         <h4>Your Order</h4>
                         <div class="checkout__order__products">Products <span>Total</span></div>
-                        <ul>
+                        <ul class="order-list">
                             <li>Vegetable’s Package <span>$75.99</span></li>
                             <li>Fresh Vegetable <span>$151.99</span></li>
                             <li>Organic Bananas <span>$53.99</span></li>

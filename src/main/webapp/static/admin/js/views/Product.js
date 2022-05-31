@@ -65,29 +65,16 @@ export default class Product extends AbstractView {
         });
     }
     // Cho button Save và Add -> sau khi call api
-    addListener() {
-         
-        let self = this,
-            typeArr = ['Edit','Add','Delete'];
+    addListener() {       
+        let self = this;
 
-        document.querySelectorAll('.delete-prod').forEach(e=>{
-            e.addEventListener('click',()=>{
-                self.type = typeArr[2];
-
-            })
+        const rows = [...document.querySelector('#productTable tbody').children];
+        rows.forEach(row=>{
+            this.addRowListener(row);
         })
-        
-        document.querySelectorAll('.modal-toggle.edit').forEach(e=>{
-            e.addEventListener('click',()=>{
-                document.querySelector('#modal-btn').textContent = typeArr[0];
-                self.type = typeArr[0];
-            })
-        })
-        document.querySelectorAll('.modal-toggle.add').forEach(e=>{
-            e.addEventListener('click',()=>{
-                document.querySelector('#modal-btn').textContent = typeArr[1];
-                self.type = typeArr[1];
-            })
+        document.querySelector('.modal-toggle.add').addEventListener('click',()=>{
+            document.querySelector('#modal-btn').textContent ="Add";
+            self.type = "Add";
         })
 
         const form = document.querySelector('#form');
@@ -102,6 +89,20 @@ export default class Product extends AbstractView {
             }
         })
     }
+    // add listener for edit , delete button
+    addRowListener(row){
+        let self = this,
+            typeArr = ['Edit','Delete'];
+        row.querySelector('.modal-toggle.edit').addEventListener('click',()=>{
+            document.querySelector('#modal-btn').textContent = typeArr[0];
+            self.type = typeArr[0];
+        })
+        row.querySelector('.delete-prod').addEventListener('click',(e)=>{
+            self.type = typeArr[1];
+            this.DeleteProduct(e.target.closest('tr'));
+        })
+    }
+
     // Add product feature
     AddProduct(formElement) {
         const formData = new FormData(formElement);
@@ -112,14 +113,17 @@ export default class Product extends AbstractView {
         }).then(res=>res.json())
         .then(data=>{
             if(data.fail!=true) {
-                this.mainElement.querySelector('tbody').appendChild(this.elementFrom(this.getRowHTML({
+                const row = this.elementFrom(this.getRowHTML({
                     id : data.id,
                     base64 : 'data:image/jpg;base64,'+ data.base64Images,
                     name : data.name,
                     category : data.category.name,
                     price : data.price,
                     mountInStock : data.in_stock,
-                })))
+                }));
+                this.addRowListener(row);
+                this.addToggleModalEvent(row.querySelector('.modal-toggle.edit'),document.querySelector('.modal.product'));
+                this.mainElement.querySelector('tbody').appendChild(row);
             }
             console.log(data);
 
@@ -187,8 +191,7 @@ export default class Product extends AbstractView {
                 row.querySelector('[data-name]').textContent = data.name;
                 row.querySelector('[data-category]').textContent = data.category.name;
                 row.querySelector('.prod-price').textContent = data.price.toLocaleString('vi-VN');
-                row.querySelector('.mountInStock').textContent = data.in_stock;
-                
+                row.querySelector('.mountInStock').textContent = data.in_stock;     
             }
             console.log(data);
 
@@ -197,33 +200,51 @@ export default class Product extends AbstractView {
     // End Update Product feature
 
     // Start Delete Product feature
-    DeleteProduct() {
-        
+    DeleteProduct(row) {
+        let payLoad = { 
+            id : `${row.dataset.id}`
+        }
+        fetch("http://localhost:8080/OrganicStore/api-product",{
+            method : 'DELETE',
+            body : JSON.stringify(payLoad)
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.success!=null){
+                row.remove();
+            } else if (data.message!=null) {
+                alert(data.message);
+            }
+        })
     }
     // End Delete Product feature
     
     // Start Modal Toggle Event
     popupModal(modal){
         document.querySelectorAll(".modal-toggle").forEach(elem =>{
-            elem.addEventListener('click',(e)=>{
-                if(e.target.matches('a.add')){
-                    e.preventDefault();
-                } else if(e.target.matches('.modal-toggle.edit')) {
-                    document.querySelector('#form').setAttribute('data-id',e.target.dataset.id);
-                    this.loadOneProduct(e.target.dataset.id);
-                }
-                if(modal.classList.contains("active")){
-                    modal.style.opacity = 0;
-                    setTimeout(()=>{
-                        modal.classList.toggle("active");
-                    },300)
-                }
-                else{
-                    modal.style.opacity = 1;
-                    modal.classList.toggle("active");
-                }
-            })
+            this.addToggleModalEvent(elem,modal);
         });
+    }
+    addToggleModalEvent(elem,modal) {
+        elem.addEventListener('click',(e)=>{
+            if(e.target.matches('a.add')){
+                e.preventDefault();
+            } else if(e.target.matches('.modal-toggle.edit')) {
+                let form = document.querySelector('#form');
+                form.setAttribute('data-id',e.target.dataset.id);
+                form.querySelector('.modal-header span').textContent = `#${e.target.closest('tr').dataset.id}`;
+                this.loadOneProduct(e.target.dataset.id);
+            }
+            if(modal.classList.contains("active")){
+                modal.style.opacity = 0;
+                setTimeout(()=>{
+                    modal.classList.toggle("active");
+                },300)
+            }
+            else{
+                modal.style.opacity = 1;
+                modal.classList.toggle("active");
+            }
+        })
     }
     loadOneProduct(id) {
         fetch(`http://localhost:8080/OrganicStore/api-product?id=${id}`)
@@ -238,6 +259,7 @@ export default class Product extends AbstractView {
                 "[name='saleOff']" : data.saleOff,
                 "[name='description']" : data.description
             }
+            
             this.updateModalContent(productData,data.base64Images);
             // console.log(data);
 
@@ -246,6 +268,7 @@ export default class Product extends AbstractView {
     }
     updateModalContent(productData,base64Img) {
         let form = this.mainElement.querySelector('#form');
+        
         for(const [key,value] of Object.entries(productData)) {
             form.querySelector(key).value = value;
         }
@@ -274,10 +297,10 @@ const html = `
 <div class="data-table-wrapper " style="margin-top:80px;">
     <div class="data-table product">
         <div class="cardHeader">
-            <h2>Bảng sản phẩm</h2>
+            <h2>Product</h2>
             <a   href="#" class="btn modal-toggle add " >Add New</a>
         </div>
-        <table id="customerTable" class=" table table-sortable ">
+        <table id="productTable" class=" table table-sortable ">
             <thead>
                 <th class="table-id">ID</th>
                 <th >Info</th>
@@ -300,7 +323,7 @@ const modalHtml = `
         </div>
         <header class="modal-header">
             <i class="modal-heading-icon fa-solid fa-suitcase"></i>
-            Product
+            Product <span></span>
         </header>
         <div class="modal-body">
             <div class="modal-input-group">

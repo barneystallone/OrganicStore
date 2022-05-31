@@ -25,8 +25,8 @@ export const initArea = (cityElem,districtElem,subDistrictElem) => {
 
 export const AddAreaEventListener = (districtElem,subDistrictElem) => {
         // d-none => display: none
-        // subDistrictElem.querySelectorAll(`option[districtIndex="0"]`)
-        //     .forEach(e => e.classList.remove("d-none"));
+        subDistrictElem.querySelectorAll(`option[districtIndex="0"]`)
+            .forEach(e => e.classList.remove("d-none"));
  
         districtElem.addEventListener("change", e => {
             const districtIndex = e.target.value;

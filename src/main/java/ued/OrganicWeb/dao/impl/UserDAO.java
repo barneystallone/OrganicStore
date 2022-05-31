@@ -13,6 +13,8 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO{
 	
 	private UserDAO() {};
 	
+	
+	
 	public static UserDAO getInstance() {
 		if(instance==null) {
 			instance = new UserDAO();
@@ -34,21 +36,42 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO{
 		}
 		return super.query(sql, new UserMapper(),params);
 	}
-
+	@Override
+	public Boolean isUniqueUsername(UserModel model) {
+		StringBuilder sql = new StringBuilder("select count(id) from user where username = ?");
+		int count = rowCount(sql,model.getUsername());
+		return (count>0) ? false : true;
+	}
 	@Override
 	public int save(UserModel model) {
-		CustomerModel customerModel = model.getCustomer();
-		int id = CustomerDAO.getInstance().save(customerModel);
-		if(id>0) {
-			model.setCustomer_id(id);
-			StringBuilder sql = new StringBuilder("Insert into user"
-					+ "(username, customer_id, role_id, status)"
-					+ " values(?, ?, ?, ?)");
-			return super.insert(sql, model.getUsername(),model.getCustomer_id(),
-					model.getRole_id(),model.isActive());
+		if(isUniqueUsername(model)) {
+			CustomerModel customerModel = model.getCustomer();
+			int id = CustomerDAO.getInstance().save(customerModel);
+			if(id>0) {
+				model.setCustomer_id(id);
+				StringBuilder sql = new StringBuilder("Insert into user"
+						+ "(username, password, customer_id, role_id, status)"
+						+ " values(?, ?, ?, ?, ?)");
+				return super.insert(sql, model.getUsername(),model.getPassword(),model.getCustomer_id(),
+						model.getRole_id(),model.isActive());
+			} else {
+				return 0;		
+			}
 		} else {
-			return 0;		
+			return 0;
 		}
+//		CustomerModel customerModel = model.getCustomer();
+//		int id = CustomerDAO.getInstance().save(customerModel);
+//		if(id>0) {
+//			model.setCustomer_id(id);
+//			StringBuilder sql = new StringBuilder("Insert into user"
+//					+ "(username, customer_id, role_id, status)"
+//					+ " values(?, ?, ?, ?)");
+//			return super.insert(sql, model.getUsername(),model.getCustomer_id(),
+//					model.getRole_id(),model.isActive());
+//		} else {
+//			return 0;		
+//		}
 	}
 
 	@Override
