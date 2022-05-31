@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import ued.OrganicWeb.model.CustomerModel;
 import ued.OrganicWeb.model.OrderDetailsModel;
 import ued.OrganicWeb.model.OrderModel;
+import ued.OrganicWeb.model.UserModel;
 import ued.OrganicWeb.service.ICustomerService;
 import ued.OrganicWeb.service.IOrderDetailsService;
 import ued.OrganicWeb.service.IOrderService;
@@ -50,23 +51,30 @@ public class OrderCartAPI extends HttpServlet{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode resData = mapper.createObjectNode();
-		CustomerModel model = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
+//		CustomerModel model = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
+		UserModel userModel =(UserModel) SessionUtil.getInstance().getValue(req, "user");
+		CustomerModel model = null;
 		Map<Integer, Integer> listItems = (HashMap<Integer, Integer> )SessionUtil.getInstance().getValue(req, "listItems");
 		
+		boolean isLogin= false;
 		int customerID =0 ;
 		int orderID =0 ;
 		OrderModel orderModel = null;
-		if(SessionUtil.getInstance().getValue(req, "user")==null) {
+		if(userModel==null) {
+			model = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 			customerID = customerService.save(model);
 			model.setId(customerID);
 			orderModel = new OrderModel(new Date(),0,0,model.getHouseStreet(),model.getAreaId()
-					,model.getName(),model.getPhoneNumber(),customerID);
+					,model.getName(),model.getPhoneNumber(),model.getId());
 			orderID = orderService.save(orderModel);
 			orderModel.setId(orderID);
 			
 		} else {
-			//		TH2: có người dùng : ->
-			
+			model = userModel.getCustomer();
+			orderModel = new OrderModel(new Date(),0,0,model.getHouseStreet(),model.getAreaId()
+					,model.getName(),model.getPhoneNumber(),model.getId());
+			orderID = orderService.save(orderModel);
+			orderModel.setId(orderID);
 		}
 		final int orderIDFinal = orderID;
 		List<OrderDetailsModel> list = listItems.entrySet().parallelStream().map(e->{
@@ -76,7 +84,9 @@ public class OrderCartAPI extends HttpServlet{
 		orderDetailsService.saveMulti(list);
 		if(RestUtil.message.toString().startsWith("45000")) {
 			orderService.delete(orderModel);
-			customerService.delete(model);
+			if(!isLogin) {
+				customerService.delete(model);				
+			}
 			resData.put("status", 0);
 			resData.put("message", RestUtil.message.toString().substring(6)
 					.replaceAll("[\n]", "").trim().replaceAll("\\s+", " "));
