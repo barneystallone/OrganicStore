@@ -1,6 +1,7 @@
 
 import Dashboard from "/OrganicStore/static/admin/js/views/Dashboard.js";
 import Customer from "/OrganicStore/static/admin/js/views/Customer.js";
+import User from "/OrganicStore/static/admin/js/views/User.js";
 import Category from "/OrganicStore/static/admin/js/views/Category.js";
 import Product from "/OrganicStore/static/admin/js/views/Product.js";
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
@@ -24,6 +25,7 @@ const router = () => {
     const routes = [
         {path:"/OrganicStore/admin/" , view : Dashboard},
         {path:"/OrganicStore/admin/customer" , view : Customer},
+        {path:"/OrganicStore/admin/user" , view : User},
         {path:"/OrganicStore/admin/category" , view : Category},
         {path:"/OrganicStore/admin/product" , view : Product}
     ]

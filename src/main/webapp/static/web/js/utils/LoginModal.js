@@ -9,7 +9,7 @@ class LoginModal {
             signUpBtn : options.signUpBtn
         }
         this.AddListener();
-
+        this.isLogin = false;
     }
     modalToggle ()  {
         const modal = this.elements.main;
@@ -37,10 +37,10 @@ class LoginModal {
         document.querySelectorAll('.header__top__right__auth').forEach(e=>{
             e.addEventListener('click',evt=>{
                 evt.preventDefault();
-                if(e.classList.contains('logout')==false) {
-                    self.modalToggle();
-                } else {
+                if(self.isLogin) {
                     self.LogOutHandler();
+                } else {
+                    self.modalToggle();
                 }
             })
         })
@@ -76,7 +76,8 @@ class LoginModal {
                 if(data.success) {
                     alert(data.success);
                     this.elements.main.querySelector('.modal-close').click();
-                    e.classList.add('logout');
+                    // e.classList.add('logout');
+                    this.isLogin = true;
                 } else if (data.fail) {
                     alert(data.fail);
                 }
@@ -97,9 +98,7 @@ class LoginModal {
             if(data.success) {
                 alert(data.success);
                 this.elements.main.querySelector('.modal-close').click();
-                document.querySelectorAll('.header__top__right__auth').forEach(e=>{
-                    e.classList.add('logout');
-                })
+                this.isLogin = true;
             } else if (data.fail) {
                 alert(data.fail);
             }
@@ -112,9 +111,7 @@ class LoginModal {
         .then(data=>{
             if(data.success) {
                 alert(data.success);
-                document.querySelectorAll('.header__top__right__auth').forEach(e=>{
-                    e.classList.remove('logout');
-                })
+                this.isLogin = false;
             } 
         }).catch(err=>console.log(err));
     }
