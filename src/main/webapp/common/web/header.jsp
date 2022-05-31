@@ -39,18 +39,18 @@
 		</div>
 		<nav class="humberger__menu__nav mobile-menu">
 			<ul>
-				<li class="active"><a href="./index.html">Home</a></li>
-				<li><a href="./shop-grid.html">Shop</a></li>
-				<li><a href="#">Pages</a>
+				<li class="active"><a href="${root}/shopping" data-link>Home</a></li>
+				<!-- <li><a href="${root}/shopping" data-link>Shop</a></li> -->
+				<li><a href="#" >Pages</a>
 					<ul class="header__menu__dropdown">
-						<li><a href="${root}/shopping" data-link>Shop Details</a></li>
-						<li><a href="${root}/shopping" data-link>Shoping Cart</a></li>
+						<li><a href="${root}/shopping" data-link>Shopping</a></li>
+						<li><a href="${root}/shopping/cart" data-link>Shopping Cart</a></li>
 						<li><a href="${root}/checkout" data-link>Check Out</a></li>
-						<li><a href="${root}/shopping" data-link>Blog Details</a></li>
+						<!-- <li><a href="${root}/shopping" data-link>Blog Details</a></li> -->
 					</ul>
 				</li>
-				<li><a href="./blog.html">Blog</a></li>
-				<li><a href="./contact.html">Contact</a></li>
+				<li><a href="${root}/shopping/cart" data-link>Shopping Cart</a></li>
+				<li><a href="${root}/checkout" data-link>Checkout</a></li>
 			</ul>
 		</nav>
 		<div id="mobile-menu-wrap"></div>
@@ -117,18 +117,18 @@
 				<div class="col-lg-6">
 					<nav class="header__menu">
 						<ul>
-							<li class="active"><a href="${root}/shopping">Home</a></li>
-							<li><a href="${root}/shopping">Shop</a></li>
+							<li class="active"><a href="${root}/shopping" data-link>Home</a></li>
+							<!-- <li><a href="${root}/shopping" data-link>Shop</a></li> -->
 							<li><a href="#">Pages</a>
 								<ul class="header__menu__dropdown">
-									<li><a href="${root}/shopping" data-link>Shop Details</a></li>
-									<li><a href="${root}/shopping" data-link>Shoping Cart</a></li>
+									<li><a href="${root}/shopping" data-link>Shopping</a></li>
+									<li><a href="${root}/shopping/cart" data-link>Shopping Cart</a></li>
 									<li><a href="${root}/checkout" data-link>Check Out</a></li>
-									<li><a href="${root}/shopping" data-link>Blog Details</a></li>
+									<!-- <li><a href="${root}/shopping" data-link>Blogping</a></li> -->
 								</ul>
 							</li>
-							<li><a href="./blog.html">Blog</a></li>
-							<li><a href="./contact.html">Contact</a></li>
+							<li><a href="${root}/shopping/cart" data-link>Shopping Cart</a></li>
+							<li><a href="${root}/checkout" data-link>Check Out</a></li>
 						</ul>
 					</nav>
 				</div>

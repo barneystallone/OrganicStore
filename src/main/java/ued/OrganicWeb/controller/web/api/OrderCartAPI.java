@@ -44,25 +44,21 @@ public class OrderCartAPI extends HttpServlet{
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-//		super.doPost(req, resp);
 		req.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
 		
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode resData = mapper.createObjectNode();
-//		CustomerModel model = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 		UserModel userModel =(UserModel) SessionUtil.getInstance().getValue(req, "user");
 		CustomerModel model = null;
 		Map<Integer, Integer> listItems = (HashMap<Integer, Integer> )SessionUtil.getInstance().getValue(req, "listItems");
-		System.out.println(listItems.size());
 		boolean isLogin= false;
 		int customerID =0 ;
 		int orderID =0 ;
 		OrderModel orderModel = null;
-		if(listItems.size()==0) {
+		if(listItems==null||listItems.size()==0) {
 			resData.put("status", 0);
-			resData.put("message", "Lỗi. Giỏ hàng trông");
+			resData.put("message", "Lỗi. Giỏ hàng trống");
 		} else if(userModel==null) {
 			model = RestUtil.of(req.getReader()).toModel(CustomerModel.class);
 			if(model.getAreaId()!=0&&model.getName().equals("")==false&&model.getEmail().equals("")==false
