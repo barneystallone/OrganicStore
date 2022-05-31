@@ -136,7 +136,7 @@
 					<div class="header__cart">
 						<ul>
 							<li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-							<li>
+							<li class="cart_container">
 								<a href="/OrganicStore/shopping/cart" data-link><i class="fa fa-shopping-cart"></i><span>3</span></a>
 								<ul class="cart_subs">
 									<li class="first">
