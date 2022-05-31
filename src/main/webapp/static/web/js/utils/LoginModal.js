@@ -9,7 +9,7 @@ class LoginModal {
             signUpBtn : options.signUpBtn
         }
         this.AddListener();
-
+        this.isLogin = false;
     }
     modalToggle ()  {
         const modal = this.elements.main;
@@ -47,7 +47,10 @@ class LoginModal {
         document.querySelector('.modal-close').addEventListener('click',()=>{
             self.modalToggle();
         })
-        this.elements.loginBtn.addEventListener('click', ()=> this.LoginHandler())
+        this.elements.loginBtn.addEventListener('click', ()=> {
+            
+            this.LoginHandler()
+        })
         this.elements.signUpBtn.addEventListener('click', ()=> this.SignUpHandler())
     }
     SignUpHandler() {

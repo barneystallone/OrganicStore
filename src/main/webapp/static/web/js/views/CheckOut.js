@@ -5,8 +5,16 @@ export default class CheckOut extends AbstractViewWithCart {
     constructor(params) {
         super(params);
         this.getCartInSesssion()
-        .then(()=>this.InitOrderList())
-        .catch(err=>console.log(err));
+        .then(()=>{
+            this.InitOrderList();
+            const self = this;
+            document.querySelector('.cart_container').addEventListener('mouseleave',()=>{
+                if(document.querySelector('.checkout__order')){
+                    self.InitOrderList();
+                }
+            });
+        }).catch(err=>console.log(err));
+        
         this.getHTML();
         this.SubmitListener();
         this.elements.successToggle = {
@@ -37,22 +45,6 @@ export default class CheckOut extends AbstractViewWithCart {
         })
         document.querySelector('.checkout__order__subtotal span').textContent = total;
         document.querySelector('.checkout__order__total span').textContent = total;
-    }
-
-    editCartSubListener() {
-        const self = this;
-        document.querySelector('.cart_container').addEventListener('mouseleave',(e)=>{
-            if(document.querySelector('.checkout__order')){
-                let ulElement = e.target.closest('.cart_container').querySelector('#showcartresitem');
-                [...ulElement.children].forEach(e=>{
-                    let row = document.querySelector(`li[data-id="${e.getAttribute('id-cart')}"`);
-                    row.querySelector('span').textContent = self.currencyFormat( e.querySelector('.tongtiensp').textContent.replace(/[^0-9]/g,""));
-                })
-                let total = self.currencyFormat(document.querySelector('#showcartresprice .total b').textContent.replace(/[^0-9]/g,""));
-                document.querySelector('.checkout__order__subtotal span').textContent = total;
-                document.querySelector('.checkout__order__total span').textContent = total;
-            }
-        })
     }
     SubmitListener() {
         document.querySelector('[order-submit]').addEventListener('click',(e)=>{

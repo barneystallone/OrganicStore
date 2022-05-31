@@ -33,6 +33,15 @@
                     </a>
                 </li>
                 <li>
+                    <a href="${root}/admin/user" data-link>
+                        <span class="icon">
+                            <ion-icon class="icon-outline" name="person-outline"></ion-icon>
+                            <ion-icon class="icon-full" name="person"></ion-icon>
+                        </span>
+                        <span class="title">User</span>
+                    </a>
+                </li>
+                <li>
                     <a href="${root}/admin/category" data-link>
                         <span class="icon">
                             <ion-icon name="book-outline" class="icon-outline"></ion-icon>

@@ -22,6 +22,7 @@ export default class Category extends AbstractView{
             modal.setAttribute('data-id',row.dataset.id);
             modal.setAttribute('data-old_parent_id',row.dataset.parentid);
             modal.querySelector('#editCateName').value = row.dataset.name;
+            modal.querySelector('.modal-header span').textContent = `#${row.dataset.id}`;
             modal.querySelector('#superCate').value = row.dataset.parentid;
         })
         row.querySelector('.delete-prod').addEventListener('click',(e)=>{
@@ -203,7 +204,7 @@ export default class Category extends AbstractView{
             <div class="data-table-wrapper " style="margin-top:80px;">
                 <div class="data-table"> 
                     <div class="cardHeader">
-                        <h2>Customer</h2>
+                        <h2>Category</h2>
                     </div>
                     
                     <table class=" table table-sortable " >
@@ -303,7 +304,7 @@ const modalCategory = `
         </div>
         <header class="modal-header">
             <i class="modal-heading-icon fa-solid fa-face-laugh"></i>
-            Sửa danh mục
+            Sửa danh mục <span></span>
         </header>
         
         <div class="modal-body ">

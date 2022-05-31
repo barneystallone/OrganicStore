@@ -229,7 +229,9 @@ export default class Product extends AbstractView {
             if(e.target.matches('a.add')){
                 e.preventDefault();
             } else if(e.target.matches('.modal-toggle.edit')) {
-                document.querySelector('#form').setAttribute('data-id',e.target.dataset.id);
+                let form = document.querySelector('#form');
+                form.setAttribute('data-id',e.target.dataset.id);
+                form.querySelector('.modal-header span').textContent = `#${e.target.closest('tr').dataset.id}`;
                 this.loadOneProduct(e.target.dataset.id);
             }
             if(modal.classList.contains("active")){
@@ -257,6 +259,7 @@ export default class Product extends AbstractView {
                 "[name='saleOff']" : data.saleOff,
                 "[name='description']" : data.description
             }
+            
             this.updateModalContent(productData,data.base64Images);
             // console.log(data);
 
@@ -265,6 +268,7 @@ export default class Product extends AbstractView {
     }
     updateModalContent(productData,base64Img) {
         let form = this.mainElement.querySelector('#form');
+        
         for(const [key,value] of Object.entries(productData)) {
             form.querySelector(key).value = value;
         }
@@ -293,7 +297,7 @@ const html = `
 <div class="data-table-wrapper " style="margin-top:80px;">
     <div class="data-table product">
         <div class="cardHeader">
-            <h2>Bảng sản phẩm</h2>
+            <h2>Product</h2>
             <a   href="#" class="btn modal-toggle add " >Add New</a>
         </div>
         <table id="productTable" class=" table table-sortable ">
@@ -319,7 +323,7 @@ const modalHtml = `
         </div>
         <header class="modal-header">
             <i class="modal-heading-icon fa-solid fa-suitcase"></i>
-            Product
+            Product <span></span>
         </header>
         <div class="modal-body">
             <div class="modal-input-group">
