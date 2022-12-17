@@ -688,13 +688,17 @@ ol {
 	color: #b2b2b2;
 }
 
-.hero__search__form form button {
+.hero__search__form form [type=submit] {
 	position: absolute;
 	right: 0;
 	top: -1px;
 	height: 50px;
+	color: white;
+	line-height: 25px;
 }
-
+.hero__search__form form [type=submit]:hover {
+	opacity: 0.8;
+}
 .hero__search__phone {
 	float: right;
 }
@@ -4150,4 +4154,9 @@ ul.cart_subs li,
 .instant-search__result-title {
 	font-weight: bold;
 	font-size: 16px;
+}
+
+.disable {
+	cursor: default !important;
+    opacity: 0.7 !important;
 }

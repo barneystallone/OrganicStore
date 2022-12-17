@@ -51,6 +51,11 @@ export default class Shopping  extends AbstractViewWithCart{
         this.getData();
         this.setTitle('Shopping');
         this.getView();
+        this.elements = {
+            ...this.elements,
+            searchInput : document.querySelector('.instant-search__input'),
+            searchBtn :  document.querySelector('.instant-search__btn')
+        }
     }
 
     addListener(){
@@ -75,9 +80,17 @@ export default class Shopping  extends AbstractViewWithCart{
                 });
                
             })
-
         })
+
     }
+
+    getProductsBySearch(query) {
+        const url = new URL('/OrganicStore/api-search-product',window.location.origin);
+
+        url.searchParams.set('q',query);
+        return this.getProducts(url);
+    }
+
     getDiscountProducts(){
         return new Promise((resolve,reject)=> {
             fetch('http://localhost:8080/OrganicStore/api-product-discount')
@@ -113,9 +126,9 @@ export default class Shopping  extends AbstractViewWithCart{
             }).catch(err=>reject(err));
         })
     }
-    getProducts(){
+    getProducts(endpoint){
         return new Promise((resolve,reject)=>{
-            fetch('http://localhost:8080/OrganicStore/api-product')
+            fetch(endpoint)
             .then(res=>res.json())
             .then(data=>{
                 let product = new Array() ;
@@ -167,6 +180,11 @@ export default class Shopping  extends AbstractViewWithCart{
                     product.push(this.creatElementFromText(text));
                    
                 }
+                while (this.elements.main.querySelector('.list__product').firstChild) {
+                    this.elements.main.querySelector('.list__product').removeChild(
+                        this.elements.main.querySelector('.list__product').firstChild
+                    )
+                }
                 this.elements.main.querySelector('.list__product').append(...product);
                 
 
@@ -204,8 +222,11 @@ export default class Shopping  extends AbstractViewWithCart{
         })
     }
     getData() {
+        const searchParams = new URLSearchParams(window.location.search); 
+        let promise =  (searchParams.has('q')) ? this.getProductsBySearch(searchParams.get('q')) 
+            : this.getProducts(new URL('http://localhost:8080/OrganicStore/api-product'));
 
-        Promise.all([this.getProducts(),this .getParentCategories(),this.getDiscountProducts()])
+        Promise.all([promise,this .getParentCategories(),this.getDiscountProducts()])
         .then(([products,categories,discountProducts])=>{
             console.log({products});
             console.log({categories});

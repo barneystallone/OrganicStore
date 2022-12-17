@@ -20,8 +20,16 @@ class InstantSearch {
 
             const query = this.elements.input.value;
             
+            if(query.length<3) {
+                if(!this.elements.main.querySelector('.instant-search__btn').classList.contains('disable')) {
+                    this.elements.main.querySelector('.instant-search__btn').classList.add('disable');
+                }
+            } else if(this.elements.main.querySelector('.instant-search__btn').classList.contains('disable')) {
+                this.elements.main.querySelector('.instant-search__btn').classList.remove('disable');
+            }
+
             delay = setTimeout(()=>{
-                if(query.length<3) {
+                if(query.length<3) { 
                     this.populateResults([]);
                     return;
                 }
