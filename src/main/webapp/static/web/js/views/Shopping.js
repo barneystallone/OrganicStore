@@ -56,6 +56,7 @@ export default class Shopping  extends AbstractViewWithCart{
             searchInput : document.querySelector('.instant-search__input'),
             searchBtn :  document.querySelector('.instant-search__btn')
         }
+        console.log(this.elements);
     }
 
     addListener(){

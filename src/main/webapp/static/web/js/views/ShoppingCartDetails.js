@@ -135,6 +135,7 @@ export default class ShoppingCartDetails extends AbstractViewWithCart {
         this.cartTable = this.elements.main.querySelector('.shoping__cart__table table');
         this.UpdateCartListener();
     }
+    // tự động sửa lại phần cart ở dưới nếu update subcart
     editCartSubListener() {
         const self = this;
         document.querySelector('.cart_container').addEventListener('mouseleave',(e)=>{

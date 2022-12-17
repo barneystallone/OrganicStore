@@ -28,10 +28,11 @@ public class CustomerAPI extends HttpServlet{
 	private ICustomerService customerService;
 
 	private static final long serialVersionUID = 4470621607563822872L;
-
+// Lấy danh sách
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
+//		 client -> server : request
+// 		server -> client : response
 	/**
 	 *  Access origin control
 	 *  
@@ -88,6 +89,7 @@ public class CustomerAPI extends HttpServlet{
 		    mapper.writeValue(resp.getOutputStream(), idObject);
 		    
 	}
+//	Sửa
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ObjectMapper mapper = new  ObjectMapper();

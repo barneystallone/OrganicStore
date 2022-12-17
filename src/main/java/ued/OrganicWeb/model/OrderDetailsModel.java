@@ -2,6 +2,7 @@ package ued.OrganicWeb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+//  instance  new OrderDetailsModel()
 //@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderDetailsModel {
 	private int quantity;

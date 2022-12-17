@@ -1,4 +1,5 @@
 import AbstractViewWithCart from "/OrganicStore/static/web/js/views/AbstractViewWithCart.js";
+import IntergrateGoogleMap from "/OrganicStore/static/web/js/utils/IntergrateGoogleMap.js";
 import {AddAreaEventListener,initArea} from "/OrganicStore/static/common/AreaUtils.js";
 
 export default class CheckOut extends AbstractViewWithCart {
@@ -16,12 +17,12 @@ export default class CheckOut extends AbstractViewWithCart {
         }).catch(err=>console.log(err));
         
         this.getHTML();
+        
         this.SubmitListener();
         this.elements.successToggle = {
             text1: "Success",
             text2: "Thanh toán thành công. Reset giỏ hàng",
         }
-        this.editCartSubListener();
     }
 
     getHTML() {
@@ -31,7 +32,7 @@ export default class CheckOut extends AbstractViewWithCart {
         this.elements.main.innerHTML = "";
         this.elements.main.appendChild(mainInner);
         
-        
+        const intergrateGoogleMap = new IntergrateGoogleMap();
     }
     InitOrderList(){
         const orderList = document.querySelector('.order-list'),
@@ -160,11 +161,15 @@ const html = `<div class="checkout spad">
                         <div class="checkout__order__subtotal">Subtotal <span>$750.99</span></div>
                         <div class="checkout__order__total">Total <span>$750.99</span></div>
                         
-                        <button type="submit" class="site-btn" order-submit>PLACE ORDER</button>
+                        <button type="button" class="site-btn" order-submit>PLACE ORDER</button>
                     </div>
                 </div>
             </div>
         </form>
+        <div id="google-map">
+            <div id="map-panel"></div>
+            <div id="map-sidebar"></div>
+        </div>        
     </div>
 </div>
 </div>`;
