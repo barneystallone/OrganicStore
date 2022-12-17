@@ -15,6 +15,7 @@
 
 <!-- Js Plugins -->
 <script type="module" src="${root}/static/web/js/index.js"></script>
+<script type="module" src="${root}/static/web/js/instant-search.js"></script>
 <script defer src="${root}/static/web/js/jquery-3.3.1.min.js"></script>
 <script defer src="${root}/static/web/js/bootstrap.min.js"></script>
 <!-- <script defer src="${root}/static/web/js/jquery.nice-select.min.js"></script> -->

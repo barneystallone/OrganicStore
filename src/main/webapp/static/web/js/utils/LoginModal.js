@@ -1,6 +1,5 @@
 import {AddAreaEventListener,initArea} from "/OrganicStore/static/common/AreaUtils.js";
 
-
 class LoginModal {
     constructor(options){
         this.elements = {

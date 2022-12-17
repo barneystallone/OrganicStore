@@ -197,13 +197,76 @@
 				</div>
 				<div class="col-lg-9">
 					<div class="hero__search">
-						<div class="hero__search__form">
-							<form action="#">
+						<div class="hero__search__form ">
+						<!-- <div class="hero__search__form instant-search--loading"> -->
+							<form action="#" id="searchProd" class="instant-search">
 								<div class="hero__search__categories">
 									All Categories <span class="arrow_carrot-down"></span>
 								</div>
-								<input type="text" placeholder="What do yo u need?">
+								<input type="text" placeholder="What do yo u need?" class="instant-search__input" >
 								<button type="submit" class="site-btn">SEARCH</button>
+								<!-- <div class="instant-search__result--container">
+									<a href="#" class="instant-search__result">
+										<div class="instant-search__result--left">
+											<img src="${root}/static/web/img/logo.png" alt="">
+										</div>
+										<div class="instant-search__result--right">
+											<div class="instant-search__result-title"> 
+												<span> Sup lo </span>
+											</div>
+											<div class="instant-search__result-price">17.000</div>
+											<p>asldkjasldkjasldjasldkjasasldkjasldkajsldkajsdlkasjdlkas</p>
+										</div>
+									</a>
+									<a href="#" class="instant-search__result">
+										<div class="instant-search__result--left">
+											<img src="${root}/static/web/img/logo.png" alt="">
+										</div>
+										<div class="instant-search__result--right">
+											<div class="instant-search__result-title"> 
+												<span> Sup lo </span>
+											</div>
+											<div class="instant-search__result-price">17.000</div>
+											<p>asldkjasldkjasldjasldkjasasldkjasldkajsldkajsdlkasjdlkas</p>
+										</div>
+									</a>
+									<a href="#" class="instant-search__result">
+										<div class="instant-search__result--left">
+											<img src="${root}/static/web/img/logo.png" alt="">
+										</div>
+										<div class="instant-search__result--right">
+											<div class="instant-search__result-title"> 
+												<span> Sup lo </span>
+											</div>
+											<div class="instant-search__result-price">17.000</div>
+											<p>asldkjasldkjasldjasldkjasasldkjasldkajsldkajsdlkasjdlkas</p>
+										</div>
+									</a>
+									<a href="#" class="instant-search__result">
+										<div class="instant-search__result--left">
+											<img src="${root}/static/web/img/logo.png" alt="">
+										</div>
+										<div class="instant-search__result--right">
+											<div class="instant-search__result-title"> 
+												<span> Sup lo </span>
+											</div>
+											<div class="instant-search__result-price">17.000</div>
+											<p>asldkjasldkjasldjasldkjasasldkjasldkajsldkajsdlkasjdlkas</p>
+										</div>
+									</a>
+									<a href="#" class="instant-search__result">
+										<div class="instant-search__result--left">
+											<img src="${root}/static/web/img/logo.png" alt="">
+										</div>
+										<div class="instant-search__result--right">
+											<div class="instant-search__result-title"> 
+												<span> Sup lo </span>
+											</div>
+											<div class="instant-search__result-price">17.000</div>
+											<p>asldkjasldkjasldjasldkjasasldkjasldkajsldkajsdlkasjdlkas</p>
+										</div>
+									</a>
+								</div> -->
 							</form>
 						</div>
 						<div class="hero__search__phone">
