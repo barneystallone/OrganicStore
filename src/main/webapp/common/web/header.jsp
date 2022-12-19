@@ -197,13 +197,15 @@
 				</div>
 				<div class="col-lg-9">
 					<div class="hero__search">
-						<div class="hero__search__form">
-							<form action="#">
+						<div class="hero__search__form ">
+						<!-- <div class="hero__search__form instant-search--loading"> -->
+							<form action="#" id="searchProd" class="instant-search">
 								<div class="hero__search__categories">
 									All Categories <span class="arrow_carrot-down"></span>
 								</div>
-								<input type="text" placeholder="What do yo u need?">
-								<button type="submit" class="site-btn">SEARCH</button>
+								<input type="text" placeholder="What do yo u need?" class="instant-search__input" >
+								<!-- <button type="submit" class="instant-search__btn site-btn">SEARCH</button> -->
+								<a type="submit" data-link class="instant-search__btn site-btn disable">SEARCH</a>
 							</form>
 						</div>
 						<div class="hero__search__phone">

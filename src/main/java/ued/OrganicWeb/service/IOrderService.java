@@ -4,6 +4,6 @@ import java.util.List;
 
 import ued.OrganicWeb.model.OrderModel;
 
-public interface IOrderService extends IGenericService<OrderModel> {
+public interface IOrderService extends IGeneric2Service<OrderModel> {
 	List<OrderModel> listOrders(int customerId );
 }

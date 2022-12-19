@@ -100,4 +100,11 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 		StringBuilder sql = new StringBuilder("select * from product  where saleOff>0 order by saleOff");
 		return query(sql, new ProductMapper());
 	}
+
+	@Override
+	public List<ProductModel> searchProduct(String query) {
+		// TODO Auto-generated method stub
+		StringBuilder sql = new StringBuilder("select * from product where name like ?");
+		return query(sql, new ProductMapper(), "%".concat(query).concat("%"));
+	}
 }

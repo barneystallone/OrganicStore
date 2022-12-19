@@ -46,5 +46,11 @@ public class ProductService implements IProductService{
 	public List<ProductModel> listDiscountProduct() {
 		return productDAO.listDiscountProduct();
 	}
+
+	@Override
+	public List<ProductModel> searchProduct(String query) {
+		// TODO Auto-generated method stub
+		return productDAO.searchProduct(query);
+	}
 	
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import ued.OrganicWeb.model.CategoryModel;
 
 
-public interface ICategoryDAO extends GenericDAO<CategoryModel> {
+public interface ICategoryDAO extends Generic2DAO<CategoryModel> {
 	List<CategoryModel> listParentCategory();
 	List<CategoryModel> listChildCategory();
 //	//=========================================

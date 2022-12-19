@@ -688,13 +688,17 @@ ol {
 	color: #b2b2b2;
 }
 
-.hero__search__form form button {
+.hero__search__form form [type=submit] {
 	position: absolute;
 	right: 0;
 	top: -1px;
 	height: 50px;
+	color: white;
+	line-height: 25px;
 }
-
+.hero__search__form form [type=submit]:hover {
+	opacity: 0.8;
+}
 .hero__search__phone {
 	float: right;
 }
@@ -2116,7 +2120,9 @@ ol {
 	padding-bottom: 20px;
 	margin-bottom: 25px;
 }
-
+.checkout__form form {
+	margin-bottom: 60px;
+}
 .checkout__form p {
 	column-rule: #b2b2b2;
 }
@@ -2145,7 +2151,12 @@ ol {
 }
 
 .checkout__input input.checkout__input__add {
-	margin-bottom: 20px;
+	margin-bottom: 4px;
+}
+.checkout__input input.checkout__input__add+p {
+	color: red;
+	font-size: 14px;
+	margin-bottom: 10px;
 }
 
 .checkout__input input::placeholder {
@@ -2245,19 +2256,28 @@ ol {
 	float: right;
 }
 
-.checkout__order .checkout__order__subtotal {
+.checkout__order .checkout__order__subtotal, 
+.checkout__order .checkout__shipping__total {
 	font-size: 18px;
 	color: #1c1c1c;
 	font-weight: 700;
 	border-bottom: 1px solid #e1e1e1;
 	border-top: 1px solid #e1e1e1;
 	padding-bottom: 15px;
-	margin-bottom: 15px;
 	padding-top: 15px;
 }
 
-.checkout__order .checkout__order__subtotal span {
+.checkout__order .checkout__shipping__total {
+	margin-bottom: 15px;
+}
+.checkout__order .checkout__order__subtotal span,
+.checkout__order .checkout__shipping__total span {
 	float: right;
+}
+.checkout__order .checkout__shipping__total e {
+	font-weight: 300;
+    font-size: 16px;
+    font-family: 'ROBOTO';
 }
 
 .checkout__order .checkout__input__checkbox label {
@@ -4066,4 +4086,142 @@ ul.cart_subs li,
 .modal-close:hover {
     cursor: pointer;
     opacity: 1;
+}
+
+/* instant search bar */
+.instant-search--loading::after {
+	content: "" ;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 2px;
+	background-color: #7fad39;
+	border-radius: 5px;
+	animation: searchIndicator 0.5s infinite ease-in-out;
+}
+
+@keyframes searchIndicator {
+	0% {width: 15%;}
+	50% {width: calc(100% - 85px);}
+	100% {width: 15%;}
+}
+
+.instant-search__result--container {
+	background-color: white;
+	position: absolute;
+	top: 100%;
+	max-height: 300px;
+	width: 100%;
+	left: 0;
+	z-index: 30;
+	overflow-y: auto;
+	/* border-width: 1px;
+	border-style: solid;
+	border-color: #7fad39	; */
+	box-shadow: 0 0 3px   rgba(0, 0, 0, 0.2) ;
+	word-break: break-word;
+
+	visibility: hidden;
+	opacity: 0;
+
+	transition: visibility 0.2s opacity 0.2s;
+}
+.instant-search__result-container--visible {
+	visibility: visible;
+	opacity: 1;
+}
+.hero.hero-normal .hero__search {
+	overflow: unset;
+}
+.hero__search__form form {
+	position: relative;
+}
+
+.instant-search__result {
+	color:#333333;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+}
+.instant-search__result:not(:last-of-type) {
+	border-bottom: 1px solid #eeeeee;
+}
+.instant-search__result:hover {
+	background-color: #eeeeee;
+	color: unset;
+	/* cursor: default; */
+}
+.instant-search__result--left {
+	flex-basis: 70px;
+}
+.instant-search__result--left img {
+	width: 64px;
+	height: 64px;
+	border-radius: 100%;
+}
+.instant-search__result--right {
+	margin-left: 30px;
+	flex-basis: calc(100% - 70px);
+}
+.instant-search__result--right p {
+	line-height: 18px;
+}
+.instant-search__result-title {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.disable {
+	cursor: default !important;
+    opacity: 0.7 !important;
+}
+
+/* intergrated google map */
+#google-map {
+	height: 600px;
+	display: flex;
+}
+  
+#map-panel {
+	flex-basis: 100%;
+	flex-grow: 1;
+	padding: 16px;
+	max-width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	overflow: auto;
+	
+}
+
+#map-sidebar {
+	flex-basis: 0;
+	flex-grow: 4;
+	height: 100%;
+	overflow-y: scroll;
+}
+
+#google-map {
+	flex: auto;
+  }
+  
+#map-sidebar {
+	flex: 0 1 auto;
+	padding: 0;
+}
+#map-sidebar > div {
+	padding: 8px;
+}
+
+/* render map-sidebar */
+#map-sidebar .adp-placemark {
+	box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    background-color: #ffffff;
+}
+#map-sidebar .adp-text {
+	padding: 4px 8px;
+    width: calc(100% - 60px);
+}
+.d-none {
+	display: none;
 }

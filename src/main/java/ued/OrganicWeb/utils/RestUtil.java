@@ -13,8 +13,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ued.OrganicWeb.service.IGenericService;
-
+import ued.OrganicWeb.service.IGeneric2Service;
+// REF:
+// https://stackoverflow.com/questions/1548782/retrieving-json-object-literal-from-httpservletrequest
 public class RestUtil {
 
 	private String strJson;
@@ -42,6 +43,7 @@ public class RestUtil {
 //	}
 	public <T> T toListModels(TypeReference<T> classType) {
 		try {
+//		
 			return new ObjectMapper().readValue(this.strJson, classType);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
@@ -61,7 +63,7 @@ public class RestUtil {
 		return new RestUtil(sb.toString());
 	}
 	// limit , offset
-	public static <T> List<T> getList(IGenericService<T> service,HttpServletRequest req, HttpServletResponse resp){
+	public static <T> List<T> getList(IGeneric2Service<T> service,HttpServletRequest req, HttpServletResponse resp){
 		String sLimit  = (req.getParameter("limit")==null) ? "" : req.getParameter("limit");
 		String sOffset  = (req.getParameter("offset")==null) ? "" : req.getParameter("offset");
 

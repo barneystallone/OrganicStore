@@ -20,9 +20,35 @@ public class OrderModel extends AbstractModel{
 	private String payment_method;
 	private int customer_id;
 	private CustomerModel customer;
+	private int shippingFee = 0;
 	public OrderModel() {};
 	
 	
+	public OrderModel(Date createDate, int status, int totalPrice, String shipping_address, int area_id,
+			String recipient_name, String recipient_phone, int customer_id, int shippingFee) {
+		super();
+		this.createDate = createDate;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.shipping_address = shipping_address;
+		this.area_id = area_id;
+		this.recipient_name = recipient_name;
+		this.recipient_phone = recipient_phone;
+		this.customer_id = customer_id;
+		this.shippingFee = shippingFee;
+	}
+
+
+	public int getShippingFee() {
+		return shippingFee;
+	}
+
+
+	public void setShippingFee(int shippingFee) {
+		this.shippingFee = shippingFee;
+	}
+
+
 	public OrderModel(Date createDate, int status, int totalPrice, String shipping_address, int area_id,
 			String recipient_name, String recipient_phone, int customer_id) {
 		super();

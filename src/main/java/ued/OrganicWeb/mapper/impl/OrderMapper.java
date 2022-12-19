@@ -17,6 +17,7 @@ public class OrderMapper implements MapModel<OrderModel>{
 			model.setId(rs.getInt("id"));
 			model.setCreateDate(rs.getDate("createDate"));
 			model.setStatus(rs.getInt("status"));
+			model.setShippingFee(rs.getInt("shippingFee"));
 			model.setTotalPrice(rs.getInt("totalPrice"));
 			model.setPayment_method(rs.getString("payment_method"));
 			model.setCustomer_id(rs.getInt("customer_id"));

@@ -1,6 +1,6 @@
-package ued.OrganicWeb.service;
+package ued.OrganicWeb.dao;
 
-public interface IGenericService<T>{
+public interface Generic1DAO<T> {
 	int save(T model);
 	void update(T model);
 	void delete(T model);
