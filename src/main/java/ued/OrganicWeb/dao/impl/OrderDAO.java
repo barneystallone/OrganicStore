@@ -38,17 +38,19 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO{
 	public int save(OrderModel model) {
 		StringBuilder sql = new StringBuilder("Insert into BillOrder"
 			+ "(createDate,status,totalPrice,shipping_address,"
-			+ "recipient_name,recipient_phone,payment_method,customer_id,area_id) "
-			+ "values(?,?,0,?,?,?,?,?,?)");
+			+ "recipient_name,recipient_phone,payment_method,customer_id,area_id,shippingFee) "
+			+ "values(?,?,?,?,?,?,?,?,?,?)");
 		List<Object> fields = List.of(
 			model.getCreateDate(),
 			model.getStatus(),
+			model.getTotalPrice(),
 			model.getShipping_address(),
 			model.getRecipient_name(),
 			model.getRecipient_phone(),
 			"cod",
 			model.getCustomer_id(),
-			model.getArea_id()			
+			model.getArea_id(),
+			model.getShippingFee()
 		);
 
 		return insert(sql, fields.toArray(new Object[0]));

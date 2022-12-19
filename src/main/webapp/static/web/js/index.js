@@ -1,6 +1,5 @@
 import Shopping from "/OrganicStore/static/web/js/views/Shopping.js";
 import Details from "/OrganicStore/static/web/js/views/Details.js";
-import {initMap, calculateAndDisplayRoute} from "/OrganicStore/static/web/js/utils/IntergrateGoogleMap-copy.js";
 import CartSub from "/OrganicStore/static/web/js/utils/cart_sub.js";
 import ShoppingCart from "/OrganicStore/static/web/js/views/ShoppingCartDetails.js";
 import CheckOut from "/OrganicStore/static/web/js/views/CheckOut.js";
@@ -85,4 +84,3 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-window.initMap = initMap;

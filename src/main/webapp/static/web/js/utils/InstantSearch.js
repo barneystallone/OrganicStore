@@ -17,8 +17,9 @@ class InstantSearch {
         let delay;
         this.elements.input.addEventListener('input',()=>{ 
             clearTimeout(delay);
-
-            const query = this.elements.input.value;
+            
+            const query = this.elements.input.value.trim().replace(/\s+/g," ");
+            
             
             if(query.length<3) {
                 if(!this.elements.main.querySelector('.instant-search__btn').classList.contains('disable')) {

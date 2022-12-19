@@ -109,8 +109,12 @@
         */
     </script>
 	
-	<script
+	<!-- <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2rGWJmV6krAaKtaerxtKli9rNbVVqq4c&region=VN&libraries=places&language=vi&callback&v=weekly"
+      defer
+    ></script> -->
+	<script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIqw4fXPfNRjF79yIHwKV2uZ9cI0AEFaM&region=VN&libraries=places&language=vi&callback&v=weekly"
       defer
     ></script>
 </body>

@@ -1,6 +1,7 @@
 import AbstractViewWithCart from "/OrganicStore/static/web/js/views/AbstractViewWithCart.js";
 import IntergrateGoogleMap from "/OrganicStore/static/web/js/utils/IntergrateGoogleMap.js";
 import {AddAreaEventListener,initArea} from "/OrganicStore/static/common/AreaUtils.js";
+import { convertToNumber } from "/OrganicStore/static/web/js//utils/format.js";
 
 export default class CheckOut extends AbstractViewWithCart {
     constructor(params) {
@@ -36,26 +37,34 @@ export default class CheckOut extends AbstractViewWithCart {
     }
     InitOrderList(){
         const orderList = document.querySelector('.order-list'),
-              total = this.currencyFormat(document.querySelector('#showcartresprice .total b').textContent.replace(/[^0-9]/g,""));
+              shippingFee= document.querySelector('.checkout__shipping__total span').textContent.replace(/[^0-9]/g,""),
+              total = document.querySelector('#showcartresprice .total b').textContent.replace(/[^0-9]/g,"");
         orderList.innerHTML="";
         [...document.querySelector('#showcartresitem').children].forEach(e=>{
             const   name = e.querySelector('span.name').textContent,
+                    mount = e.querySelector('input.change_mount').value,
                     id = e.getAttribute('id-cart'),
                     subTotal= this.currencyFormat(e.querySelector('.tongtiensp').textContent.replace(/[^0-9]/g,""));
-            orderList.insertAdjacentHTML('beforeend',`<li data-id=${id}>${name} <span>${subTotal}</span></li>`)
+            orderList.insertAdjacentHTML('beforeend',`<li data-id=${id}>${name}&nbsp;&nbsp;(x${mount}) <span>${subTotal}</span></li>`)
         })
-        document.querySelector('.checkout__order__subtotal span').textContent = total;
-        document.querySelector('.checkout__order__total span').textContent = total;
+        document.querySelector('.checkout__order__subtotal span').textContent =this.currencyFormat( total);
+        document.querySelector('.checkout__order__total span').textContent = this.currencyFormat(total*1 + shippingFee*1);
     }
     SubmitListener() {
         document.querySelector('[order-submit]').addEventListener('click',(e)=>{
-            
+            if(e.target.closest('[order-submit]').classList.contains('disable')){
+                e.preventDefault();
+                return;
+            }
             let payLoad = {
-                "name" : document.querySelector('#customer_name').value,
-                "email" :document.querySelector('#customer_email').value,
-                "phoneNumber": document.querySelector('#customer_phone').value,
-                "houseStreet":  document.querySelector('#customer_street').value,
-                "areaId" : document.querySelector('#subDistrict').value,
+                "customer": {
+                    "name" : document.querySelector('#customer_name').value,
+                    "email" :document.querySelector('#customer_email').value,
+                    "phoneNumber": document.querySelector('#customer_phone').value,
+                    "houseStreet":  document.querySelector('#customer_street').value,
+                    "areaId" : document.querySelector('#subDistrict').value,
+                },
+                "shippingFee": convertToNumber(document.querySelector('.checkout__shipping__total span').textContent) 
             }
             fetch('http://localhost:8080/OrganicStore//api-order-cart',{
                 method :'POST',
@@ -93,28 +102,31 @@ const html = `<div class="checkout spad">
             <div class="row">
                 <div class="col-lg-8 col-md-6">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg">
                             <div class="checkout__input">
                                 <p>Họ và tên<span>*</span></p>
                                 <input type="text" id="customer_name" required>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg">
                             <div class="checkout__input">
                                 <p>Số điện thoại<span>*</span></p>
                                 <input type="text" id="customer_phone" required>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row">
                         
-                        <div class="col-lg-6">
+                        <div class="col-lg">
                             <div class="checkout__input">
                                 <p>Email<span>*</span></p>
                                 <input type="text" id="customer_email" required>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg" style="display:none;">
                             <div class="checkout__input">
                                 <p>Tỉnh/Thành phố<span>*</span></p>
                                 <!-- <input type="text"> -->
@@ -123,16 +135,16 @@ const html = `<div class="checkout spad">
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="display:none;">
                         
-                        <div class="col-lg-6">
+                        <div class="col-lg"> 
                             <div class="checkout__input">
                                 <p>Quận/Huyện<span>*</span></p>
                                 <select district id="district" class="" name="" >
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg">
                             <div class="checkout__input">
                                 <p>Xã/Phường<span>*</span></p>
                                 <select district id="subDistrict" class="" name="areaId" >
@@ -142,10 +154,15 @@ const html = `<div class="checkout spad">
                        
                     </div>
                     <div class="checkout__input">
-                        <p>Số nhà, tên đường<span>*</span></p>
+                        <p>Địa chỉ<span>*</span></p>
                         <input type="text" id="customer_street"placeholder="Street Address" class="checkout__input__add">
+                        <p class='warning d-none'></p>
                     </div>
-                    
+                    <div class="checkout__input">
+                        <p>Ghi chú <span></span></p>
+                        <textarea name="note" id="checkout_note"  rows="5" style="width:100%; resize:none;"></textarea>
+                        <p class='warning d-none'></p>
+                    </div>
 
                     
                 </div>
@@ -159,6 +176,7 @@ const html = `<div class="checkout spad">
                             <li>Organic Bananas <span>$53.99</span></li>
                         </ul>
                         <div class="checkout__order__subtotal">Subtotal <span>$750.99</span></div>
+                        <div class="checkout__shipping__total">Shipping <e></e> <span>0</span></div>
                         <div class="checkout__order__total">Total <span>$750.99</span></div>
                         
                         <button type="button" class="site-btn" order-submit>PLACE ORDER</button>

@@ -3,7 +3,7 @@ package ued.OrganicWeb.dao;
 import ued.OrganicWeb.model.UserModel;
 
 
-public interface IUserDAO extends GenericDAO<UserModel>{
+public interface IUserDAO extends Generic2DAO<UserModel>{
 	
 	int checkLogin(UserModel userModel);
 	boolean changePassword(UserModel user);

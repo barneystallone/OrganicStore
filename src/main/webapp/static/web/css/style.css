@@ -2120,7 +2120,9 @@ ol {
 	padding-bottom: 20px;
 	margin-bottom: 25px;
 }
-
+.checkout__form form {
+	margin-bottom: 60px;
+}
 .checkout__form p {
 	column-rule: #b2b2b2;
 }
@@ -2149,7 +2151,12 @@ ol {
 }
 
 .checkout__input input.checkout__input__add {
-	margin-bottom: 20px;
+	margin-bottom: 4px;
+}
+.checkout__input input.checkout__input__add+p {
+	color: red;
+	font-size: 14px;
+	margin-bottom: 10px;
 }
 
 .checkout__input input::placeholder {
@@ -2249,19 +2256,28 @@ ol {
 	float: right;
 }
 
-.checkout__order .checkout__order__subtotal {
+.checkout__order .checkout__order__subtotal, 
+.checkout__order .checkout__shipping__total {
 	font-size: 18px;
 	color: #1c1c1c;
 	font-weight: 700;
 	border-bottom: 1px solid #e1e1e1;
 	border-top: 1px solid #e1e1e1;
 	padding-bottom: 15px;
-	margin-bottom: 15px;
 	padding-top: 15px;
 }
 
-.checkout__order .checkout__order__subtotal span {
+.checkout__order .checkout__shipping__total {
+	margin-bottom: 15px;
+}
+.checkout__order .checkout__order__subtotal span,
+.checkout__order .checkout__shipping__total span {
 	float: right;
+}
+.checkout__order .checkout__shipping__total e {
+	font-weight: 300;
+    font-size: 16px;
+    font-family: 'ROBOTO';
 }
 
 .checkout__order .checkout__input__checkbox label {
@@ -4205,4 +4221,7 @@ ul.cart_subs li,
 #map-sidebar .adp-text {
 	padding: 4px 8px;
     width: calc(100% - 60px);
+}
+.d-none {
+	display: none;
 }
