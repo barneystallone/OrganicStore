@@ -70,6 +70,15 @@
                     </a>
                 </li>
                 <li>
+                    <a data-link href="${root}/admin/inventory">
+                        <span class="icon">
+                            <ion-icon class="icon-outline" name="cube-outline"></ion-icon>
+                            <ion-icon class="icon-full" name="cube"></ion-icon>
+                        </span>
+                        <span class="title">Inventory</span>
+                    </a>
+                </li>
+                <li>
                     <a href="#">
                         <span class="icon">
                             <ion-icon class="icon-outline" name="lock-closed-outline"></ion-icon>

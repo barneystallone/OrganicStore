@@ -3,6 +3,7 @@ import DragUploadFile from "/OrganicStore/static/admin/js/dragdrop.js"
 export default class Product extends AbstractView {
     constructor(params) {
         super(params);
+        this.setTitle("Product");
         this.getAsync();
         this.getHtml();
         this.DragUploadFile = new DragUploadFile();

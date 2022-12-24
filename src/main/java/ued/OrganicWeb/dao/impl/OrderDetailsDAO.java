@@ -24,7 +24,7 @@ public class OrderDetailsDAO extends AbstractDAO<OrderDetailsModel> implements I
 	
 	@Override
 	public List<OrderDetailsModel> list(int orderId) {
-		StringBuilder sql = new StringBuilder("Select * from orderdetails where order_id= ? ");
+		StringBuilder sql = new StringBuilder("Select * from orderdetails where order_id=  ?");
 		return query(sql, new OrderDetailsMapper(), orderId);
 	}
 

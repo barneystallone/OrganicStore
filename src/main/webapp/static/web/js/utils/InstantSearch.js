@@ -20,13 +20,14 @@ class InstantSearch {
             
             const query = this.elements.input.value.trim().replace(/\s+/g," ");
             
+            const searchBtn = this.elements.main.querySelector('.instant-search__btn');
             
             if(query.length<3) {
-                if(!this.elements.main.querySelector('.instant-search__btn').classList.contains('disable')) {
-                    this.elements.main.querySelector('.instant-search__btn').classList.add('disable');
+                if(searchBtn&&!searchBtn.classList.contains('disable')) {
+                    searchBtn.classList.add('disable');
                 }
-            } else if(this.elements.main.querySelector('.instant-search__btn').classList.contains('disable')) {
-                this.elements.main.querySelector('.instant-search__btn').classList.remove('disable');
+            } else if(searchBtn&&searchBtn.classList.contains('disable')) {
+                searchBtn.classList.remove('disable');
             }
 
             delay = setTimeout(()=>{
@@ -58,6 +59,9 @@ class InstantSearch {
     */
     populateResults(results) {
         // Xóa các kết quả đang tồn tại
+        if(results==[]) {
+
+        }
         while (this.elements.resultsContainer.firstChild) {
             this.elements.resultsContainer.removeChild(
                 this.elements.resultsContainer.firstChild
@@ -118,17 +122,20 @@ class InstantSearch {
 
     /**
      * Tạo ra các HTML element đại diện cho  mỗi result ở trong  results.
+     * Sau này có thể truyền 1 tham số callback có thể là gọi api hay j đó để security
      *
      * @param {Object} result kết quả tìm kiếm
      * @returns {HTMLAnchorElement}
      */
     createResultElement(result) {
-        const element = document.createElement("a");
+        
+        const element = (this.options.anchor) ? document.createElement("a") : document.createElement("div");
         element.classList.add("instant-search__result");
         element.insertAdjacentHTML("afterbegin",this.options.templateFunction(result));
 
         // attribute href
         element.setAttribute('href',`/OrganicStore/details/${result.id}`);
+        element.setAttribute('data-id',`${result.id}`);
         element.setAttribute('data-link','');
 
         // Chặn trước khi blur ra khỏi
@@ -136,6 +143,8 @@ class InstantSearch {
             e.preventDefault();
         })
         return element;
+
+        // gọi callback có thể là gọi api hay j đó để security (chưa làm)
     }
 }
 

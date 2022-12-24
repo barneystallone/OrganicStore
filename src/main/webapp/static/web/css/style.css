@@ -4124,7 +4124,7 @@ ul.cart_subs li,
 	visibility: hidden;
 	opacity: 0;
 
-	transition: visibility 0.2s opacity 0.2s;
+	transition: visibility 0.2s ,opacity 0.2s;
 }
 .instant-search__result-container--visible {
 	visibility: visible;

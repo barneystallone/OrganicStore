@@ -74,8 +74,12 @@ public class ProductModel extends AbstractModel {
 	}
 	
 	public String getBase64Images() {
-		base64Images = Base64.getEncoder().encodeToString(image);
-		return base64Images;
+		if(image!=null) {
+			base64Images = Base64.getEncoder().encodeToString(image);
+			return base64Images;
+			
+		}
+		return null;
 	}
 	public void setBase64Images(String base64Images) {
 		this.base64Images = base64Images;

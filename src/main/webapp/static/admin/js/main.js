@@ -3,6 +3,8 @@ import Dashboard from "/OrganicStore/static/admin/js/views/Dashboard.js";
 import Customer from "/OrganicStore/static/admin/js/views/Customer.js";
 import User from "/OrganicStore/static/admin/js/views/User.js";
 import Category from "/OrganicStore/static/admin/js/views/Category.js";
+import Inventory from "/OrganicStore/static/admin/js/views/Inventory.js";
+// import AddInventory from "/OrganicStore/static/admin/js/views/AddInventory.js";
 import Product from "/OrganicStore/static/admin/js/views/Product.js";
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
@@ -27,6 +29,8 @@ const router = () => {
         {path:"/OrganicStore/admin/customer" , view : Customer},
         {path:"/OrganicStore/admin/user" , view : User},
         {path:"/OrganicStore/admin/category" , view : Category},
+        {path:"/OrganicStore/admin/inventory" , view : Inventory},
+        {path:"/OrganicStore/admin/inventory/:param" , view : Inventory},
         {path:"/OrganicStore/admin/product" , view : Product}
     ]
     const mapRouteMatchs = routes.map(route => {
@@ -54,7 +58,7 @@ window.addEventListener("popstate", router ,true);
 document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
         try {
-            if (e.target.closest("a").matches("[data-link]")) {
+            if (e.target.closest("a")&&e.target.closest("a").matches("[data-link]")) {
                 e.preventDefault();
                 navigateTo(e.target.closest("a").href);
             }

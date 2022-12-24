@@ -1,8 +1,6 @@
 package ued.OrganicWeb.dao.impl;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,10 +15,8 @@ import java.util.List;
 import ued.OrganicWeb.dao.IAbstractDAO;
 import ued.OrganicWeb.mapper.MapModel;
 import ued.OrganicWeb.utils.RestUtil;
-import ued.OrganicWeb.utils.SessionUtil;
 
 public class AbstractDAO<T> implements IAbstractDAO<T> {
-
 	public Connection getConnection() {
 		try {
 //			Class.forName("com.mysql.jdbc.Driver");

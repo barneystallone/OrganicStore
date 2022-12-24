@@ -1,13 +1,11 @@
 // import InstantSearch from "/OrganicStore/static/web/js/utils/InstantSearch.js";
-
-import InstantSearch from "./utils/InstantSearch.js";
+import InstantSearch from "../../web/js/utils/InstantSearch";
 const searchProduct =  document.querySelector('#searchProd');
 
 const instantSearchProducuts = new InstantSearch(searchProduct,{
     inputSelector : ".instant-search__input",
     searchURL : new URL("/OrganicStore/api-search-product",window.location.origin),
     queryParam : "q",
-    anchor : true,
     templateFunction : (result) =>{
         return `
             <div class="instant-search__result--left">

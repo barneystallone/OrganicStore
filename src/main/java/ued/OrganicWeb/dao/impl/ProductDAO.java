@@ -1,8 +1,12 @@
 package ued.OrganicWeb.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.mysql.cj.protocol.Resultset;
 
 import ued.OrganicWeb.dao.IProductDAO;
 import ued.OrganicWeb.mapper.impl.ProductMapper;
@@ -106,5 +110,24 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 		// TODO Auto-generated method stub
 		StringBuilder sql = new StringBuilder("select * from product where name like ?");
 		return query(sql, new ProductMapper(), "%".concat(query).concat("%"));
+	}
+
+	@Override
+	public ProductModel getNameAndPrice(int id) {
+		// TODO Auto-generated method stub
+		StringBuilder sql = new StringBuilder("select name, price, saleOff from product where id = ?");
+		return super.get(sql,(ResultSet rs) -> {
+			try {
+				ProductModel model = new ProductModel();
+				model.setName(rs.getString("name"));
+				model.setPrice(rs.getInt("price"));
+				model.setSaleOff(rs.getInt("saleOff"));
+				return model;
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}, id);
 	}
 }
