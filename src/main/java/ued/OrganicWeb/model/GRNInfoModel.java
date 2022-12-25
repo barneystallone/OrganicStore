@@ -3,9 +3,9 @@ package ued.OrganicWeb.model;
 public class GRNInfoModel extends AbstractModel{	
 	private int idGRN  ;
 	private int quantity;
-	private int priceNhap;
+	private int importPrice;
 	private int totalSubPrice ;
-	private int idProduct;
+	private int idProd;
 //	private ProductModel product;
 	private String productName;
 	private int productPrice;
@@ -42,17 +42,17 @@ public class GRNInfoModel extends AbstractModel{
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public int getIdProduct() {
-		return idProduct;
+	public int getIdProd() {
+		return idProd;
 	}
-	public void setIdProduct(int idProduct) {
-		this.idProduct = idProduct;
+	public void setIdProd(int idProduct) {
+		this.idProd = idProduct;
 	}
-	public int getPriceNhap() {
-		return priceNhap;
+	public int getImportPrice() {
+		return importPrice;
 	}
-	public void setPriceNhap(int priceNhap) {
-		this.priceNhap = priceNhap;
+	public void setImportPrice(int priceNhap) {
+		this.importPrice = priceNhap;
 	}
 	public int getTotalSubPrice() {
 		return totalSubPrice;

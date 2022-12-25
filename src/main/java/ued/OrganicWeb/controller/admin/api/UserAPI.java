@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ued.OrganicWeb.model.UserModel;
 import ued.OrganicWeb.service.IUserService;
+import ued.OrganicWeb.utils.SessionUtil;
 
 @WebServlet(urlPatterns = {"/api-user-admin"})
 public class UserAPI extends HttpServlet {
@@ -30,8 +31,12 @@ public class UserAPI extends HttpServlet {
 		
 		resp.setContentType("application/json");
 		List<UserModel> list =  userService.list();
-		
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.writeValue(resp.getOutputStream(), list);
+
+		if(req.getParameter("getUser")!=null) {
+			mapper.writeValue(resp.getOutputStream(), ((UserModel)SessionUtil.getInstance().getValue(req, "user")).getCustomer());			
+		} else {
+			mapper.writeValue(resp.getOutputStream(), list);			
+		}
 	}
 }

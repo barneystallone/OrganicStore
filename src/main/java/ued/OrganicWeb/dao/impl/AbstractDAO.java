@@ -199,8 +199,12 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 					StringBuilder message =RestUtil.message;
 					message.delete(0,RestUtil.message.length());
 					message.append("1451").append(e.getMessage());
-				}else {
-					e.printStackTrace();					
+				}else if(e.getErrorCode()==1644) {
+					StringBuilder message =RestUtil.message;
+					message.delete(0,RestUtil.message.length());
+					message.append("1644 ").append(e.getMessage());
+				} else {
+					e.printStackTrace();
 				}
 			} finally {
 				try {

@@ -51,13 +51,13 @@ public class GRNInfoDAO extends AbstractDAO<GRNInfoModel> implements IGRNInfoDAO
 		List<Object> itemFields = new ArrayList<>();
 //		(null,idGRN,idProd,quantity,importPrice,default)
 		for (GRNInfoModel model : listModel) {
-			sql.append("(?,?,?,?,?,?), ");
-			itemFields.add(null);
+			sql.append("(null,?,?,?,?,default), ");
+//			itemFields.add(null);
 			itemFields.add(model.getIdGRN());
-			itemFields.add(model.getIdProduct());
+			itemFields.add(model.getIdProd());
 			itemFields.add(model.getQuantity());
-			itemFields.add(model.getPriceNhap());
-			itemFields.add("default");
+			itemFields.add(model.getImportPrice());
+//			itemFields.add("default");
 		}
 		sql.deleteCharAt(sql.length()-2);
 		return insert(sql , itemFields.toArray(new Object[0]));

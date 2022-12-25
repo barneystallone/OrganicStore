@@ -16,11 +16,11 @@ public class GRNInfoMapper implements MapModel<GRNInfoModel> {
 			GRNInfoModel model = new GRNInfoModel();
 			model.setId(rs.getInt("id"));
 			model.setIdGRN(rs.getInt("idGRN"));
-			model.setIdProduct(rs.getInt("idProduct"));
-			model.setPriceNhap(rs.getInt("importPrice"));
+			model.setIdProd(rs.getInt("idProduct"));
+			model.setImportPrice(rs.getInt("importPrice"));
 			model.setQuantity(rs.getInt("quantity"));
 			model.setTotalSubPrice(rs.getInt("subTotalPrice"));
-			ProductModel productModel = ProductDAO.getInstance().getNameAndPrice(model.getIdProduct());
+			ProductModel productModel = ProductDAO.getInstance().getNameAndPrice(model.getIdProd());
 //			model.setProduct(productModel.getName());
 			model.setProductName(productModel.getName());
 			model.setProductPrice(productModel.getPrice()*(100-productModel.getSaleOff())/100);

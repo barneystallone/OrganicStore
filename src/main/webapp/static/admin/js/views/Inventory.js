@@ -9,11 +9,13 @@ export default class Inventory extends AbstractView{
         
         if(this.params[":param"] == "new") {
             this.elements = {
-                // postUrl: new URL(""),
+                apiUrl: new URL("/OrganicStore/api-grn",window.location.origin),
                 oldPage: 1,
                 totalItem: 0,
                 itemPerPage: 7,
                 contentNhapHang : contentNhapHang,
+                saveButtonSelector: '#btn-save',
+                closeButtonSelector: '#btn-close',
                 templateFunction : ({id,name}) => {
                     return `
                         <tr data-id="${id}">
@@ -21,13 +23,13 @@ export default class Inventory extends AbstractView{
                             <td>${name}</td>
                             <td>
                                 <div class="input-sp amount-input">
-                                <input type="text" >
+                                <input type="text" class="prod-quantity" >
                             
                                 </div>
                             </td>
                             <td>
                                 <div class="input-sp amount-input">
-                                    <input type="text" >
+                                    <input type="text"  class="prod-importPrice">
                             
                                 </div>
                             </td>
@@ -41,20 +43,22 @@ export default class Inventory extends AbstractView{
             }
         }  else  {
             this.elements = {
-                getListUrl: new URL("/OrganicStore/api-grn",window.location.origin),
-                itemPerPage: 7,
+                apiUrl: new URL("/OrganicStore/api-grn",window.location.origin),
+                itemPerPage: 3,
+                btnDeleteSelector :'.btn-delete',
                 totalItem : 0, // set lại khi có dữ liệu
+                page: 1,
                 table : table,
                 templateFunction : (result) => { // arrow func => this là dối tượng Inventory
                     let str1= ` 
     <tr class=" nhap-resume" data-id= "${result.id}">
-        <td >${result.id}</td>
+        <td >${result.ngayGio}</td>
         <td >${this.formatDate(result.ngayGio)}</td>
         <td >${this.currencyFormat(result.totalPrice)}</td>
         <td>${this.currencyFormat(result.totalPrice-result.traTruoc)}</td>
         <td>${result.grnstatus}</td>
     </tr>
-    <tr class="hide-panel ">
+    <tr class="hide-panel " data-id= "${result.id}">
         <td colspan="5">
             <div class="panel-content">
                 <ul class="tab-list">
@@ -65,7 +69,7 @@ export default class Inventory extends AbstractView{
                     <div class="form-info">
                         <div class="form-group form-group__id">
                             <span class="form-group--label">Mã nhập hàng:</span>
-                            <span class="form-group--content">${result.id}</span>
+                            <span class="form-group--content">${result.ngayGio}</span>
                         </div>
                         <div class="form-group form-group__time ">
                             <span class="form-group--label">Thời gian:</span>
@@ -99,8 +103,8 @@ export default class Inventory extends AbstractView{
                                 <th>Mã hàng hóa</th>
                                 <th>Tên hàng</th>
                                 <th>Số lượng</th>
-                                <th>Giá bán</th>
                                 <th>Giá nhập</th>
+                                <th>Giá bán</th>
                             </tr>
                         </thead>
                     <tbody>
@@ -110,11 +114,11 @@ export default class Inventory extends AbstractView{
                     while (tmp = result.listInfoGRN.shift()) {
                         str2 += `
                         <tr data-id=${tmp.id}>
-                            <td>${tmp.id}</td>
+                            <td>${tmp.idProd}</td>
                             <td >${tmp.productName}</td>
                             <td >${tmp.quantity}</td>
+                            <td>${tmp.importPrice}</td>
                             <td>${tmp.productPrice}</td>
-                            <td>${tmp.priceNhap}</td>
                         </tr>  
                         
                         
@@ -131,7 +135,7 @@ export default class Inventory extends AbstractView{
 
             </div>
             <div class="button-group__phieuNhap">
-                <button type="button" class="button button-phieuNhap button--danger">
+                <button type="button" class="button button-phieuNhap button--danger btn-delete">
                     <span class="button__icon">
                         <ion-icon name="close-outline"></ion-icon>
                     </span>
@@ -139,15 +143,27 @@ export default class Inventory extends AbstractView{
                 </button>
                 <button type="button" class="button button-phieuNhap">
                     <span class="button__icon">
+                        <ion-icon name="arrow-undo-outline"></ion-icon>
+                    </span>
+                    <span class="button__text">Nhập thêm hàng</span>
+                </button>
+                <button type="button" class="button button-phieuNhap">
+                    <span class="button__icon">
                         <ion-icon name="arrow-redo-outline"></ion-icon>
                     </span>
                     <span class="button__text">Mở phiếu</span>
                 </button>
-                <button type="button" class="button button-phieuNhap">
+                <!--    <button type="button" class="button button-phieuNhap">
+               <span class="button__icon">
+                <ion-icon name="copy-outline"></ion-icon>
+                </span>
+                <span class="button__text">Sao chép</span>
+                </button> -->
+                <button type="button" class="button button-phieuNhap button-check">
                     <span class="button__icon">
-                        <ion-icon name="copy-outline"></ion-icon>
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
                     </span>
-                    <span class="button__text">Sao chép</span>
+                    <span class="button__text">Hoàn thành</span>
                 </button>
             </div>
         </div>
@@ -170,6 +186,9 @@ export default class Inventory extends AbstractView{
         if(this.params[":param"] == "new"){
             console.log("hello2")
             this.mainElement.innerHTML = this.elements.contentNhapHang;
+
+            // Set personName
+            document.querySelector('.info-group--content input').value = window.getCookie("personName")
             document.querySelector('.info-group__date input').value = this.formatDate(new Date());   
             this.elements.searchProduct = this.mainElement.querySelector('.instant-search') ;
             const instantSearchProducuts = new InstantSearch(this.elements.searchProduct,{
@@ -196,23 +215,43 @@ export default class Inventory extends AbstractView{
             });
         } else {
             this.mainElement.innerHTML =  this.elements.table ;
-            const url = new URL(this.elements.getListUrl.toString());
-            url.searchParams.set("offset",0);
-            url.searchParams.set("limit",this.elements.itemPerPage);
+            const searchParams = new URL(window.location.href).searchParams;
+            const url = new URL(this.elements.apiUrl.toString());
+            let page = searchParams.get('page')*1
+            if(page) {
+                this.elements.page = page;
+            }
             url.searchParams.set("count","");
-            this.getListDataGRN(url).then(results=> {
+            this.getListDataGRN(url).then((results) => {
                 this.elements.totalItem = results.totalItem;
                 const pageTotals = Math.ceil(this.elements.totalItem/this.elements.itemPerPage);
                 if(pageTotals>=2) {
-                    createPagination(pageTotals,1);
+                    createPagination(pageTotals,this.elements.page);
                 }
-                let result;
-                while(result = results.listGRN.shift()){
-                    this.populateRow(result);
+                if(pageTotals< this.elements.page) {
+                    document.querySelector(`li.number[data-page="${1}"]`).click();
                 }
-                this.showExpandRowEvent();
-            })
-            console.log("hello")
+          
+                this.populateGRNTable(results.listGRN);
+            
+            });
+            // url.searchParams.set("offset", this.elements.page-1);
+            // url.searchParams.set("limit",this.elements.itemPerPage);
+            // url.searchParams.set("count","");
+
+            // this.getListDataGRN(url).then(results=> {
+            //     this.elements.totalItem = results.totalItem;
+            //     const pageTotals = Math.ceil(this.elements.totalItem/this.elements.itemPerPage);
+            //     if(pageTotals>=2) {
+            //         createPagination(pageTotals,this.elements.page);
+            //     }
+            //     if(pageTotals< this.elements.page) {
+            //         document.querySelector(`li.number[data-page="${1}"]`).click();
+            //     }
+            //     this.populateGRNTable(results.listGRN);
+            
+            // })
+            // console.log("hello")
         }
             
         this.getScript();
@@ -221,46 +260,48 @@ export default class Inventory extends AbstractView{
         },100)
     }
 
-
+    /**
+     * 
+     * @param {url} url : URL 
+     */
     getListDataGRN(url) {
+        url.searchParams.set("offset", this.elements.page-1);
+        url.searchParams.set("limit",this.elements.itemPerPage);
+        
 
+      
         return fetch(url,{
             method: "get"
         })
         .then(res => res.json())
-        .catch(e => console.log("e"))
+        .catch(e => console.log(e))
         .finally((results) => {
             return results;
+        
         })
     }
-
-    addListener() {
-        if(this.params[":param"] == "new") {
-            this.elements.searchProduct.addEventListener('click',(evt) => {
-                
-                if(evt.target.closest('.instant-search__result')) {
-                    this.populateRow(evt);
-                }
-            })
-
-            // Load lại table khi click vào phân trang
-            // chạy sau listener trong createPagination
-            document.querySelector('.pagination ul').addEventListener('click', (e)=> {
-                const element = e.target.closest('li');
-                if(element&&(element.classList.contains('number')||element.classList.contains('btn'))) {
-                    // updateTable
-                    this.updateTable(this.mainElement.querySelector('li.number.active').dataset.page*1);
-                    console.log("inventory/getScript")
-                }
-            })
-            
-            // createPagination(20, 1);
-            return;
+ 
+    /**
+     * Load lại table inventory
+     * 
+     * @param {results} results : Mảng các GRN data
+     */
+    populateGRNTable(results){
+        let result;
+        const tbodyElem = this.mainElement.querySelector('tbody');
+        tbodyElem.innerHTML = "";
+        while(result = results.shift()){
+            this.populateRow(result,tbodyElem);
         }
-        // Xổ xuống khi xem chi tiết
-        
-
+        this.showExpandRowEvent();
+        this.addEvent();
+        // this.saveCompleteEvent();
     }
+
+    
+    /**
+     * Xổ xuống khi xem phiếu nhập: xem các mặt hàng nhập,....
+     */
     showExpandRowEvent() {
         document.querySelectorAll('.nhap-resume').forEach((elem) => {
             let delay,delay2;
@@ -297,16 +338,55 @@ export default class Inventory extends AbstractView{
             })
         });
     }
+    // Cho trang /inventory
+    addEvent() {
+        document.querySelectorAll(this.elements.btnDeleteSelector).forEach(element => {
+            element.addEventListener('click',(e) => {
+                const id = e.target.closest('tr').dataset.id;
+                fetch(this.elements.apiUrl,{
+                    method: "DELETE",
+                    body: JSON.stringify({id})
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if(result.status!==200) {
+                        throw new Error(result.message);
+                    }
+                    alert("Hủy phiếu nhập thành công");
+                    document.querySelectorAll(`tr[data-id="${id}"]`).forEach(e => e.remove())
+                })
+                .catch(e => alert(e.message));
+            })
+        })
+        document.querySelectorAll('.button-check').forEach(element => {
+            element.addEventListener('click',(e) => {
+                const id = e.target.closest('tr').dataset.id;
+                fetch("http://localhost:8080/OrganicStore/api-grn-complete",{
+                    method: "put",
+                    body: JSON.stringify({id})
+                })
+                .then(res => res.json())
+                .then(result => {
+                   
+                    alert(result);
+                    document.querySelector(`li.number[data-page="${this.elements.page}"]`).click();
+                })
+                .catch(e => console.error(e));
+            })
+        })
+    }
+    
+
     /**
      * Khi click vào Instant Result => Thêm một dòng mới vào bảng phiếu nhập inventory/new
      * Phân trang nếu hơn số dòng quy định
      * 
      * @param {*} elem Instant Result khi Search
      */
-    populateRow(e) {
+    populateRow(result,tbodyElem) {
         if(this.params[":param"] == "new") {
-            const   elem = e.target.closest('.instant-search__result').querySelector('.instant-search__result--left'),
-                    tbodyElem = this.mainElement.querySelector('#hangNhapTable').tBodies[0],
+            const   elem = result.target.closest('.instant-search__result').querySelector('.instant-search__result--left'),
+                    // tbodyElem = this.mainElement.querySelector('#hangNhapTable').tBodies[0],
                     id = elem.dataset.id,
                     name = elem.dataset.name;
             const row = this.mainElement.querySelector(`tbody tr[data-id="${id}"]`);
@@ -336,9 +416,9 @@ export default class Inventory extends AbstractView{
             this.elements.searchProduct.querySelector('input').blur();
             return;
         } 
-        const html = this.elements.templateFunction(e);
-        const tbodyElem = this.mainElement.querySelector('#nhapkhoTable tbody');
-        tbodyElem.insertAdjacentHTML('afterbegin',html);
+        const html = this.elements.templateFunction(result);
+        // const tbodyElem = this.mainElement.querySelector('#nhapkhoTable tbody');
+        tbodyElem.insertAdjacentHTML('beforeend',html);
         // const newRow = this.createRowElement(e);
         // const tbodyElem = this.mainElement.querySelector('#nhapkhoTable tbody');
         // tbodyElem.insertAdjacentElement('afterbegin',newRow);
@@ -378,7 +458,92 @@ export default class Inventory extends AbstractView{
             }
         }
     }
+    addListener() {
+        if(this.params[":param"] == "new") {
+            this.elements.searchProduct.addEventListener('click',(evt) => {
+                
+                if(evt.target.closest('.instant-search__result')) {
+                    this.populateRow(evt,this.mainElement.querySelector('#hangNhapTable tbody'));
+                }
+            })
 
+            // Load lại table khi click vào phân trang
+            // chạy sau listener trong createPagination
+            document.querySelector('.pagination ul').addEventListener('click', (e)=> {
+                const element = e.target.closest('li');
+                if(element&&(element.classList.contains('number')||element.classList.contains('btn'))) {
+                    // updateTable
+                    this.updateTable(this.mainElement.querySelector('li.number.active').dataset.page*1);
+                    console.log("inventory/getScript")
+                }
+            })
+            
+            // Save button
+            document.querySelector(this.elements.saveButtonSelector).addEventListener('click',(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const   traTruoc = document.querySelector("#traTruoc").value;
+                // const   customerId = window.getCookie("customerId"); // Lấy từ session dưới backend
+                const   listInfoGRN = [...document.querySelectorAll("#hangNhapTable tbody tr")].map(e => {
+                    return {
+                        "idProd" : e.dataset.id,
+                        "quantity": e.querySelector('.prod-quantity').value,
+                        "importPrice": e.querySelector('.prod-importPrice').value
+                    }         
+                })
+                
+                this.callAPI(this.elements.apiUrl,{
+                    traTruoc,
+                    listInfoGRN
+                });
+
+            })
+            // createPagination(20, 1);
+            return;
+        }
+        // Sự kiện phân trang
+        // chạy sau listener trong creatPagination
+        document.querySelector('.pagination ul').addEventListener('click', (e)=> {
+            const element = e.target.closest('li');
+            if(element&&(element.classList.contains('number')||element.classList.contains('btn'))) {
+                let activePage = this.mainElement.querySelector('li.number.active').dataset.page*1;
+                this.elements.page = activePage;
+                const usp = new URLSearchParams(window.location.search);
+                usp.set('page',activePage);
+                // Thay đổi params .VD  Từ page 6 Click sang page 8
+                //  ?page=6 -> ?page=8
+                history.replaceState(null, null, "?"+usp.toString());
+                this.updateTable(activePage);
+                console.log("inventory/getScript")
+            }
+        })
+
+    }
+
+    /**
+     * gọi Create Update api
+     * @param {url} url : api url
+     */
+    callAPI(url,payLoad) {
+        if(this.params[":param"] == "new" ){
+            fetch(url,{
+                method:"Post",
+                body : JSON.stringify(payLoad),
+            })
+            .then(
+                res=>res.json()
+                )
+            .then(result => {
+                if(result.status!==200) {
+                    throw new Error(result.message);
+                }
+                alert("Lưu phiếu nhập thành công");
+                const url = new URL(this.elements.apiUrl.toString());
+                document.querySelector(`.pagination li.number[data-page="${1}"]`).click()
+            })
+            .catch(e => alert(e.message));
+        }
+    }
     getScript() {
         if(this.params[":param"] == "new") {
             // document.querySelector('.pagination ').classList.add('d-none');
@@ -402,10 +567,10 @@ export default class Inventory extends AbstractView{
      * @param {page} page Trang muốn chuyển qua 
      */
     updateTable(page) {
-        if(this.params[":param"] == "new") {
+        if(this.params[":param"] == "new" ) {
             const rowsArray = Array.from(this.mainElement.querySelectorAll('#hangNhapTable tbody tr'));
             // const oldBegin = (this.elements.oldPage-1)*this.elements.itemPerPage
-            // const oldEnd = Math.min(oldBegin+ this.elements.itemPerPage, rowsArray.length);
+            // const oldEnd = Math.min(oldBegin+ this.etraTruoclements.itemPerPage, rowsArray.length);
             // const oldRows = rowsArray.slice(oldBegin,oldEnd);
             const begin = (page-1)*this.elements.itemPerPage;
             const end = Math.min(begin+ this.elements.itemPerPage, rowsArray.length);
@@ -419,6 +584,12 @@ export default class Inventory extends AbstractView{
 
             return;
         }
+        const url = new URL(this.elements.apiUrl.toString());
+        url.searchParams.set("offset",(page*1-1)*this.elements.itemPerPage);
+        url.searchParams.set("limit",this.elements.itemPerPage);
+        this.getListDataGRN(url).then(results => {
+            this.populateGRNTable(results);
+        })
     }
 
    
@@ -461,7 +632,7 @@ const contentNhapHang = `
 <div class="nhaphang-right">
     <div class="info-group">
         <div class="info-group__person info-group--content">
-            <input type="text" disabled value="Nguyễn Hữu H">
+            <input type="text" disabled value="">
             <ion-icon name="person"></ion-icon>
         </div>
         <div class="info-group__date info-group--content">
@@ -494,15 +665,15 @@ const contentNhapHang = `
     </div>
     <div class="info-group">
         <div class="info-group--label">
-            <label for="debt">Đã trả</label>
+            <label for="traTruoc">Đã trả</label>
         </div>
         <div class="info-group--content">
-            <input id="debt"type="text" placeholder="Đã trả trước">
+            <input id="traTruoc"type="text" placeholder="Đã trả trước">
             <ion-icon name="pricetags-outline"></ion-icon>
         </div>
     </div>
     <div class="button-group">
-        <a data-link href="/OrganicStore/admin/inventory" class="btn">
+        <a id="btn-close" data-link href="/OrganicStore/admin/inventory" class="btn">
             <button type="button" class="button button--danger">
                 <span class="button__text">Hủy</span>
                 <span class="button__icon">
@@ -510,7 +681,7 @@ const contentNhapHang = `
                 </span>
             </button>
         </a>
-        <a data-link href="/OrganicStore/admin/inventory/new" class="btn">
+        <a id="btn-save" data-link href="/OrganicStore/admin/inventory/new" class="btn ">
             <button type="button" class="button">
                 <span class="button__text">Lưu</span>
                 <span class="button__icon">
@@ -540,7 +711,7 @@ const table = `
             <table id="nhapkhoTable" class=" table table-sortable ">
                 <thead>
                     <tr>
-                        <th>Mã nhập hàng</th>
+                        <th>Mã phiếu nhập</th>
                         <th >Thời gian</th>
                         <th >Tổng tiền</th>
                         <th>Cần trả thêm</th>
@@ -548,355 +719,23 @@ const table = `
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class=" nhap-resume">
-                        <td>Mã nhập hàng</td>
-                        <td >Thời gian</td>
-                        <td >Tổng tiền</td>
-                        <td>Cần trả thêm</td>
-                        <td>Trạng thái</td>
-                    </tr>
-                    <tr class="hide-panel ">
-                        <td colspan="5">
-                            <div class="panel-content">
-                                <ul class="tab-list">
-                                    <li class="active">Thông tin</li>
-                                    <li>Thẻ kho</li>
-                                    <li>Thẻ kho</li>
-                                </ul>
-                                
-                                <div class="tab-content">
-                                    <div class="form-info">
-                                        <div class="form-group form-group__id">
-                                            <span class="form-group--label">Mã nhập hàng:</span>
-                                            <span class="form-group--content">123123</span>
-                                        </div>
-                                        <div class="form-group form-group__time ">
-                                            <span class="form-group--label">Thời gian:</span>
-                                            <span class="form-group--content">30/10/2022 18:30</span>
-                                        </div>
-                                        <div class="form-group form-group__status">
-                                            <span class="form-group--label">Tổng tiền:</span>
-                                            <span class="form-group--content">200.000đ</span>
-                                        </div>
-                                        <div class="form-group form-group__ncc">
-                                            <span class="form-group--label">Nhà cung cấp:</span>
-                                            <span class="form-group--content">NCC NCC</span>
-                                        </div>
-                                        <div class="form-group form-group__person--create">
-                                            <span class="form-group--label">Người tạo:</span>
-                                            <span class="form-group--content">Nguyễn Văn A</span>
-                                        </div>
-                                        <div class="form-group form-group__status">
-                                            <span class="form-group--label">Trạng thái:</span>
-                                            <span class="form-group--content">Phiếu tạm</span>
-                                        </div>
-                                    </div>
-                                    <div class="note">
-                                        <textarea  id="note-area" maxlength="80" placeholder="Ghi chú..."></textarea>
-                                        <ion-icon name="pencil-outline"></ion-icon>
-                                    </div>
-                                    <div class="listProduct">
-                                        <table id="" class=" table table-sortable ">
-                                        <thead>
-                                            <tr>
-                                                <th>Mã hàng hóa</th>
-                                                <th>Tên hàng</th>
-                                                <th>Số lượng</th>
-                                                <th>Giá bán</th>
-                                                <th>Giá nhập</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                        </tbody>
-                                        </table>
-                                        <div class="tratruoc">
-                                            <span>Tiền đã trả NCC:</span>
-                                            <span>0</span>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="button-group__phieuNhap">
-                                    <button type="button" class="button button-phieuNhap button--danger">
-                                        <span class="button__icon">
-                                            <ion-icon name="close-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Hủy bỏ</span>
-                                    </button>
-                                    <button type="button" class="button button-phieuNhap">
-                                        <span class="button__icon">
-                                            <ion-icon name="arrow-redo-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Mở phiếu</span>
-                                    </button>
-                                    <button type="button" class="button button-phieuNhap">
-                                        <span class="button__icon">
-                                            <ion-icon name="copy-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Sao chép</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nhap-resume">
-                        <td>Mã nhập hàng</td>
-                        <td >Thời gian</td>
-                        <td >Tổng tiền</td>
-                        <td>Cần trả thêm</td>
-                        <td>Trạng thái</td>
-                    </tr>
-                    <tr class="hide-panel ">
-                        <td colspan="5">
-                            <div class="panel-content">
-                                <ul class="tab-list">
-                                    <li class="active">Thông tin</li>
-                                    <li>Thẻ kho</li>
-                                    <li>Thẻ kho</li>
-                                </ul>
-                                
-                                <div class="tab-content">
-                                    <div class="form-info">
-                                        <div class="form-group form-group__id">
-                                            <span class="form-group--label">Mã nhập hàng:</span>
-                                            <span class="form-group--content">123123</span>
-                                        </div>
-                                        <div class="form-group form-group__time ">
-                                            <span class="form-group--label">Thời gian:</span>
-                                            <span class="form-group--content">30/10/2022 18:30</span>
-                                        </div>
-                                        <div class="form-group form-group__status">
-                                            <span class="form-group--label">Tổng tiền:</span>
-                                            <span class="form-group--content">200.000đ</span>
-                                        </div>
-                                        <div class="form-group form-group__ncc">
-                                            <span class="form-group--label">Nhà cung cấp:</span>
-                                            <span class="form-group--content">NCC NCC</span>
-                                        </div>
-                                        <div class="form-group form-group__person--create">
-                                            <span class="form-group--label">Người tạo:</span>
-                                            <span class="form-group--content">Nguyễn Văn A</span>
-                                        </div>
-                                        <div class="form-group form-group__status">
-                                            <span class="form-group--label">Trạng thái:</span>
-                                            <span class="form-group--content">Phiếu tạm</span>
-                                        </div>
-                                    </div>
-                                    <div class="note">
-                                        <textarea  id="note-area" maxlength="80" placeholder="Ghi chú..."></textarea>
-                                        <ion-icon name="pencil-outline"></ion-icon>
-                                    </div>
-                                    <div class="listProduct">
-                                        <table id="" class=" table table-sortable ">
-                                        <thead>
-                                            <tr>
-                                                <th>Mã hàng hóa</th>
-                                                <th>Tên hàng</th>
-                                                <th>Số lượng</th>
-                                                <th>Giá bán</th>
-                                                <th>Giá nhập</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                        </tbody>
-                                        </table>
-                                        <div class="tratruoc">
-                                            <span>Tiền đã trả NCC:</span>
-                                            <span>0</span>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="button-group__phieuNhap">
-                                    <button type="button" class="button button-phieuNhap button--danger">
-                                        <span class="button__icon">
-                                            <ion-icon name="close-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Hủy bỏ</span>
-                                    </button>
-                                    <button type="button" class="button button-phieuNhap">
-                                        <span class="button__icon">
-                                            <ion-icon name="arrow-redo-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Mở phiếu</span>
-                                    </button>
-                                    <button type="button" class="button button-phieuNhap">
-                                        <span class="button__icon">
-                                            <ion-icon name="copy-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Sao chép</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nhap-resume" >
-                        <td>Mã nhập hàng</td>
-                        <td >Thời gian</td>
-                        <td >Tổng tiền</td>
-                        <td>Cần trả thêm</td>
-                        <td>Trạng thái</td>
-                    </tr>
-                    <tr class="hide-panel ">
-                        <td colspan="5">
-                            <div class="panel-content">
-                                <ul class="tab-list">
-                                    <li class="active">Thông tin</li>
-                                    <li>Thẻ kho</li>
-                                    <li>Thẻ kho</li>
-                                </ul>
-                                
-                                <div class="tab-content">
-                                    <div class="form-info">
-                                        <div class="form-group form-group__id">
-                                            <span class="form-group--label">Mã nhập hàng:</span>
-                                            <span class="form-group--content">123123</span>
-                                        </div>
-                                        <div class="form-group form-group__time ">
-                                            <span class="form-group--label">Thời gian:</span>
-                                            <span class="form-group--content">30/10/2022 18:30</span>
-                                        </div>
-                                        <div class="form-group form-group__status">
-                                            <span class="form-group--label">Tổng tiền:</span>
-                                            <span class="form-group--content">200.000đ</span>
-                                        </div>
-                                        <div class="form-group form-group__ncc">
-                                            <span class="form-group--label">Nhà cung cấp:</span>
-                                            <span class="form-group--content">NCC NCC</span>
-                                        </div>
-                                        <div class="form-group form-group__person--create">
-                                            <span class="form-group--label">Người tạo:</span>
-                                            <span class="form-group--content">Nguyễn Văn A</span>
-                                        </div>
-                                        <div class="form-group form-group__status">
-                                            <span class="form-group--label">Trạng thái:</span>
-                                            <span class="form-group--content">Phiếu tạm</span>
-                                        </div>
-                                    </div>
-                                    <div class="note">
-                                        <textarea  id="note-area" maxlength="80" placeholder="Ghi chú..."></textarea>
-                                        <ion-icon name="pencil-outline"></ion-icon>
-                                    </div>
-                                    <div class="listProduct">
-                                        <table id="" class=" table table-sortable ">
-                                        <thead>
-                                            <tr>
-                                                <th>Mã hàng hóa</th>
-                                                <th>Tên hàng</th>
-                                                <th>Số lượng</th>
-                                                <th>Giá bán</th>
-                                                <th>Giá nhập</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                            <tr>
-                                                <td>123123213</td>
-                                                <td >Chuối</td>
-                                                <td >500</td>
-                                                <td>20.000đ</td>
-                                                <td>15.000đ</td>
-                                            </tr>    
-                                        </tbody>
-                                        </table>
-                                        <div class="tratruoc">
-                                            <span>Tiền đã trả NCC:</span>
-                                            <span>0</span>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="button-group__phieuNhap">
-                                    <button type="button" class="button button-phieuNhap button--danger">
-                                        <span class="button__icon">
-                                            <ion-icon name="close-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Hủy bỏ</span>
-                                    </button>
-                                    <button type="button" class="button button-phieuNhap">
-                                        <span class="button__icon">
-                                            <ion-icon name="arrow-redo-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Mở phiếu</span>
-                                    </button>
-                                    <button type="button" class="button button-phieuNhap">
-                                        <span class="button__icon">
-                                            <ion-icon name="copy-outline"></ion-icon>
-                                        </span>
-                                        <span class="button__text">Sao chép</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                    
+                    
 
                 </tbody>
             </table>
             <div class="pagination">
                 <ul>
+                    <!--
                     <li class="btn prev"><span><i class="fas fa-angle-left"></i> Prev</span></li><li class="number " data-page="1"><span>1</span></li><li class="number active" data-page="2"><span>2</span></li><li class="number " data-page="3"><span>3</span></li><li class="number " data-page="4"><span>4</span></li><li class="btn next"><span>Next <i class="fas fa-angle-right"></i></span></li>
+                    -->
                 </ul>
             </div>
         </div>
     </div>
 </div>
 `;
-
+    
 // 
 /* 
 <form action="#" id="searchProd" class="instant-search">

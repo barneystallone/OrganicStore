@@ -1,6 +1,5 @@
 package ued.OrganicWeb.dao.impl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import ued.OrganicWeb.dao.IGrnDAO;
@@ -41,7 +40,12 @@ public class GRNDAO extends AbstractDAO<GRNModel> implements IGrnDAO{
 	@Override
 	public int save(GRNModel model) {
 		// TODO Auto-generated method stub
-		return 0;
+//		null,customerId,default,default,traTruoc,default
+		StringBuilder sql = new StringBuilder(
+				"insert GRN values (null,?,default,default,?,default)"
+			);
+		
+		return insert(sql,model.getCustomerId(),model.getTraTruoc());
 	}
 
 	@Override
@@ -53,14 +57,16 @@ public class GRNDAO extends AbstractDAO<GRNModel> implements IGrnDAO{
 	@Override
 	public void delete(GRNModel model) {
 		// TODO Auto-generated method stub
-		
+//		StringBuilder sql = new StringBuilder("call delete_grn_phieuTam(?)");
+		StringBuilder sql = new StringBuilder("call huy_grn_phieuTam(?)");
+		super.update(sql, model.getId());
 	}
 
 	@Override
 	public List<GRNModel> listActiveGRN(Integer... params) {
 		// TODO Auto-generated method stub
 		StringBuilder sql = new StringBuilder(
-					"SELECT * FROM GRN where GRNstatus in (\"phiếu tạm\",\"Đã hoàn thành\")"
+					"SELECT * FROM GRN where GRNstatus in (\"phiếu tạm\",\"Đã hoàn thành\") order by id desc"
 				);
 		if(params.length==2) {
 			sql.append(" LIMIT ?,?");
@@ -77,6 +83,13 @@ public class GRNDAO extends AbstractDAO<GRNModel> implements IGrnDAO{
 				+ "where GRNstatus in (?,?)");
 		
 		return rowCount(sql, "phiếu tạm","Đã hoàn thành");
+	}
+
+	@Override
+	public void saveComplete(GRNModel model) {
+		StringBuilder sql = new StringBuilder("update grn set traTruoc = totalPrice "
+				+ "where id = ?");
+		super.update(sql, model.getId());
 	}
 	
 	

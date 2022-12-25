@@ -9,7 +9,7 @@ import ued.OrganicWeb.service.IGRNService;
 
 public class GRNService implements IGRNService{
 
-	IGrnDAO GrnDAO = GRNDAO.getInstance();
+	IGrnDAO grnDAO = GRNDAO.getInstance();
 	
 	@Override
 	public List<GRNModel> list(Integer... params) {
@@ -26,7 +26,7 @@ public class GRNService implements IGRNService{
 	@Override
 	public int save(GRNModel model) {
 		// TODO Auto-generated method stub
-		return 0;
+		return grnDAO.save(model);
 	}
 
 	@Override
@@ -38,17 +38,23 @@ public class GRNService implements IGRNService{
 	@Override
 	public void delete(GRNModel model) {
 		// TODO Auto-generated method stub
-		
+		grnDAO.delete(model);
 	}
 
 	@Override
 	public List<GRNModel> listActiveGRN(Integer... params) {
-		return GrnDAO.listActiveGRN(params);
+		return grnDAO.listActiveGRN(params);
 	}
 
 	@Override
 	public int getTotalItems() {
-		return GrnDAO.getTotalItems();
+		return grnDAO.getTotalItems();
+	}
+
+	@Override
+	public void saveComplete(GRNModel model) {
+		grnDAO.saveComplete(model);
+		
 	}
 
 }
