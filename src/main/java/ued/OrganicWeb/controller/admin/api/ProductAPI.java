@@ -27,7 +27,7 @@ import ued.OrganicWeb.service.IProductService;
 import ued.OrganicWeb.utils.FormDataUtil;
 import ued.OrganicWeb.utils.RestUtil;
 
-@WebServlet(urlPatterns = {"/api-product","/api-product-discount"})
+@WebServlet(urlPatterns = {"/api-product","/api-product-discount","/api-khohang"})
 @MultipartConfig(maxFileSize = 16177215) 
 public class ProductAPI extends HttpServlet {
 	
@@ -49,7 +49,11 @@ public class ProductAPI extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		String productId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
 		
-		if(req.getServletPath().startsWith("/api-product-discount")) {
+		if(req.getServletPath().startsWith("/api-khohang")) {
+			List<ProductModel> results = productService.listTonKho();
+			mapper.writeValue(resp.getOutputStream(), results);
+			
+		}else if(req.getServletPath().startsWith("/api-product-discount")) {
 			List<ProductModel> results = productService.listDiscountProduct();
 			mapper.writeValue(resp.getOutputStream(), results);
 		} 

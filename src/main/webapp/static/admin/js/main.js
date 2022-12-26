@@ -29,8 +29,8 @@ const router = () => {
         {path:"/OrganicStore/admin/customer" , view : Customer},
         {path:"/OrganicStore/admin/user" , view : User},
         {path:"/OrganicStore/admin/category" , view : Category},
-        {path:"/OrganicStore/admin/inventory" , view : Inventory},
         {path:"/OrganicStore/admin/inventory/:param" , view : Inventory},
+        {path:"/OrganicStore/admin/inventory" , view : Inventory},
         {path:"/OrganicStore/admin/product" , view : Product}
     ]
     const mapRouteMatchs = routes.map(route => {
@@ -49,6 +49,11 @@ const router = () => {
         // navigateTo("/OrganicStore/admin/");
         location.pathname = "/OrganicStore/admin/";
     } else{
+        if(location.pathname=="/OrganicStore/admin/inventory/khohang") {
+            document.documentElement.style.setProperty('--green', '#287bff');
+        } else {
+            document.documentElement.style.setProperty('--green', '#009879');
+        }
         new match.route.view(getParams(match)); // get view
     }
 };

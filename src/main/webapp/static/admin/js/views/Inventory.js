@@ -1,6 +1,6 @@
 import AbstractView from "/OrganicStore/static/admin/js/views/AbstractView.js";
 import InstantSearch from "/OrganicStore/static/web/js/utils/InstantSearch.js";
-import {createPagination,addPageNumberEvent} from "/OrganicStore/static/common/utils.js";
+import {createPagination} from "/OrganicStore/static/common/utils.js";
 export default class Inventory extends AbstractView{
     constructor(params) {
         super(params);
@@ -23,25 +23,25 @@ export default class Inventory extends AbstractView{
                             <td>${name}</td>
                             <td>
                                 <div class="input-sp amount-input">
-                                <input type="text" class="prod-quantity" >
+                                <input type="text" class="prod-quantity"  value=0>
                             
                                 </div>
                             </td>
                             <td>
                                 <div class="input-sp amount-input">
-                                    <input type="text"  class="prod-importPrice">
+                                    <input type="text"  class="prod-importPrice" value=0>
                             
                                 </div>
                             </td>
                             <td class="thanhTien">
-                                Thành tiền
+                                <span class="thanhTien">0</span>
                                 <ion-icon class="delete-btn" name="trash-outline"></ion-icon>
                             </td>
                         </tr>
                     `
                 }
             }
-        }  else  {
+        }  else {
             this.elements = {
                 apiUrl: new URL("/OrganicStore/api-grn",window.location.origin),
                 itemPerPage: 3,
@@ -49,6 +49,15 @@ export default class Inventory extends AbstractView{
                 totalItem : 0, // set lại khi có dữ liệu
                 page: 1,
                 table : table,
+                titleArr : ["Mã phiếu nhập","Thời gian","Tổng tiền","Cần trả thêm"," Trạng thái"],
+                templateHeader :  (arr) => {
+                    let html = ``,
+                        title;
+                    while(title= arr.shift()) {
+                        html += `<th>${title}</th>`
+                    }
+                    return html
+                }     ,
                 templateFunction : (result) => { // arrow func => this là dối tượng Inventory
                     let str1= ` 
     <tr class=" nhap-resume" data-id= "${result.id}">
@@ -174,6 +183,53 @@ export default class Inventory extends AbstractView{
                     return str1.concat(str2).concat(str3);
                 }
             }
+        } 
+        
+        if(this.params[":param"] == "khohang") {
+            this.elements = {
+                ...this.elements,
+                titleArr : ["Mã hàng hóa","Tên hàng","Tồn kho","Giá vốn"],
+                apiUrl: new URL("/OrganicStore/api-khohang",window.location.origin),
+                templateFunction : (result) => { // arrow func => this là dối tượng Inventory
+                    let str1= ` 
+    <tr class=" nhap-resume" data-id= "${result.id}">
+        <td >SP${result.id}</td>
+        <td >${result.name}</td>
+        <td >${result.in_stock}</td>
+        <td>${result.price}</td>
+    </tr>
+    <tr class="hide-panel " data-id= "${result.id}">
+        <td colspan="5">
+            <div class="panel-content">
+                <ul class="tab-list">
+                    <li class="active">Thẻ kho</li>
+                </ul>
+                
+                <div class="tab-content">
+                    <div class="listProduct">
+                        <table id="" class=" table table-sortable ">
+                        <thead>
+                            <tr>
+                                <th>Chứng từ</th>
+                                <th>Thời gian</th>
+                                <th>Số lượng</th>
+                                <th>Giá nhập</th>
+                                <th>Giá bán</th>
+                            </tr>
+                        </thead>
+                    <tbody>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+                    
+                    `
+                    return str1;
+                }
+            }
         }
 
         this.getHtml();
@@ -207,14 +263,19 @@ export default class Inventory extends AbstractView{
                             <div class="instant-search__result-title"> 
                                 <span> ${result.name} </span>
                             </div>
-                            <div class="instant-search__result-price">Giá: ${result.price*(100-result.saleOff)/100}đ &nbsp Tồn: ${result.in_stock} </div>
-                            
+                            <div class="instant-search__result-price">
+                                Giá: ${result.price*(100-result.saleOff)/100}đ &nbsp Tồn: ${result.in_stock} 
+                            </div>
                         </div>
                     `
                 }
             });
         } else {
             this.mainElement.innerHTML =  this.elements.table ;
+            
+            document.querySelector('#nhapkhoTable thead tr').innerHTML = this.elements.templateHeader(
+                this.elements.titleArr
+            )
             const searchParams = new URL(window.location.href).searchParams;
             const url = new URL(this.elements.apiUrl.toString());
             let page = searchParams.get('page')*1
@@ -231,27 +292,11 @@ export default class Inventory extends AbstractView{
                 if(pageTotals< this.elements.page) {
                     document.querySelector(`li.number[data-page="${1}"]`).click();
                 }
-          
-                this.populateGRNTable(results.listGRN);
+                let arr = (this.params[":param"] == "khohang") ? results : results.listGRN
+                this.populateGRNTable(results);
             
             });
-            // url.searchParams.set("offset", this.elements.page-1);
-            // url.searchParams.set("limit",this.elements.itemPerPage);
-            // url.searchParams.set("count","");
 
-            // this.getListDataGRN(url).then(results=> {
-            //     this.elements.totalItem = results.totalItem;
-            //     const pageTotals = Math.ceil(this.elements.totalItem/this.elements.itemPerPage);
-            //     if(pageTotals>=2) {
-            //         createPagination(pageTotals,this.elements.page);
-            //     }
-            //     if(pageTotals< this.elements.page) {
-            //         document.querySelector(`li.number[data-page="${1}"]`).click();
-            //     }
-            //     this.populateGRNTable(results.listGRN);
-            
-            // })
-            // console.log("hello")
         }
             
         this.getScript();
@@ -265,7 +310,7 @@ export default class Inventory extends AbstractView{
      * @param {url} url : URL 
      */
     getListDataGRN(url) {
-        url.searchParams.set("offset", this.elements.page-1);
+        url.searchParams.set("offset", (this.elements.page-1)*this.elements.itemPerPage);
         url.searchParams.set("limit",this.elements.itemPerPage);
         
 
@@ -402,7 +447,25 @@ export default class Inventory extends AbstractView{
                 
                 // Xóa row nếu click vào button xóa
                 newRow.querySelector('.delete-btn').addEventListener('click',(e) => this.removeRow(e));
-            
+                
+        
+                newRow.querySelectorAll('.amount-input input').forEach(element=>{
+                    this.addNumberKeydownListener(element);
+                    element.addEventListener('blur', (e)=> {
+                        const row = e.target.closest('tr');
+    
+                        row.querySelector('.thanhTien').textContent = this.currencyFormat(
+                            row.querySelector('.prod-quantity').value*row.querySelector('.prod-importPrice').value
+                        );
+                        document.querySelector('#totalPrice').textContent = this.currencyFormat(
+                            [...document.querySelectorAll('td.thanhTien')].reduce((prev,current) => {
+                                return prev + this.convertToNumber(current.textContent)*1;
+                            },0)
+                        );
+
+                        e.target.value =  e.target.value*1
+                    })
+                })
                 if(length>=this.elements.itemPerPage) {
                     this.mainElement.querySelector(`li.number[data-page="1"]`).click();
                 }
@@ -417,11 +480,7 @@ export default class Inventory extends AbstractView{
             return;
         } 
         const html = this.elements.templateFunction(result);
-        // const tbodyElem = this.mainElement.querySelector('#nhapkhoTable tbody');
         tbodyElem.insertAdjacentHTML('beforeend',html);
-        // const newRow = this.createRowElement(e);
-        // const tbodyElem = this.mainElement.querySelector('#nhapkhoTable tbody');
-        // tbodyElem.insertAdjacentElement('afterbegin',newRow);
 
     }
 
@@ -432,9 +491,8 @@ export default class Inventory extends AbstractView{
     }
 
     removeRow(e) {
-        const delRow =  e.target.closest('tr');
         const rows = [...e.target.closest('tbody').children];
-        const index = rows.indexOf(delRow);
+        const index = rows.indexOf(e.target.closest('tr'));
         const newTotalPages =  Math.ceil((rows.length-1)/this.elements.itemPerPage);
         let activePage =  Math.ceil((index+1)/this.elements.itemPerPage);
         activePage = (activePage>newTotalPages) ? newTotalPages : activePage; // activePage mới khi xóa 
@@ -466,6 +524,11 @@ export default class Inventory extends AbstractView{
                     this.populateRow(evt,this.mainElement.querySelector('#hangNhapTable tbody'));
                 }
             })
+
+            this.addNumberKeydownListener(document.querySelector('#traTruoc'))
+            this.elements
+            this.addNumberKeydownListener(document.querySelector('#traTruoc'))
+            
 
             // Load lại table khi click vào phân trang
             // chạy sau listener trong createPagination
@@ -537,9 +600,9 @@ export default class Inventory extends AbstractView{
                 if(result.status!==200) {
                     throw new Error(result.message);
                 }
-                alert("Lưu phiếu nhập thành công");
+                console.log("Lưu phiếu nhập thành công");
                 const url = new URL(this.elements.apiUrl.toString());
-                document.querySelector(`.pagination li.number[data-page="${1}"]`).click()
+                document.querySelector(this.elements.closeButtonSelector).click()
             })
             .catch(e => alert(e.message));
         }
@@ -550,13 +613,18 @@ export default class Inventory extends AbstractView{
             
             return;
         }
+        
+        document.querySelector('#taoPhieuNhap .button').classList.toggle('blue',this.params[":param"] == "khohang");
+        document.querySelector('#xemHangHoa .button').classList.toggle('blue',this.params[":param"] == "khohang");
         document.querySelector('.data-table').style.width = "98%";
         Object.assign(document.querySelector('.cardHeader ').style, {
             alignItems : "center",
         })
-        Object.assign(document.querySelector('.cardHeader a.btn').style, {
-            backgroundColor : 'transparent',
-        })
+    
+        document.querySelector('#taoPhieuNhap').style.backgroundColor = 'transparent' ;
+        document.querySelector('#xemHangHoa').style.backgroundColor = 'transparent' ;
+        
+
        
     }
 
@@ -569,9 +637,6 @@ export default class Inventory extends AbstractView{
     updateTable(page) {
         if(this.params[":param"] == "new" ) {
             const rowsArray = Array.from(this.mainElement.querySelectorAll('#hangNhapTable tbody tr'));
-            // const oldBegin = (this.elements.oldPage-1)*this.elements.itemPerPage
-            // const oldEnd = Math.min(oldBegin+ this.etraTruoclements.itemPerPage, rowsArray.length);
-            // const oldRows = rowsArray.slice(oldBegin,oldEnd);
             const begin = (page-1)*this.elements.itemPerPage;
             const end = Math.min(begin+ this.elements.itemPerPage, rowsArray.length);
             const newRows = rowsArray.slice(begin,end);
@@ -584,10 +649,9 @@ export default class Inventory extends AbstractView{
 
             return;
         }
-        const url = new URL(this.elements.apiUrl.toString());
-        url.searchParams.set("offset",(page*1-1)*this.elements.itemPerPage);
-        url.searchParams.set("limit",this.elements.itemPerPage);
-        this.getListDataGRN(url).then(results => {
+        this.elements.page = page;
+
+        this.getListDataGRN(new URL(this.elements.apiUrl.toString())).then(results => {
             this.populateGRNTable(results);
         })
     }
@@ -655,9 +719,9 @@ const contentNhapHang = `
             <ion-icon name="qr-code-outline"></ion-icon>
         </div>
     </div>
-    <div class="info-group ">
+    <div  class="info-group ">
         <div class="info-group--label">Tổng tiền</div>
-        <div class="info-group--content">200.000 đ</div>
+        <div id="totalPrice" class="info-group--content">200.000 đ</div>
     </div>
     <div class="info-group ">
         <div class="info-group--label">Trạng thái</div>
@@ -698,14 +762,26 @@ const table = `
     <div class="data-table">
         <div class="cardHeader">
             <h2>Phiếu nhập hàng</h2>
-            <a data-link href="/OrganicStore/admin/inventory/new" class="btn">
-                <button type="button" class="button">
-                    <span class="button__text">Nhập hàng</span>
-                    <span class="button__icon">
-                    <ion-icon name="add-outline"></ion-icon>
-                     </span>
-                </button>
-            </a>
+            <div class = "inventory-btn-group">
+                <a data-link id="xemHangHoa" href="/OrganicStore/admin/inventory/khohang" class="btn">
+                    <button type="button" class="button">
+                        <span class="button__text">Hàng hóa</span>
+                        <span class="button__icon">
+                            <ion-icon name="arrow-redo-outline"></ion-icon>
+                        </span>
+                    </button>
+                </a>
+                <a data-link id="taoPhieuNhap" href="/OrganicStore/admin/inventory/new" class="btn">
+                    <button type="button" class="button">
+                        <span class="button__text">Nhập hàng</span>
+                        <span class="button__icon">
+                        <ion-icon name="add-outline"></ion-icon>
+                        </span>
+                    </button>
+                </a>
+            
+            
+            </div>
         </div>
         <div class="table-nhapkho-wrapper">
             <table id="nhapkhoTable" class=" table table-sortable ">
@@ -736,98 +812,3 @@ const table = `
 </div>
 `;
     
-// 
-/* 
-<form action="#" id="searchProd" class="instant-search">
-    <div class="hero__search__categories">
-        All Categories <span class="arrow_carrot-down"></span>
-    </div>
-    <input type="text" placeholder="What do yo u need?" class="instant-search__input" >
-    <!-- <button type="submit" class="instant-search__btn site-btn">SEARCH</button> -->
-    <a type="submit" data-link class="instant-search__btn site-btn disable">SEARCH</a>
-</form>
- */
-
-//
-
-{/* <div class="pagination">
-    <ul>
-        <li class="btn prev"><span><i class="fas fa-angle-left"></i> Prev</span></li>
-        <li class="number active" data-page="1"><span>1</span></li>
-        <li class="number" data-page="2"><span>2</span></li>
-        <li class="number" data-page="3"><span>3</span></li>
-        <li class="number" data-page="4"><span>4</span></li>
-        <li class="btn next"><span>Next <i class="fas fa-angle-right"></i></span></li>
-    </ul>
-</div> */}
-
-
-{/* <tr>
-                    <td>Mã hàng hóa</td>
-                    <td>Tên hàng</td>
-                    <td>
-                        <div class="input-sp amount-input">
-                            <input type="text" >
-                    
-                        </div>
-                    </td>
-                    <td>
-                         <div class="input-sp amount-input">
-                            <input type="text" >
-                    
-                        </div>
-                    </td>
-                    <td>Thành tiền</td>
-                </tr>
-                <tr>
-                    <td>Mã hàng hóa</td>
-                    <td>Tên hàng</td>
-                    <td>
-                        <div class="input-sp amount-input">
-                            <input type="text" >
-                    
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-sp amount-input">
-                            <input type="text" >
-                    
-                        </div>
-                    </td>
-                    <td>Thành tiền</td>
-                </tr>
-                <tr>
-                    <td>Mã hàng hóa</td>
-                    <td>Tên hàng</td>
-                    <td>
-                        <div class="input-sp amount-input">
-                        <input type="text" >
-                    
-                        </div>
-                    </td>
-                    <td>
-                         <div class="input-sp amount-input">
-                            <input type="text" >
-                    
-                        </div>
-                    </td>
-                    <td>Thành tiền</td>
-                </tr>
-                <tr>
-                    <td>Mã hàng hóa</td>
-                    <td>Tên hàng</td>
-                    
-                    <td>
-                        <div class="input-sp amount-input">
-                        <input type="text" >
-                    
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-sp amount-input">
-                        <input type="text" >
-                    
-                        </div>
-                    </td>
-                    <td>Thành tiền</td>
-                </tr> */}

@@ -2,7 +2,10 @@ package ued.OrganicWeb.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -130,4 +133,28 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 			}
 		}, id);
 	}
+
+	@Override
+	public List<ProductModel> listTonKho() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		 Date date = new Date();  
+		 System.out.println("call calTon(\""+ formatter.format(date) +"\")");
+		StringBuilder sql = new StringBuilder("call calTon('"+ formatter.format(date) +"');");
+		return super.call(sql,(ResultSet rs) -> {
+			try {
+				ProductModel model = new ProductModel();
+				model.setId(rs.getInt("id"));
+				model.setName(rs.getString("name"));
+				model.setIn_stock(rs.getInt("slTon"));
+				model.setPrice(rs.getInt("von"));
+				return model;
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		});
+	}
+	
+	
 }

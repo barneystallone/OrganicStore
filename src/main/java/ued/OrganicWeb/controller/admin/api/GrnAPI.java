@@ -134,6 +134,7 @@ public class GrnAPI extends HttpServlet{
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		req.setCharacterEncoding("UTF-8");
+		resp.setContentType("application/json");
 		ObjectMapper mapper = new ObjectMapper();
 		String path = req.getServletPath();
 		GRNModel model = mapper.readValue(req.getInputStream(), GRNModel.class);

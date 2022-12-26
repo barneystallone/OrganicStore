@@ -9,6 +9,7 @@
 
 :root {
     --green: #009879;
+    --greenTmp: #009879;
     --blue: #287bff;
     --white: #fff;
     --white2:#fbfbfb;
@@ -1243,9 +1244,17 @@ button#modal-btn:focus,.modal-textarea:focus,.modal-input:focus{
     font-weight: 500;
     cursor: pointer;
 }
-
+.button.blue {
+    background: var(--blue);
+}
 .button:hover {
     background: #008168;
+}
+.button.blue:hover {
+    background: #1556c1e0;
+}
+.button.blue:active {
+    background: #1455bf;
 }
 
 .button:active {
@@ -1668,7 +1677,7 @@ input#NhaCungCap {
 
 .tab-content .table th{
     color: var(--white);
-    background: #3db59d;
+    background: var(--green);
     font-size: 16px;
 }
 
@@ -1759,4 +1768,8 @@ input#NhaCungCap {
 .nhaphang-left  td.thanhTien, 
 .nhaphang-left  th.thanhTien{
     padding-right: 44px;
+}
+
+.inventory-btn-group {
+    display: flex;
 }
