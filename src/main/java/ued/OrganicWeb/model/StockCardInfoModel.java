@@ -2,7 +2,7 @@ package ued.OrganicWeb.model;
 
 import java.sql.Timestamp;
 
-public class StockCardModel extends AbstractModel {
+public class StockCardInfoModel extends AbstractModel {
 	private Timestamp ngayGio;
 	private int quantity;
 	private int giaNhap;

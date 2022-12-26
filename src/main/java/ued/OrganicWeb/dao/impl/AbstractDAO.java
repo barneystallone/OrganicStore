@@ -109,6 +109,7 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 		if (conn != null) {
 			try {
 				cs = conn.prepareCall(sql.toString());
+				setParams(cs, params);
 				cs.executeQuery();
 				rs = cs.getResultSet();
 				while (rs.next()) {

@@ -12,8 +12,11 @@ import java.util.stream.Collectors;
 import com.mysql.cj.protocol.Resultset;
 
 import ued.OrganicWeb.dao.IProductDAO;
+import ued.OrganicWeb.mapper.MapModel;
 import ued.OrganicWeb.mapper.impl.ProductMapper;
+import ued.OrganicWeb.mapper.impl.StockCardInfoMapper;
 import ued.OrganicWeb.model.ProductModel;
+import ued.OrganicWeb.model.StockCardInfoModel;
 
 public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO {
 	
@@ -155,6 +158,8 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 			}
 		});
 	}
+
+	
 	
 	
 }

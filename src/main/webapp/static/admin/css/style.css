@@ -1773,3 +1773,7 @@ input#NhaCungCap {
 .inventory-btn-group {
     display: flex;
 }
+
+.listStockCardInfo {
+    flex-grow: 1;
+}

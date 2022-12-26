@@ -60,15 +60,7 @@
                         <span class="title">Product</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon class="icon-outline" name="stats-chart-outline"></ion-icon>
-                            <ion-icon class="icon-full" name="stats-chart"></ion-icon>
-                        </span>
-                        <span class="title">Doanh thu</span>
-                    </a>
-                </li>
+                
                 <li>
                     <a data-link href="${root}/admin/inventory">
                         <span class="icon">
@@ -81,12 +73,13 @@
                 <li>
                     <a href="#">
                         <span class="icon">
-                            <ion-icon class="icon-outline" name="lock-closed-outline"></ion-icon>
-                            <ion-icon class="icon-full" name="lock-closed"></ion-icon>
+                            <ion-icon class="icon-outline" name="stats-chart-outline"></ion-icon>
+                            <ion-icon class="icon-full" name="stats-chart"></ion-icon>
                         </span>
-                        <span class="title">Password</span>
+                        <span class="title">Doanh thu</span>
                     </a>
                 </li>
+            
                 <li>
                     <a href="${root}/logout">
                         <span class="icon">

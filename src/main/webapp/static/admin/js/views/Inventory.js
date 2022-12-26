@@ -43,13 +43,11 @@ export default class Inventory extends AbstractView{
             }
         }  else {
             this.elements = {
-                apiUrl: new URL("/OrganicStore/api-grn",window.location.origin),
                 itemPerPage: 3,
-                btnDeleteSelector :'.btn-delete',
+                
                 totalItem : 0, // set lại khi có dữ liệu
                 page: 1,
                 table : table,
-                titleArr : ["Mã phiếu nhập","Thời gian","Tổng tiền","Cần trả thêm"," Trạng thái"],
                 templateHeader :  (arr) => {
                     let html = ``,
                         title;
@@ -58,180 +56,188 @@ export default class Inventory extends AbstractView{
                     }
                     return html
                 }     ,
-                templateFunction : (result) => { // arrow func => this là dối tượng Inventory
-                    let str1= ` 
-    <tr class=" nhap-resume" data-id= "${result.id}">
-        <td >${result.ngayGio}</td>
-        <td >${this.formatDate(result.ngayGio)}</td>
-        <td >${this.currencyFormat(result.totalPrice)}</td>
-        <td>${this.currencyFormat(result.totalPrice-result.traTruoc)}</td>
-        <td>${result.grnstatus}</td>
-    </tr>
-    <tr class="hide-panel " data-id= "${result.id}">
-        <td colspan="5">
-            <div class="panel-content">
-                <ul class="tab-list">
-                    <li class="active">Thông tin</li>
-                </ul>
                 
-                <div class="tab-content">
-                    <div class="form-info">
-                        <div class="form-group form-group__id">
-                            <span class="form-group--label">Mã nhập hàng:</span>
-                            <span class="form-group--content">${result.ngayGio}</span>
-                        </div>
-                        <div class="form-group form-group__time ">
-                            <span class="form-group--label">Thời gian:</span>
-                            <span class="form-group--content">${this.formatDate(result.ngayGio)}</span>
-                        </div>
-                        <div class="form-group form-group__status">
-                            <span class="form-group--label">Tổng tiền:</span>
-                            <span class="form-group--content">${this.currencyFormat(result.totalPrice)}</span>
-                        </div>
-                        <div class="form-group form-group__ncc">
-                            <span class="form-group--label">Nhà cung cấp:</span>
-                            <span class="form-group--content">NCC NCC</span>
-                        </div>
-                        <div class="form-group form-group__person--create">
-                            <span class="form-group--label">Người tạo:</span>
-                            <span class="form-group--content">${result.customer.name}</span>
-                        </div>
-                        <div class="form-group form-group__status">
-                            <span class="form-group--label">Trạng thái:</span>
-                            <span class="form-group--content">${result.grnstatus}</span>
-                        </div>
-                    </div>
-                    <div class="note">
-                        <textarea  id="note-area" maxlength="80" placeholder="Ghi chú..."></textarea>
-                        <ion-icon name="pencil-outline"></ion-icon>
-                    </div>
-                    <div class="listProduct">
-                        <table id="" class=" table table-sortable ">
-                        <thead>
-                            <tr>
-                                <th>Mã hàng hóa</th>
-                                <th>Tên hàng</th>
-                                <th>Số lượng</th>
-                                <th>Giá nhập</th>
-                                <th>Giá bán</th>
-                            </tr>
-                        </thead>
-                    <tbody>
-                        `
-                    let str2 = ``;
-                    let tmp ;
-                    while (tmp = result.listInfoGRN.shift()) {
-                        str2 += `
-                        <tr data-id=${tmp.id}>
-                            <td>${tmp.idProd}</td>
-                            <td >${tmp.productName}</td>
-                            <td >${tmp.quantity}</td>
-                            <td>${tmp.importPrice}</td>
-                            <td>${tmp.productPrice}</td>
-                        </tr>  
-                        
-                        
-                        `
-                    }
-                    let str3 = `
-                    </tbody>
-                    </table>
-                    <div class="tratruoc">
-                        <span>Tiền đã trả NCC:</span>
-                        <span>${this.currencyFormat(result.traTruoc)}</span>
+            }
+            if(this.params[":param"] == "khohang") {
+                this.elements = {
+                    ...this.elements,
+                    titleArr : ["Mã hàng hóa","Tên hàng","Tồn kho","Giá vốn"],
+                    apiUrl: new URL("/OrganicStore/api-khohang",window.location.origin),
+                    templateFunction : (result) => { // arrow func => this là dối tượng Inventory
+                        let str1= ` 
+        <tr class=" nhap-resume" data-id= "${result.id}">
+            <td >SP${result.id}</td>
+            <td >${result.name}</td>
+            <td >${result.in_stock}</td>
+            <td>${result.price}</td>
+        </tr>
+        <tr class="hide-panel " data-id= "${result.id}">
+            <td colspan="5">
+                <div class="panel-content">
+                    <ul class="tab-list">
+                        <li class="active">Thẻ kho</li>
+                    </ul>
+                    
+                    <div class="tab-content">
+                        <div class="listStockCardInfo">
+                            <table id="" class=" table table-sortable ">
+                            <thead>
+                                <tr>
+                                    <th>Chứng từ</th>
+                                    <th>Thời gian</th>
+                                    <th>Số lượng</th>
+                                    <th>Giá nhập</th>
+                                    <th>Giá bán</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                        </tbody>
+                        </table>
                     </div>
                 </div>
-
             </div>
-            <div class="button-group__phieuNhap">
-                <button type="button" class="button button-phieuNhap button--danger btn-delete">
-                    <span class="button__icon">
-                        <ion-icon name="close-outline"></ion-icon>
-                    </span>
-                    <span class="button__text">Hủy bỏ</span>
-                </button>
-                <button type="button" class="button button-phieuNhap">
-                    <span class="button__icon">
-                        <ion-icon name="arrow-undo-outline"></ion-icon>
-                    </span>
-                    <span class="button__text">Nhập thêm hàng</span>
-                </button>
-                <button type="button" class="button button-phieuNhap">
-                    <span class="button__icon">
-                        <ion-icon name="arrow-redo-outline"></ion-icon>
-                    </span>
-                    <span class="button__text">Mở phiếu</span>
-                </button>
-                <!--    <button type="button" class="button button-phieuNhap">
-               <span class="button__icon">
-                <ion-icon name="copy-outline"></ion-icon>
-                </span>
-                <span class="button__text">Sao chép</span>
-                </button> -->
-                <button type="button" class="button button-phieuNhap button-check">
-                    <span class="button__icon">
-                        <ion-icon name="checkmark-circle-outline"></ion-icon>
-                    </span>
-                    <span class="button__text">Hoàn thành</span>
-                </button>
-            </div>
-        </div>
-    </td>
-</tr>
+        </td>
+    </tr>
+                        
+                        `
+                        return str1;
+                    }
+                }
+            } else {
+                this.elements = {
+                    ...this.elements,
+                    apiUrl: new URL("/OrganicStore/api-grn",window.location.origin),
+                    titleArr : ["Mã phiếu nhập","Thời gian","Tổng tiền","Cần trả thêm"," Trạng thái"],
+                    btnDeleteSelector :'.btn-delete',
+                    templateFunction : (result) => { // arrow func => this là dối tượng Inventory
+                        let str1= ` 
+        <tr class=" nhap-resume" data-id= "${result.id}">
+            <td >${result.ngayGio}</td>
+            <td >${this.formatDate(result.ngayGio)}</td>
+            <td >${this.currencyFormat(result.totalPrice)}</td>
+            <td>${this.currencyFormat(result.totalPrice-result.traTruoc)}</td>
+            <td>${result.grnstatus}</td>
+        </tr>
+        <tr class="hide-panel " data-id= "${result.id}">
+            <td colspan="5">
+                <div class="panel-content">
+                    <ul class="tab-list">
+                        <li class="active">Thông tin</li>
+                    </ul>
                     
-                    `
-                    return str1.concat(str2).concat(str3);
+                    <div class="tab-content">
+                        <div class="form-info">
+                            <div class="form-group form-group__id">
+                                <span class="form-group--label">Mã nhập hàng:</span>
+                                <span class="form-group--content">${result.ngayGio}</span>
+                            </div>
+                            <div class="form-group form-group__time ">
+                                <span class="form-group--label">Thời gian:</span>
+                                <span class="form-group--content">${this.formatDate(result.ngayGio)}</span>
+                            </div>
+                            <div class="form-group form-group__status">
+                                <span class="form-group--label">Tổng tiền:</span>
+                                <span class="form-group--content">${this.currencyFormat(result.totalPrice)}</span>
+                            </div>
+                            <div class="form-group form-group__ncc">
+                                <span class="form-group--label">Nhà cung cấp:</span>
+                                <span class="form-group--content">NCC NCC</span>
+                            </div>
+                            <div class="form-group form-group__person--create">
+                                <span class="form-group--label">Người tạo:</span>
+                                <span class="form-group--content">${result.customer.name}</span>
+                            </div>
+                            <div class="form-group form-group__status">
+                                <span class="form-group--label">Trạng thái:</span>
+                                <span class="form-group--content">${result.grnstatus}</span>
+                            </div>
+                        </div>
+                        <div class="note">
+                            <textarea  id="note-area" maxlength="80" placeholder="Ghi chú..."></textarea>
+                            <ion-icon name="pencil-outline"></ion-icon>
+                        </div>
+                        <div class="listProduct">
+                            <table id="" class=" table table-sortable ">
+                            <thead>
+                                <tr>
+                                    <th>Mã hàng hóa</th>
+                                    <th>Tên hàng</th>
+                                    <th>Số lượng</th>
+                                    <th>Giá nhập</th>
+                                    <th>Giá bán</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                            `
+                        let str2 = ``;
+                        let tmp ;
+                        while (tmp = result.listInfoGRN.shift()) {
+                            str2 += `
+                            <tr data-id=${tmp.id}>
+                                <td>${tmp.idProd}</td>
+                                <td >${tmp.productName}</td>
+                                <td >${tmp.quantity}</td>
+                                <td>${tmp.importPrice}</td>
+                                <td>${tmp.productPrice}</td>
+                            </tr>  
+                            
+                            
+                            `
+                        }
+                        let str3 = `
+                        </tbody>
+                        </table>
+                        <div class="tratruoc">
+                            <span>Tiền đã trả NCC:</span>
+                            <span>${this.currencyFormat(result.traTruoc)}</span>
+                        </div>
+                    </div>
+    
+                </div>
+                <div class="button-group__phieuNhap">
+                    <button type="button" class="button button-phieuNhap button--danger btn-delete">
+                        <span class="button__icon">
+                            <ion-icon name="close-outline"></ion-icon>
+                        </span>
+                        <span class="button__text">Hủy bỏ</span>
+                    </button>
+                    <button type="button" class="button button-phieuNhap">
+                        <span class="button__icon">
+                            <ion-icon name="arrow-undo-outline"></ion-icon>
+                        </span>
+                        <span class="button__text">Nhập thêm hàng</span>
+                    </button>
+                    <button type="button" class="button button-phieuNhap">
+                        <span class="button__icon">
+                            <ion-icon name="arrow-redo-outline"></ion-icon>
+                        </span>
+                        <span class="button__text">Mở phiếu</span>
+                    </button>
+                    <!--    <button type="button" class="button button-phieuNhap">
+                   <span class="button__icon">
+                    <ion-icon name="copy-outline"></ion-icon>
+                    </span>
+                    <span class="button__text">Sao chép</span>
+                    </button> -->
+                    <button type="button" class="button button-phieuNhap button-check">
+                        <span class="button__icon">
+                            <ion-icon name="checkmark-circle-outline"></ion-icon>
+                        </span>
+                        <span class="button__text">Hoàn thành</span>
+                    </button>
+                </div>
+            </div>
+        </td>
+    </tr>
+                        
+                        `
+                        return str1.concat(str2).concat(str3);
+                    }
                 }
             }
         } 
         
-        if(this.params[":param"] == "khohang") {
-            this.elements = {
-                ...this.elements,
-                titleArr : ["Mã hàng hóa","Tên hàng","Tồn kho","Giá vốn"],
-                apiUrl: new URL("/OrganicStore/api-khohang",window.location.origin),
-                templateFunction : (result) => { // arrow func => this là dối tượng Inventory
-                    let str1= ` 
-    <tr class=" nhap-resume" data-id= "${result.id}">
-        <td >SP${result.id}</td>
-        <td >${result.name}</td>
-        <td >${result.in_stock}</td>
-        <td>${result.price}</td>
-    </tr>
-    <tr class="hide-panel " data-id= "${result.id}">
-        <td colspan="5">
-            <div class="panel-content">
-                <ul class="tab-list">
-                    <li class="active">Thẻ kho</li>
-                </ul>
-                
-                <div class="tab-content">
-                    <div class="listProduct">
-                        <table id="" class=" table table-sortable ">
-                        <thead>
-                            <tr>
-                                <th>Chứng từ</th>
-                                <th>Thời gian</th>
-                                <th>Số lượng</th>
-                                <th>Giá nhập</th>
-                                <th>Giá bán</th>
-                            </tr>
-                        </thead>
-                    <tbody>
-                    </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </td>
-</tr>
-                    
-                    `
-                    return str1;
-                }
-            }
-        }
-
+        
         this.getHtml();
         this.addListener();
     }
@@ -293,7 +299,7 @@ export default class Inventory extends AbstractView{
                     document.querySelector(`li.number[data-page="${1}"]`).click();
                 }
                 let arr = (this.params[":param"] == "khohang") ? results : results.listGRN
-                this.populateGRNTable(results);
+                this.populateGRNTable(arr);
             
             });
 
@@ -356,32 +362,118 @@ export default class Inventory extends AbstractView{
                 const isActive = (hidePanel.classList.contains('active')==true);
                 clearTimeout(delay);
                 clearTimeout(delay2);
-                if(isActive) {
-                    delay = setTimeout(()=>{
+                if(this.params[":param"] == "khohang") {
+                    hidePanel.querySelector('.table tbody').innerHTML = "";
+                    const apiUrl = new URL(this.elements.apiUrl.toString());
+                    apiUrl.searchParams.set("id",elem.dataset.id);
+                    fetch(apiUrl,{
+                        method: 'Get'                        
+                    })
+                    .then(res => res.json())
+                    .then(dataArr => {
+                        let str2 = ``,
+                            signedQuantity,
+                            tmp;
+                        while (tmp = dataArr.shift()) {
+                            signedQuantity = (tmp.quantity > 0 ) ? `+${tmp.quantity}` : tmp.quantity
+                            str2 += `
+                                <tr data-id=${tmp.id}>
+                                <td>${tmp.id}</td>
+                                <td>${this.formatDate(tmp.ngayGio)}</td>
+                                <td >${signedQuantity}</td>
+                                <td>${tmp.giaNhap}</td>
+                                <td>${tmp.giaBan}</td>
+                            </tr>  
+                            `
+                        }
+                        hidePanel.querySelector('.table tbody').insertAdjacentHTML('beforeend',str2);
+                       
+                        if(isActive) {
+                            delay = setTimeout(()=>{
+                                elem.classList.toggle('active');
+                                hidePanel.classList.toggle('active');
+                            },400)
+                            
+                            panel.style.height =  "0";
+                        } else {
+                            
+                            elem.classList.toggle('active');
+                            hidePanel.classList.toggle('active');
+                            // panel.style.height =   "450px" ;
+                            panel.style.height =  panel.scrollHeight +"px" ;
+                            delay2=setTimeout(() => {
+                                window.scrollTo(
+                                    window.scrollX+elem.getBoundingClientRect().left,
+                                    window.scrollY+elem.getBoundingClientRect().top-63
+                                    )
+
+                            },400)                    
+                        }
+                    } ).catch(e=>console.error(e))
+                   
+                } else {
+                    const hidePanel = elem.nextElementSibling;
+                    const panel = hidePanel.querySelector('.panel-content');
+                    const isActive = (hidePanel.classList.contains('active')==true);
+                    clearTimeout(delay);
+                    clearTimeout(delay2);
+                    if(isActive) {
+                        delay = setTimeout(()=>{
+                            elem.classList.toggle('active');
+                            hidePanel.classList.toggle('active');
+                        },400)
+                        
+                        panel.style.height =  "0";
+                    } else {
+                        
                         elem.classList.toggle('active');
                         hidePanel.classList.toggle('active');
-                    },400)
-                    
-                   panel.style.height =  "0";
-                } else {
-                    
-                    elem.classList.toggle('active');
-                    hidePanel.classList.toggle('active');
-                    // panel.style.height =   "450px" ;
-                    panel.style.height =  panel.scrollHeight +"px" ;
-                    delay2=setTimeout(() => {
-                        window.scrollTo(
-                            window.scrollX+elem.getBoundingClientRect().left,
-                            window.scrollY+elem.getBoundingClientRect().top-63
-                            )
+                        // panel.style.height =   "450px" ;
+                        panel.style.height =  panel.scrollHeight +"px" ;
+                        delay2=setTimeout(() => {
+                            window.scrollTo(
+                                window.scrollX+elem.getBoundingClientRect().left,
+                                window.scrollY+elem.getBoundingClientRect().top-63
+                                )
 
-                    },400)                    
+                        },400)                    
+                    }
                 }
+                // this.expandingRow(elem);
                 // hidePanel.querySelector('.panel-content').style.height =  (!hidePanel.classList.contains('active')) ?  "450px" : "0";
                
 
             })
         });
+    }
+    expandingRow(elem) {
+        let delay,delay2;
+        const hidePanel = elem.nextElementSibling;
+        const panel = hidePanel.querySelector('.panel-content');
+        const isActive = (hidePanel.classList.contains('active')==true);
+        clearTimeout(delay);
+        clearTimeout(delay2);
+        if(isActive) {
+            delay = setTimeout(()=>{
+                elem.classList.toggle('active');
+                hidePanel.classList.toggle('active');
+            },400)
+            
+            panel.style.height =  "0";
+        } else {
+            
+            elem.classList.toggle('active');
+            hidePanel.classList.toggle('active');
+            // panel.style.height =   "450px" ;
+            panel.style.height =  panel.scrollHeight +"px" ;
+            delay2=setTimeout(() => {
+                window.scrollTo(
+                    window.scrollX+elem.getBoundingClientRect().left,
+                    window.scrollY+elem.getBoundingClientRect().top-63
+                    )
+
+            },400)                    
+        }
     }
     // Cho trang /inventory
     addEvent() {
@@ -526,7 +618,7 @@ export default class Inventory extends AbstractView{
             })
 
             this.addNumberKeydownListener(document.querySelector('#traTruoc'))
-            this.elements
+            
             this.addNumberKeydownListener(document.querySelector('#traTruoc'))
             
 
@@ -613,6 +705,13 @@ export default class Inventory extends AbstractView{
             
             return;
         }
+        if(this.params[":param"] == "khohang") {
+            document.querySelector('#xemHangHoa ').setAttribute('href',"/OrganicStore/admin/inventory");
+            document.querySelector('#xemHangHoa .button__text').textContent = "Phiếu nhập";
+            document.querySelector('.cardHeader h2 ').textContent = "Hàng hóa";
+            
+        }
+
         
         document.querySelector('#taoPhieuNhap .button').classList.toggle('blue',this.params[":param"] == "khohang");
         document.querySelector('#xemHangHoa .button').classList.toggle('blue',this.params[":param"] == "khohang");
