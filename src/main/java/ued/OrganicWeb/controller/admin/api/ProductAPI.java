@@ -21,13 +21,16 @@ import org.apache.commons.beanutils.BeanUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import ued.OrganicWeb.dao.impl.StockCardInfoDAO;
 import ued.OrganicWeb.model.CustomerModel;
 import ued.OrganicWeb.model.ProductModel;
+import ued.OrganicWeb.model.StockCardInfoModel;
 import ued.OrganicWeb.service.IProductService;
+import ued.OrganicWeb.service.IStockCardInfoService;
 import ued.OrganicWeb.utils.FormDataUtil;
 import ued.OrganicWeb.utils.RestUtil;
 
-@WebServlet(urlPatterns = {"/api-product","/api-product-discount"})
+@WebServlet(urlPatterns = {"/api-product","/api-product-discount","/api-khohang"})
 @MultipartConfig(maxFileSize = 16177215) 
 public class ProductAPI extends HttpServlet {
 	
@@ -38,6 +41,8 @@ public class ProductAPI extends HttpServlet {
 	
 	@Inject
 	IProductService productService;
+	@Inject
+	IStockCardInfoService stockCardInfoService;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,9 +54,32 @@ public class ProductAPI extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		String productId = (req.getParameter("id")==null) ? "" : req.getParameter("id");
 		
-		if(req.getServletPath().startsWith("/api-product-discount")) {
+		if(req.getServletPath().startsWith("/api-khohang")) {
+			if(productId!=null&&productId.matches("^\\d+$")) {
+				String offset = (req.getParameter("offset")==null) ? "0" : req.getParameter("offset");
+				String limit = (req.getParameter("limit")==null) ? "1000" : req.getParameter("limit");
+				if(offset.matches("^\\d+$")&&limit.matches("^\\d+$")) {
+					
+					List<StockCardInfoModel> listItems = stockCardInfoService.listIOProduct(
+							Integer.parseInt(productId), 
+							Integer.parseInt(offset),
+							Integer.parseInt(limit)
+					);
+					mapper.writeValue(resp.getOutputStream(), listItems);
+					return;
+				} else {
+					mapper.writeValue(resp.getOutputStream(), null);
+				}
+			} else {
+				List<ProductModel> results = productService.listTonKho();
+				mapper.writeValue(resp.getOutputStream(), results);
+				return;
+			}
+			return;
+		}else if(req.getServletPath().startsWith("/api-product-discount")) {
 			List<ProductModel> results = productService.listDiscountProduct();
 			mapper.writeValue(resp.getOutputStream(), results);
+			return;
 		} 
 		// api-product
 		else if (productId.matches("^\\d+$")) {

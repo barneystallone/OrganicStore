@@ -61,7 +61,12 @@ export const initPagination = (totalItem, itemPerPage) => {
     console.log({element});
     console.log({liTag});
     element.innerHTML = liTag;
-    document.querySelector(".number[data-page='1']").classList.add("active");
+    
+    const defaultActivePage = document.querySelector(".number[data-page='1']");
+    if(defaultActivePage) {
+        defaultActivePage.classList.add("active");
+
+    }
     // updateTableCategories(0, 9);
 }
 export const AddPaginationEvent = (totalItem, itemPerPage) => {
@@ -87,10 +92,121 @@ export const AddPaginationEvent = (totalItem, itemPerPage) => {
     })
     // active page
     document.querySelectorAll(".pagination li.number").forEach(e => {
-        e.addEventListener('click', evt => {
+        addEventClickNumberButton(e);
+    })
+}
 
-            document.querySelector(".number.active").classList.remove("active");
-            evt.target.closest("li.number").classList.add("active");
+export const addEventClickNumberButton =  (e) => {
+    e.addEventListener('click', evt => {
+
+        document.querySelector(".number.active").classList.remove("active");
+        evt.target.closest("li.number").classList.add("active");
+    })
+}
+
+
+
+
+// createPagination vs addaddPaginationEvent
+export const createPagination = (totalPages, page) => {
+    const element = document.querySelector(".pagination ul");
+    let liTag = '';
+    let active;
+    let beforePage = page - 1;
+    let afterPage = page + 1;
+    if (page > 1) {
+        liTag += `<li class="btn prev"><span><i class="fas fa-angle-left"></i> Prev</span></li>`;
+    }
+
+    if (totalPages!=4) {
+        if (page > 2) {
+            liTag += `<li class=" number"  data-page="1"><span>1</span></li>`;
+            // liTag += `<li class="first number"  data-page=" 1"><span>1</span></li>`;
+            if (page > 3) {
+                liTag += `<li class="dots"><span>...</span></li>`;
+            }
+        }
+    }
+
+    if (totalPages!=3) {
+        if (page == totalPages) {
+            beforePage = beforePage - 2;
+        } else if (page == totalPages - 1) {
+            beforePage = beforePage - 1;
+        }
+    }
+
+    if (page == 1) {
+        afterPage = afterPage + 2;
+    } else if (page == 2) {
+        afterPage = afterPage + 1;
+    }
+    
+    if(totalPages==2) {
+        beforePage = 0;
+        afterPage =2;
+    }
+    for (var plength = beforePage; plength <= afterPage; plength++) {
+        if (plength > totalPages) {
+            continue;
+        }
+        if (plength == 0) {
+            plength = plength + 1;
+        }
+        if (page == plength) {
+            active = "active";
+        } else {
+            active = "";
+        }
+        liTag += `<li class="number ${active}" data-page= "${plength}"><span>${plength}</span></li>`;
+    }
+
+
+    if ((totalPages!=4)&&page < totalPages - 2){
+        if (page < totalPages - 2) {
+            liTag += `<li class="dots"><span>...</span></li>`;
+        }
+        // liTag += `<li class="last number" data-page="${totalPages}"><span>${totalPages}</span></li>`;
+        liTag += `<li class=" number" data-page="${totalPages}"><span>${totalPages}</span></li>`;
+    }
+
+    if (page < totalPages) {
+        liTag += `<li class="btn next" ><span>Next <i class="fas fa-angle-right"></i></span></li>`;
+    }
+    element.innerHTML = liTag; 
+    addPaginationEvent(element,totalPages);
+    // return liTag; 
+}
+
+export const addPaginationEvent = (ulElem,totalPages) => {
+
+   
+    // active page
+    ulElem.querySelectorAll(".btn").forEach(e => {
+        e.addEventListener('click', (evt) => {
+            const
+                type = (evt.target.closest("li").classList.contains("prev")) ? -1 : 1,
+                activePage = ulElem.querySelector(".number.active"),
+                page = Number(activePage.dataset.page),
+                newPage = page + type;
+                console.log("utils");
+            if (!(newPage < 1 || newPage > totalPages)) {
+                createPagination(totalPages,newPage)
+            }
+
         })
+    })
+    // active page
+    ulElem.querySelectorAll(" li.number").forEach(e => {
+        addPageNumberEvent(e,totalPages);
+        
+    })
+}
+
+export const addPageNumberEvent  = (e,totalPages) => {
+    e.addEventListener('click',(evt) => {
+        const page =  evt.target.closest("li.number").dataset.page*1;
+        createPagination(totalPages,page);
+        console.log("utils");
     })
 }

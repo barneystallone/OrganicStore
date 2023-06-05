@@ -1,8 +1,7 @@
 package ued.OrganicWeb.dao.impl;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,13 +13,12 @@ import java.util.Date;
 import java.util.List;
 
 
+
 import ued.OrganicWeb.dao.IAbstractDAO;
 import ued.OrganicWeb.mapper.MapModel;
 import ued.OrganicWeb.utils.RestUtil;
-import ued.OrganicWeb.utils.SessionUtil;
 
 public class AbstractDAO<T> implements IAbstractDAO<T> {
-
 	public Connection getConnection() {
 		try {
 //			Class.forName("com.mysql.jdbc.Driver");
@@ -97,6 +95,47 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 		}
 		
 		
+		return null;
+	}
+	@Override
+	public  List<T> call(StringBuilder sql, MapModel<T> mapper, Object... params) {
+		Connection conn = getConnection();
+		CallableStatement cs = null;
+		ResultSet rs = null;
+		List<T> results = new ArrayList<>();
+
+		
+		
+		if (conn != null) {
+			try {
+				cs = conn.prepareCall(sql.toString());
+				setParams(cs, params);
+				cs.executeQuery();
+				rs = cs.getResultSet();
+				while (rs.next()) {
+				      results.add(mapper.mapRow(rs));
+			    }
+				return results;
+			} catch (SQLException e) {
+				return null;
+			} finally {
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+					if (cs != null) {
+						cs.close();
+					}
+					if (rs != null) {
+						rs.close();
+					}
+				} catch (SQLException e2) {
+					return null;
+				}
+			}
+
+		}
+
 		return null;
 	}
 
@@ -203,8 +242,12 @@ public class AbstractDAO<T> implements IAbstractDAO<T> {
 					StringBuilder message =RestUtil.message;
 					message.delete(0,RestUtil.message.length());
 					message.append("1451").append(e.getMessage());
-				}else {
-					e.printStackTrace();					
+				}else if(e.getErrorCode()==1644) {
+					StringBuilder message =RestUtil.message;
+					message.delete(0,RestUtil.message.length());
+					message.append("1644 ").append(e.getMessage());
+				} else {
+					e.printStackTrace();
 				}
 			} finally {
 				try {

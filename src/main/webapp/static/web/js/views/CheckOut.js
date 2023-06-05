@@ -1,7 +1,7 @@
 import AbstractViewWithCart from "/OrganicStore/static/web/js/views/AbstractViewWithCart.js";
 import IntergrateGoogleMap from "/OrganicStore/static/web/js/utils/IntergrateGoogleMap.js";
 import {AddAreaEventListener,initArea} from "/OrganicStore/static/common/AreaUtils.js";
-import { convertToNumber } from "/OrganicStore/static/web/js//utils/format.js";
+import { convertToNumber } from "/OrganicStore/static/web/js/utils/format.js";
 
 export default class CheckOut extends AbstractViewWithCart {
     constructor(params) {

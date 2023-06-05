@@ -52,5 +52,11 @@ public class ProductService implements IProductService{
 		// TODO Auto-generated method stub
 		return productDAO.searchProduct(query);
 	}
+
+	@Override
+	public List<ProductModel> listTonKho() {
+		// TODO Auto-generated method stub
+		return productDAO.listTonKho();
+	}
 	
 }

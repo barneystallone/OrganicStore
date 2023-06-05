@@ -122,6 +122,15 @@ export default class Dashboard extends AbstractView {
 	getScript() {
         myChart.drawChart(config);
         myChart.drawChart(config2);	
+        fetch("http://localhost:8080/OrganicStore/api-user-admin?getUser=true",{
+            method:"Get"
+        })
+        .then(res=>res.json())
+        .then(data =>{
+            console.log(data);
+            window.setCookie(`personName`,data.name,1)  ;
+            window.setCookie(`customerId`,data.id,1)  ;
+        })
 	}
 }
 

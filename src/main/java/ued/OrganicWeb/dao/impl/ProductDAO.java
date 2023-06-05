@@ -1,12 +1,22 @@
 package ued.OrganicWeb.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mysql.cj.protocol.Resultset;
+
 import ued.OrganicWeb.dao.IProductDAO;
+import ued.OrganicWeb.mapper.MapModel;
 import ued.OrganicWeb.mapper.impl.ProductMapper;
+import ued.OrganicWeb.mapper.impl.StockCardInfoMapper;
 import ued.OrganicWeb.model.ProductModel;
+import ued.OrganicWeb.model.StockCardInfoModel;
 
 public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO {
 	
@@ -107,4 +117,49 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 		StringBuilder sql = new StringBuilder("select * from product where name like ?");
 		return query(sql, new ProductMapper(), "%".concat(query).concat("%"));
 	}
+
+	@Override
+	public ProductModel getNameAndPrice(int id) {
+		// TODO Auto-generated method stub
+		StringBuilder sql = new StringBuilder("select name, price, saleOff from product where id = ?");
+		return super.get(sql,(ResultSet rs) -> {
+			try {
+				ProductModel model = new ProductModel();
+				model.setName(rs.getString("name"));
+				model.setPrice(rs.getInt("price"));
+				model.setSaleOff(rs.getInt("saleOff"));
+				return model;
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}, id);
+	}
+
+	@Override
+	public List<ProductModel> listTonKho() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		 Date date = new Date();  
+		 System.out.println("call calTon(\""+ formatter.format(date) +"\")");
+		StringBuilder sql = new StringBuilder("call calTon('"+ formatter.format(date) +"');");
+		return super.call(sql,(ResultSet rs) -> {
+			try {
+				ProductModel model = new ProductModel();
+				model.setId(rs.getInt("id"));
+				model.setName(rs.getString("name"));
+				model.setIn_stock(rs.getInt("slTon"));
+				model.setPrice(rs.getInt("von"));
+				return model;
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		});
+	}
+
+	
+	
+	
 }

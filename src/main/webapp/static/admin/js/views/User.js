@@ -5,7 +5,7 @@ import {AddAreaEventListener,initArea} from "/OrganicStore/static/common/AreaUti
 export default class Customer extends AbstractView {
     constructor(params) {
         super(params);
-        this.setTitle("Customer");
+        this.setTitle("User");
         this.modal =   `
         <div data-page='customer'>
         <div class="modal">

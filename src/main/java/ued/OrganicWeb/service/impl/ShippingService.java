@@ -1,7 +1,6 @@
 package ued.OrganicWeb.service.impl;
 
 
-import java.text.DecimalFormat;
 
 import ued.OrganicWeb.dao.impl.ShippingDAO;
 import ued.OrganicWeb.model.ShipCODModel;
